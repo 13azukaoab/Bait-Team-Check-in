@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bait Team Check-in - Logo Concepts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --secondary: #0f172a;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --bg: #f8fafc;
+        }
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 40px;
+            color: var(--secondary);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: var(--secondary);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        .logo-container {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logo-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+        .logo-desc {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .app-name {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Logo Styles */
+        
+        /* 1. Classic Map */
+        .logo-1 {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 5px 5px 15px rgba(14, 165, 233, 0.3);
+            position: relative;
+        }
+        .logo-1 i {
+            transform: rotate(45deg);
+            color: white;
+            font-size: 28px;
+        }
+
+        /* 2. Team Circle */
+        .logo-2 {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-2::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid #0ea5e9;
+            border-top-color: #f59e0b;
+            border-right-color: #10b981;
+            transform: rotate(45deg);
+        }
+        .logo-2 i {
+            font-size: 32px;
+            background: linear-gradient(135deg, #0f172a, #334155);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 3. Modern Abstract */
+        .logo-3 {
+            width: 64px;
+            height: 64px;
+            background: #0f172a;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .logo-3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #0ea5e9;
+            border-radius: 50%;
+            top: -10px;
+            right: -10px;
+            opacity: 0.5;
+        }
+        .logo-3 .initial {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            z-index: 1;
+        }
+
+        /* 4. Minimal Hook */
+        .logo-4 {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-4 svg {
+            width: 50px;
+            height: 50px;
+            fill: none;
+            stroke: #0ea5e9;
+            stroke-width: 4;
+            stroke-linecap: round;
+        }
+
+        /* 5. Target Scope */
+        .logo-5 {
+            width: 64px;
+            height: 64px;
+            border: 3px solid #ef4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .logo-5::before, .logo-5::after {
+            content: '';
+            position: absolute;
+            background: #ef4444;
+        }
+        .logo-5::before { width: 10px; height: 3px; top: 50%; left: -6px; box-shadow: 64px 0 0 #ef4444; }
+        .logo-5::after { width: 3px; height: 10px; left: 50%; top: -6px; box-shadow: 0 64px 0 #ef4444; }
+        .logo-5 i { color: #0f172a; font-size: 24px; }
+
+        /* 6. Shield Emblem */
+        .logo-6 {
+            width: 60px;
+            height: 70px;
+            background: linear-gradient(180deg, #1e293b, #0f172a);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-6 span {
+            color: #f59e0b;
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        /* 7. Speed Pin */
+        .logo-7 {
+            width: 70px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: skew(-10deg);
+            background: #0ea5e9;
+            border-radius: 8px;
+        }
+        .logo-7 i { color: white; font-size: 32px; transform: skew(10deg); }
+
+        /* 8. Hexagon Hive */
+        .logo-8 {
+            width: 64px;
+            height: 64px;
+            background: #f59e0b;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-8 i { color: white; font-size: 32px; }
+
+        /* 9. Navigator Compass */
+        .logo-9 {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .logo-9 svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* 10. Typographic */
+        .logo-10 {
+            background: #0f172a;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 800;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        .logo-10 span { color: #0ea5e9; }
+
+        .selected-badge {
+            background: #10b981;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            display: none;
+        }
+        .card.selected .selected-badge { display: block; }
+        .card.selected { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+
+    </style>
+</head>
+<body>
+    <h1>🎣 Bait Team Check-in <span style="font-size: 1rem; color: #64748b; font-weight: 400; display: block; margin-top: 10px;">Select your preferred logo style</span></h1>
+    
+    <div class="grid">
+        <!-- 1. Geo Pin -->
+        <div class="card" onclick="selectLogo(1)">
+            <div class="logo-container">
+                <div class="logo-1"><i class="fas fa-check"></i></div>
+            </div>
+            <div class="logo-name">1. Classic Map</div>
+            <div class="logo-desc">Classic location pin shape with checkmark. Clean, familiar, and direct.</div>
+            <div class="app-name"><div class="logo-1" style="width:24px; height:24px; font-size: 10px; box-shadow:none;"><i class="fas fa-check" style="font-size:10px;"></i></div> Bait Team Check-in</div>
+            <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 2. Team Circle -->
+        <div class="card" onclick="selectLogo(2)">
+            <div class="logo-container">
+                <div class="logo-2"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="logo-name">2. Team Circle</div>
+            <div class="logo-desc">Multi-colored ring representing diversity of teams (A-Z) working together.</div>
+            <div class="app-name"><div class="logo-2" style="transform: scale(0.4);"><i class="fas fa-users"></i></div> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 3. Modern Abstract -->
+        <div class="card" onclick="selectLogo(3)">
+            <div class="logo-container">
+                <div class="logo-3"><span class="initial">B</span></div>
+            </div>
+            <div class="logo-name">3. Modern Tech</div>
+            <div class="logo-desc">Sleek dark square with letter 'B'. Looks like a modern tech startup app.</div>
+            <div class="app-name"><div class="logo-3" style="transform: scale(0.4);"><span class="initial">B</span></div> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 4. Minimal Hook -->
+        <div class="card" onclick="selectLogo(4)">
+            <div class="logo-container">
+                <div class="logo-4">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="transparent" />
+                        <path d="M9 11l3 3L22 4" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="#0ea5e9" stroke-width="3" opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="logo-name">4. Minimal Check</div>
+            <div class="logo-desc">Simple stylized checkbox. Very clean and minimalist.</div>
+            <div class="app-name"><i class="fas fa-check-square" style="color: #0ea5e9; font-size: 24px;"></i> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 5. Target Scope -->
+        <div class="card" onclick="selectLogo(5)">
+            <div class="logo-container">
+                <div class="logo-5"><i class="fas fa-crosshairs"></i></div>
+            </div>
+            <div class="logo-name">5. Target Scope</div>
+            <div class="logo-desc">Sniper scope look. Implies precision, targeting, and mission accomplishment.</div>
+            <div class="app-name"><div class="logo-5" style="transform: scale(0.4); border-width: 5px;"><i class="fas fa-crosshairs"></i></div> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 6. Shield Emblem -->
+        <div class="card" onclick="selectLogo(6)">
+            <div class="logo-container">
+                <div class="logo-6"><span>BTC</span></div>
+            </div>
+            <div class="logo-name">6. Shield Guard</div>
+            <div class="logo-desc">Shield shape. Represents security, verification, and authorized personnel.</div>
+            <div class="app-name"><i class="fas fa-shield-alt" style="color: #1e293b; font-size: 24px;"></i> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 7. Speed Motion -->
+        <div class="card" onclick="selectLogo(7)">
+            <div class="logo-container">
+                <div class="logo-7"><i class="fas fa-paper-plane"></i></div>
+            </div>
+            <div class="logo-name">7. Speed Motion</div>
+            <div class="logo-desc">Dynamic slanted shape. Suggests speed, action, and active field work.</div>
+             <div class="app-name"><i class="fas fa-paper-plane" style="color: #0ea5e9; font-size: 24px;"></i> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 8. Hexagon Hive -->
+        <div class="card" onclick="selectLogo(8)">
+            <div class="logo-container">
+                <div class="logo-8"><i class="fas fa-users-cog"></i></div>
+            </div>
+            <div class="logo-name">8. Hexagon Hive</div>
+            <div class="logo-desc">Hexagon shape like a beehive. Symbolizes hardworking structured teams.</div>
+             <div class="app-name"><i class="fas fa-hexagon-nodes" style="color: #f59e0b; font-size: 24px;"></i> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 9. Navigator Compass -->
+        <div class="card" onclick="selectLogo(9)">
+            <div class="logo-container">
+                <div class="logo-9">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#0f172a"></polygon>
+                    </svg>
+                </div>
+            </div>
+            <div class="logo-name">9. Navigator</div>
+            <div class="logo-desc">Compass design. Perfect for field teams exploring and navigating areas.</div>
+             <div class="app-name"><i class="far fa-compass" style="color: #0f172a; font-size: 24px;"></i> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+        <!-- 10. Typographic -->
+        <div class="card" onclick="selectLogo(10)">
+            <div class="logo-container">
+                <div class="logo-10">B<span>T</span>C</div>
+            </div>
+            <div class="logo-name">10. Bold Type</div>
+            <div class="logo-desc">Strong typography initials. Simple, bold, and easy to read.</div>
+             <div class="app-name"><div class="logo-10" style="font-size: 14px; padding: 4px 8px;">B<span>T</span>C</div> Bait Team Check-in</div>
+             <div class="selected-badge">Selected</div>
+        </div>
+
+    </div>
+
+    <script>
+        function selectLogo(id) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            document.querySelector(`.card:nth-child(${id})`).classList.add('selected');
+            console.log(`Selected Logo ${id}`);
+        }
+    </script>
+</body>
+</html>
