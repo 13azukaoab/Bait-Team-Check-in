@@ -28,60 +28,7 @@
             --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12);
         }
 
-        /* Dark Mode Variables */
-        body.dark-mode {
-            --sidebar-bg: #0f172a; /* Keep sidebar same or darker */
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-light: #64748b;
-            --border: #334155;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.4);
-        }
-        
-        body.dark-mode .sidebar {
-            border-right: 1px solid var(--border);
-        }
-        
-        body.dark-mode .nav-item:hover, 
-        body.dark-mode .nav-item.active {
-            background: #334155;
-        }
-
-        body.dark-mode .search-box input {
-            background: #1e293b;
-            color: white;
-        }
-        
-        body.dark-mode .btn-outline {
-            background: transparent;
-            color: white;
-        }
-        
-        body.dark-mode .checkin-item {
-            background: #0f172a;
-        }
-        
-        body.dark-mode .checkin-item:hover {
-            background: #334155;
-        }
-
-        body.dark-mode .table-section {
-            background: #1e293b;
-        }
-        
-        body.dark-mode .data-table th {
-            background: #0f172a;
-            color: #cbd5e1;
-        }
-        
-        body.dark-mode select, 
-        body.dark-mode input {
-            background: #1e293b;
-            color: white;
-        }
+        /* Dark mode removed per requirements */
 
         * {
             margin: 0;
@@ -131,6 +78,24 @@
 
         .logo h1 i {
             color: var(--primary);
+        }
+
+        /* Speed Motion Logo */
+        .app-logo {
+            width: 40px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transform: skew(-10deg);
+            background: var(--primary);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+        }
+        .app-logo i {
+            color: white !important;
+            font-size: 20px;
+            transform: skew(10deg);
         }
 
         .nav-menu {
@@ -834,7 +799,7 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <h1><i class="fas fa-map-marker-alt"></i> Bait Check-In</h1>
+                <h1><span class="app-logo"><i class="fas fa-paper-plane"></i></span> Bait Check-In</h1>
             </div>
             <nav class="nav-menu">
                 <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
@@ -873,9 +838,7 @@
                     <input type="text" placeholder="ค้นหาลูกค้า, สถานที่...">
                 </div>
                 <div class="header-actions">
-                    <button class="theme-toggle" onclick="toggleDarkMode()" title="สลับโหมดมืด/สว่าง">
-                        <i class="fas fa-moon"></i>
-                    </button>
+                    <!-- Dark mode toggle removed -->
                     <button class="notification-btn">
                         <i class="fas fa-bell"></i>
                         <span class="badge">5</span>
@@ -1573,11 +1536,14 @@
     <!-- Leaflet Map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // OpenStreetMap tiles (default)
+        const osmTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
         // Initialize Map
         const map = L.map('map').setView([13.7400, 100.5400], 13);
         
         // Add tile layer (OpenStreetMap)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer(osmTileUrl, {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
@@ -1588,7 +1554,7 @@
         function initMapView() {
             if (!mapView) {
                 mapView = L.map('map-view').setView([13.7400, 100.5400], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                L.tileLayer(osmTileUrl, {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(mapView);
                 
@@ -1947,38 +1913,7 @@
         }
     </script>
     <script>
-        // Dark Mode Functionality
-        function initDarkMode() {
-            const isDark = localStorage.getItem('bait_dark_mode') === 'true';
-            if (isDark) {
-                document.body.classList.add('dark-mode');
-                updateThemeIcon(true);
-            }
-        }
-
-        function toggleDarkMode() {
-            const body = document.body;
-            body.classList.toggle('dark-mode');
-            const isDark = body.classList.contains('dark-mode');
-            localStorage.setItem('bait_dark_mode', isDark);
-            updateThemeIcon(isDark);
-        }
-
-        function updateThemeIcon(isDark) {
-            const icon = document.querySelector('.theme-toggle i');
-            if (isDark) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            }
-        }
-
-        // Initialize theme on load
-        initDarkMode();
-
-        // Excel Export Functionality
+        // Excel Export Functionality (dark mode removed)
         function exportToExcel(type) {
             // Mock data or get from logic
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM for Thai support

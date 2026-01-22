@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Bait Check-In</title>
+	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		body { font-family: 'Prompt', sans-serif; background: #f0f9ff; color: #0f172a; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+		.card { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 30px rgba(14,165,233,0.15); width: 92%; max-width: 420px; text-align: center; }
+		.logo-header { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
+		.app-logo { width: 42px; height: 36px; display: inline-flex; align-items: center; justify-content: center; transform: skew(-10deg); background: #0ea5e9; border-radius: 8px; box-shadow: 0 3px 10px rgba(14,165,233,0.3); }
+		.app-logo i { color: white; font-size: 20px; transform: skew(10deg); }
+		h1 { font-size: 1.4rem; margin: 0; }
+		p { color: #64748b; margin-bottom: 16px; }
+		.actions { display: grid; grid-template-columns: 1fr; gap: 12px; }
+		.btn { display: inline-block; padding: 14px 16px; border-radius: 12px; font-weight: 600; text-decoration: none; }
+		.btn.primary { background: linear-gradient(135deg, #0ea5e9, #06b6d4); color: #fff; }
+		.btn.secondary { background: #f1f5f9; color: #0f172a; }
+		.hint { font-size: 0.85rem; color: #64748b; margin-top: 8px; }
+	</style>
+	<script>
+		// Auto-redirect to mobile on small screens
+		document.addEventListener('DOMContentLoaded', () => {
+			const isMobile = Math.min(window.innerWidth, window.innerHeight) <= 480 || /Mobi|Android/i.test(navigator.userAgent);
+			if (isMobile) {
+				window.location.href = 'mockup-mobile.html';
+			}
+		});
+	</script>
+	</head>
+<body>
+	<div class="card">
+		<div class="logo-header">
+			<span class="app-logo"><i class="fas fa-paper-plane"></i></span>
+			<h1>Bait Check-In</h1>
+		</div>
+		<p>เลือกหน้าที่ต้องการเข้าใช้งาน</p>
+		<div class="actions">
+			<a class="btn primary" href="mockup-mobile.html">เข้าสู่ระบบทีมภาคสนาม (มือถือ)</a>
+			<a class="btn secondary" href="mockup-desktop.html">แดชบอร์ดผู้ดูแลระบบ (ไม่มีโหมดมืด)</a>
+		</div>
+		<div class="hint">อุปกรณ์มือถือจะถูกพาไปหน้ามือถืออัตโนมัติ</div>
+	</div>
+</body>
+</html>

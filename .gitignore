@@ -33,6 +33,12 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# API Keys - ห้าม commit!
+secrets/
+Longdo API KEY
+*.key
+*.secret
+
 # Large media files (if needed to exclude)
 # *.mp4
 # *.mov
