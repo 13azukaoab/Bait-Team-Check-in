@@ -28,6 +28,61 @@
             --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12);
         }
 
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --sidebar-bg: #0f172a; /* Keep sidebar same or darker */
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-light: #64748b;
+            --border: #334155;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        body.dark-mode .sidebar {
+            border-right: 1px solid var(--border);
+        }
+        
+        body.dark-mode .nav-item:hover, 
+        body.dark-mode .nav-item.active {
+            background: #334155;
+        }
+
+        body.dark-mode .search-box input {
+            background: #1e293b;
+            color: white;
+        }
+        
+        body.dark-mode .btn-outline {
+            background: transparent;
+            color: white;
+        }
+        
+        body.dark-mode .checkin-item {
+            background: #0f172a;
+        }
+        
+        body.dark-mode .checkin-item:hover {
+            background: #334155;
+        }
+
+        body.dark-mode .table-section {
+            background: #1e293b;
+        }
+        
+        body.dark-mode .data-table th {
+            background: #0f172a;
+            color: #cbd5e1;
+        }
+        
+        body.dark-mode select, 
+        body.dark-mode input {
+            background: #1e293b;
+            color: white;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -123,10 +178,10 @@
             color: white;
         }
 
-        .team-badge.team-a { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+        .team-badge.team-a { background: linear-gradient(135deg, #ef4444, #dc2626); }
         .team-badge.team-b { background: linear-gradient(135deg, #10b981, #059669); }
         .team-badge.team-c { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .team-badge.team-d { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .team-badge.team-d { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
         .team-badge.team-e { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
         .team-badge.team-f { background: linear-gradient(135deg, #ec4899, #db2777); }
         .team-badge.team-g { background: linear-gradient(135deg, #06b6d4, #0891b2); }
@@ -198,6 +253,25 @@
             display: flex;
             align-items: center;
             gap: 16px;
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
         .notification-btn {
@@ -799,6 +873,9 @@
                     <input type="text" placeholder="ค้นหาลูกค้า, สถานที่...">
                 </div>
                 <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleDarkMode()" title="สลับโหมดมืด/สว่าง">
+                        <i class="fas fa-moon"></i>
+                    </button>
                     <button class="notification-btn">
                         <i class="fas fa-bell"></i>
                         <span class="badge">5</span>
@@ -995,7 +1072,7 @@
                 <div class="checkins-section">
                     <div class="section-header">
                         <h2><i class="fas fa-clock-rotate-left"></i> Recent Check-ins</h2>
-                        <button class="btn btn-outline" style="padding: 8px 14px;">
+                        <button class="btn btn-outline" style="padding: 8px 14px;" onclick="exportToExcel('recent-checkins')">
                             <i class="fas fa-download"></i> Export
                         </button>
                     </div>
@@ -1081,7 +1158,7 @@
                         <button class="btn btn-outline">
                             <i class="fas fa-filter"></i> Filter
                         </button>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" onclick="exportToExcel('full-data')">
                             <i class="fas fa-file-export"></i> Export to Excel
                         </button>
                     </div>
@@ -1179,14 +1256,16 @@
                 <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
                     <i class="fas fa-map-location-dot" style="color: var(--primary);"></i> Map View
                 </h2>
-                <div class="map-section" style="height: calc(100vh - 200px);">
+                <div class="map-section" style="height: calc(100vh - 200px); position: relative;">
                     <div class="section-header">
                         <div class="header-actions-group">
-                            <select style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;">
-                                <option>ทุกทีม</option>
-                                <option>Team A</option>
-                                <option>Team B</option>
-                                <option>Team C</option>
+                            <select id="mapViewTeamFilter" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;">
+                                <option value="all">ทุกทีม</option>
+                                <option value="A">Team A</option>
+                                <option value="B">Team B</option>
+                                <option value="C">Team C</option>
+                                <option value="D">Team D</option>
+                                <option value="E">Team E</option>
                             </select>
                             <select style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;">
                                 <option>วันนี้</option>
@@ -1194,15 +1273,22 @@
                                 <option>7 วันที่แล้ว</option>
                                 <option>30 วันที่แล้ว</option>
                             </select>
-                            <button class="btn btn-primary"><i class="fas fa-search"></i> ค้นหา</button>
+                            <button class="btn btn-primary" onclick="filterMapView()"><i class="fas fa-search"></i> ค้นหา</button>
+                        </div>
+                        <div class="header-actions-group">
+                             <button class="btn btn-measure" id="measureBtnFull" onclick="toggleMeasureFull()">
+                                <i class="fas fa-ruler"></i> วัดระยะ
+                            </button>
                         </div>
                     </div>
-                    <div style="height: calc(100% - 80px); background: #e8f4f8; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
-                        <div style="text-align: center;">
-                            <i class="fas fa-map" style="font-size: 4rem; margin-bottom: 16px; opacity: 0.5;"></i>
-                            <p style="font-size: 1.1rem;">แผนที่แบบเต็มหน้าจอ</p>
-                            <p style="font-size: 0.9rem; color: var(--text-light);">กรุณาเลือกตัวกรองและกดค้นหา</p>
-                        </div>
+                    <!-- Full Screen Map Container -->
+                    <div id="map-view" style="height: calc(100% - 81px); width: 100%; z-index: 1;"></div>
+                    
+                    <!-- Distance Panel for Map View -->
+                    <div class="distance-panel" id="distancePanelFull">
+                        <h4><i class="fas fa-ruler"></i> วัดระยะทาง</h4>
+                        <div class="distance-info" id="distanceInfoFull">คลิกจุดแรกบนแผนที่...</div>
+                        <div class="distance-value" id="distanceValueFull">-- <span>กม.</span></div>
                     </div>
                 </div>
             </div>
@@ -1495,21 +1581,83 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Custom marker icon
-        const customIcon = L.divIcon({
-            className: 'custom-marker',
-            html: '<div style="background: linear-gradient(135deg, #0ea5e9, #06b6d4); width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3);"></div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32]
-        });
+        // Initialize Map View (Second Map)
+        let mapView = null;
+        let mapViewLayers = [];
+
+        function initMapView() {
+            if (!mapView) {
+                mapView = L.map('map-view').setView([13.7400, 100.5400], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(mapView);
+                
+                // Add click handler for Map View distance measurement
+                mapView.on('click', function(e) {
+                    if (!measureModeFull) return;
+                    
+                    const pointNum = measurePointsFull.length + 1;
+                    const pointIcon = L.divIcon({
+                        className: 'measure-point',
+                        html: `<div style="background: #ef4444; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold;">${pointNum}</div>`,
+                        iconSize: [24, 24],
+                        iconAnchor: [12, 12]
+                    });
+                    
+                    const marker = L.marker(e.latlng, { icon: pointIcon }).addTo(mapView);
+                    measureMarkersFull.push(marker);
+                    measurePointsFull.push(e.latlng);
+                    
+                    updateMeasureLineFull();
+                    
+                    const distFull = calculateTotalDistanceFull();
+                    if (measurePointsFull.length === 1) {
+                         document.getElementById('distanceValueFull').innerHTML = '0.00 <span>กม.</span>';
+                    } else {
+                        if (distFull < 1) {
+                            document.getElementById('distanceValueFull').innerHTML = `${(distFull * 1000).toFixed(0)} <span>เมตร</span>`;
+                        } else {
+                            document.getElementById('distanceValueFull').innerHTML = `${distFull.toFixed(2)} <span>กม.</span>`;
+                        }
+                    }
+                });
+            }
+            // Update markers whenever map view is shown
+            updateMapViewMarkers();
+        }
+
+        // Custom marker icon generator
+        function createCustomIcon(team) {
+            let gradient = 'linear-gradient(135deg, #0ea5e9, #06b6d4)'; // Default Blue
+            
+            // Define gradients based on team
+            const gradients = {
+                'A': 'linear-gradient(135deg, #ef4444, #dc2626)', // Red
+                'B': 'linear-gradient(135deg, #10b981, #059669)', // Green
+                'C': 'linear-gradient(135deg, #f59e0b, #d97706)', // Orange
+                'D': 'linear-gradient(135deg, #0ea5e9, #0284c7)', // Blue
+                'E': 'linear-gradient(135deg, #8b5cf6, #7c3aed)'  // Purple
+            };
+
+            if (gradients[team]) {
+                gradient = gradients[team];
+            }
+
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="background: ${gradient}; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3);"></div>`,
+                iconSize: [32, 32],
+                iconAnchor: [16, 32]
+            });
+        }
 
         // Sample check-in locations
         const locations = [
-            { lat: 13.7466, lng: 100.5392, name: 'อรุณี วงศ์ประเสริฐ', place: 'Central World' },
-            { lat: 13.7460, lng: 100.5347, name: 'สมชาย ใจดี', place: 'Siam Paragon' },
-            { lat: 13.7311, lng: 100.5696, name: 'วรรณา สุขสันต์', place: 'EmQuartier' },
-            { lat: 13.7378, lng: 100.5603, name: 'ประเสริฐ รุ่งเรือง', place: 'Terminal 21' },
-            { lat: 13.7268, lng: 100.5100, name: 'มานี มีศรี', place: 'ICONSIAM' }
+            { lat: 13.7466, lng: 100.5392, name: 'อรุณี วงศ์ประเสริฐ', place: 'Central World', team: 'A' },
+            { lat: 13.7460, lng: 100.5347, name: 'สมชาย ใจดี', place: 'Siam Paragon', team: 'B' },
+            { lat: 13.7311, lng: 100.5696, name: 'วรรณา สุขสันต์', place: 'EmQuartier', team: 'C' },
+            { lat: 13.7378, lng: 100.5603, name: 'ประเสริฐ รุ่งเรือง', place: 'Terminal 21', team: 'D' },
+            { lat: 13.7268, lng: 100.5100, name: 'มานี มีศรี', place: 'ICONSIAM', team: 'E' }
         ];
 
         // Store markers
@@ -1517,16 +1665,46 @@
 
         // Add markers
         locations.forEach((loc, index) => {
-            const marker = L.marker([loc.lat, loc.lng], { icon: customIcon })
+            const marker = L.marker([loc.lat, loc.lng], { icon: createCustomIcon(loc.team) })
                 .bindPopup(`
                     <div style="font-family: 'Prompt', sans-serif; padding: 5px;">
-                        <strong style="font-size: 1rem;">${loc.name}</strong><br>
+                        <strong style="font-size: 1rem;">${loc.name}</strong> <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b;">Team ${loc.team}</span><br>
                         <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${loc.place}</span>
                     </div>
                 `)
                 .addTo(map);
             markers.push(marker);
         });
+
+        // Function to update markers on Map View based on filter
+        function updateMapViewMarkers() {
+            if (!mapView) return;
+
+            // Clear existing layers
+            mapViewLayers.forEach(layer => mapView.removeLayer(layer));
+            mapViewLayers = [];
+            
+            const filterTeam = document.getElementById('mapViewTeamFilter').value;
+
+            locations.forEach(loc => {
+                if (filterTeam === 'all' || loc.team === filterTeam) {
+                    const marker = L.marker([loc.lat, loc.lng], { icon: createCustomIcon(loc.team) })
+                        .bindPopup(`
+                            <div style="font-family: 'Prompt', sans-serif; padding: 5px;">
+                                <strong style="font-size: 1rem;">${loc.name}</strong> <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b;">Team ${loc.team}</span><br>
+                                <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${loc.place}</span>
+                            </div>
+                        `)
+                        .addTo(mapView);
+                    mapViewLayers.push(marker);
+                }
+            });
+        }
+        
+        // Filter function for Map View
+        function filterMapView() {
+             updateMapViewMarkers();
+        }
 
         // Initially hide marker at index 3 (matching unchecked toggle)
         map.removeLayer(markers[3]);
@@ -1557,6 +1735,17 @@
             const selectedPage = document.getElementById('page-' + pageName);
             if (selectedPage) {
                 selectedPage.style.display = 'block';
+                // Initialize map if switching to mapview
+                if (pageName === 'mapview') {
+                    setTimeout(() => {
+                        initMapView();
+                        mapView.invalidateSize();
+                    }, 100);
+                } else if (pageName === 'dashboard') {
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 100);
+                }
             }
             
             // Update nav items
@@ -1692,6 +1881,156 @@
                 }
             }
         });
+
+        // -------------------------
+        // Map View Measurement Tool
+        // -------------------------
+        let measureModeFull = false;
+        let measurePointsFull = [];
+        let measureMarkersFull = [];
+        let measureLineFull = null;
+
+        function toggleMeasureFull() {
+            measureModeFull = !measureModeFull;
+            const btn = document.getElementById('measureBtnFull');
+            const panel = document.getElementById('distancePanelFull');
+            
+            if (measureModeFull) {
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-times"></i> ยกเลิก';
+                panel.classList.add('active');
+                document.getElementById('distanceInfoFull').innerHTML = 'คลิกเพื่อเพิ่มจุด <button onclick="clearMeasurementFull()" style="background: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; margin-left: 8px;"><i class="fas fa-trash"></i> ล้าง</button>';
+                document.getElementById('distanceValueFull').innerHTML = '0.00 <span>กม.</span>';
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-ruler"></i> วัดระยะ';
+                panel.classList.remove('active');
+                clearMeasurementFull();
+            }
+        }
+
+        function clearMeasurementFull() {
+            measurePointsFull = [];
+            measureMarkersFull.forEach(m => mapView.removeLayer(m));
+            measureMarkersFull = [];
+            if (measureLineFull) {
+                mapView.removeLayer(measureLineFull);
+                measureLineFull = null;
+            }
+            if (measureModeFull) {
+                document.getElementById('distanceValueFull').innerHTML = '0.00 <span>กม.</span>';
+            }
+        }
+
+        function calculateTotalDistanceFull() {
+            let total = 0;
+            for (let i = 1; i < measurePointsFull.length; i++) {
+                total += calculateDistance(
+                    measurePointsFull[i-1].lat, measurePointsFull[i-1].lng,
+                    measurePointsFull[i].lat, measurePointsFull[i].lng
+                );
+            }
+            return total;
+        }
+
+        function updateMeasureLineFull() {
+            if (measureLineFull) {
+                mapView.removeLayer(measureLineFull);
+            }
+            if (measurePointsFull.length >= 2) {
+                measureLineFull = L.polyline(measurePointsFull, {
+                    color: '#ef4444',
+                    weight: 3,
+                    dashArray: '10, 10'
+                }).addTo(mapView);
+            }
+        }
+    </script>
+    <script>
+        // Dark Mode Functionality
+        function initDarkMode() {
+            const isDark = localStorage.getItem('bait_dark_mode') === 'true';
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                updateThemeIcon(true);
+            }
+        }
+
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('bait_dark_mode', isDark);
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.querySelector('.theme-toggle i');
+            if (isDark) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // Initialize theme on load
+        initDarkMode();
+
+        // Excel Export Functionality
+        function exportToExcel(type) {
+            // Mock data or get from logic
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM for Thai support
+            let filename = "export_data.csv";
+
+            if (type === 'recent-checkins') {
+                csvContent += "Team,Name,Location,Time\n";
+                // Get data from checkins list (mocking selector logic)
+                const items = document.querySelectorAll('.checkins-list .checkin-item');
+                items.forEach(item => {
+                   const team = item.querySelector('.team-badge').innerText;
+                   const name = item.querySelector('.name').innerText;
+                   const loc = item.querySelector('.location').innerText.replace(',', ' '); // simple escape
+                   const time = item.querySelector('.time').innerText;
+                   csvContent += `${team},${name},${loc},${time}\n`;
+                });
+                filename = "recent_checkins.csv";
+            } else if (type === 'full-data') {
+                csvContent += "Team,Customer,Location,Coordinates,Time,Status\n";
+                 // Get data from table
+                const rows = document.querySelectorAll('.page-content:not([style*="none"]) .data-table tbody tr'); // visible table
+                // IF dashboard is active, use the main dashboard table
+                const dashboardTable = document.querySelector('#page-dashboard .data-table tbody tr');
+                
+                // For simplicity in this mockup, we just grab rows from the visible table or dashboard table
+                let targetRows = document.querySelectorAll('#page-dashboard .data-table tbody tr');
+                if(document.getElementById('page-checkins').style.display !== 'none') {
+                    targetRows = document.querySelectorAll('#page-checkins .data-table tbody tr');
+                }
+
+                targetRows.forEach(row => {
+                    const cols = row.querySelectorAll('td');
+                    const team = cols[0].innerText;
+                    const name = cols[1].innerText.replace('\n', ' ');
+                    const loc = cols[2].innerText.replace(',', ' ');
+                    const coord = cols[3] ? cols[3].innerText : '';
+                    const time = cols[4] ? cols[4].innerText : '';
+                    const status = cols[5] ? cols[5].innerText : '';
+                    
+                    csvContent += `${team},${name},${loc},${coord},${time},${status}\n`;
+                });
+                filename = "checkin_data.csv";
+            }
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     </script>
 </body>
 </html>

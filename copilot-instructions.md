@@ -1,19 +1,19 @@
-# 📍 Bait Check-In App - Copilot Instructions
+# 📍 Bait Check-In App - คำสั่งสำหรับ Copilot
 
 ---
 
-## 🔴 RULE 1: Deployment
+## 🔴 กฎข้อที่ 1: การ Deploy (Deployment)
 
-**USER DEPLOYS MANUALLY - AI MUST NOT DEPLOY**
+**ผู้ใช้จะ Deploy เอง - AI ห้ามทำการ Deploy**
 
-- ❌ Do NOT run `firebase deploy` commands
-- ❌ Do NOT run deployment scripts
-- ✅ Only make code changes and commit
-- ✅ User will deploy themselves when ready
+- ❌ **ห้าม** รันคำสั่ง `firebase deploy`
+- ❌ **ห้าม** รันสคริปต์ deploy ใดๆ
+- ✅ **ทำได้แค่** แก้ไขโค้ดและ Commit เท่านั้น
+- ✅ ผู้ใช้จะเป็นคน Deploy เองเมื่อพร้อม
 
 ---
 
-## 🏢 RULE 2: Zone-Branch Mapping
+## 🏢 กฎข้อที่ 2: การจับคู่เขต-สาขา (Zone-Branch Mapping)
 
 **7 เขต, 24 สาขา:**
 
@@ -27,7 +27,7 @@
 | **เขต 6** | สุขุมวิท, ปากน้ำ, ชลบุรี                  |
 | **เขต 7** | ปากช่อง, สระบุรี                          |
 
-### JavaScript Reference:
+### อ้างอิง JavaScript:
 
 ```javascript
 const ZONE_BRANCH_MAPPING = {
@@ -40,7 +40,7 @@ const ZONE_BRANCH_MAPPING = {
   "เขต 7": ["ปากช่อง", "สระบุรี"],
 };
 
-// Get zone from branch
+// หาเขตจากชื่อสาขา
 function getZoneFromBranch(branch) {
   for (const [zone, branches] of Object.entries(ZONE_BRANCH_MAPPING)) {
     if (branches.includes(branch)) return zone;
@@ -51,42 +51,42 @@ function getZoneFromBranch(branch) {
 
 ---
 
-## 👥 RULE 3: Service Teams
+## 👥 กฎข้อที่ 3: ทีมบริการ (Service Teams)
 
-**16 Teams (A-O, Z):**
+**16 ทีม (A-O, Z):**
 
 ```
 ทีม A, ทีม B, ทีม C, ทีม D, ทีม E, ทีม F, ทีม G, ทีม H,
 ทีม I, ทีม J, ทีม K, ทีม L, ทีม M, ทีม N, ทีม O, ทีม Z
 ```
 
-- Teams A-O: Field service teams (ทีมภาคสนาม)
-- Team Z: Special/backup team (ทีมพิเศษ)
+- **Teams A-O**: ทีมภาคสนามปกติ (Field service teams)
+- **Team Z**: ทีมพิเศษ/สำรอง (Special/backup team)
 
 ---
 
-## 📍 RULE 4: Check-In Data Structure
+## 📍 กฎข้อที่ 4: โครงสร้างข้อมูล Check-In (Data Structure)
 
 ### Firestore Collection: `checkins`
 
 ```javascript
 {
-  id: "string",              // Auto-generated document ID
+  id: "string",              // รหัสเอกสาร (สร้างอัตโนมัติ)
   team: "A-O|Z",             // ทีมที่ check-in
   customerName: "string",    // ชื่อลูกค้า
   contractNumber: "string",  // เลขที่สัญญา
   branch: "string",          // สาขา (จาก 24 สาขา)
-  zone: "string",            // เขต 1-7 (auto from branch)
+  zone: "string",            // เขต 1-7 (อัตโนมัติจากสาขา)
 
-  // Location data
+  // ข้อมูลตำแหน่ง (Location data)
   location: {
-    lat: number,             // Latitude
-    lng: number,             // Longitude
-    address: "string",       // Reverse geocoded address
-    accuracy: number         // GPS accuracy in meters
+    lat: number,             // ละติจูด
+    lng: number,             // ลองจิจูด
+    address: "string",       // ที่อยู่ที่แปลงจากพิกัด
+    accuracy: number         // ความแม่นยำ GPS (เมตร)
   },
 
-  // Photos (stored in Firebase Storage)
+  // รูปภาพ (เก็บใน Firebase Storage)
   photos: {
     houseFront: "string",    // Storage URL - รูปหน้าบ้าน
     contractPhoto: "string"  // Storage URL - รูปเลขที่สัญญา
@@ -95,22 +95,22 @@ function getZoneFromBranch(branch) {
   notes: "string",           // หมายเหตุ
   visible: boolean,          // แสดงบนแผนที่หรือไม่
 
-  // Timestamps
-  checkinTime: Timestamp,    // เวลา check-in
-  createdAt: Timestamp,
-  updatedAt: Timestamp
+  // เวลา (Timestamps)
+  checkinTime: Timestamp,    // เวลาที่ check-in
+  createdAt: Timestamp,      // เวลาที่สร้างข้อมูล
+  updatedAt: Timestamp       // เวลาแก้ไขล่าสุด
 }
 ```
 
 ---
 
-## 🗺️ RULE 5: Map & Distance Features
+## 🗺️ กฎข้อที่ 5: แผนที่และระยะทาง (Map & Distance)
 
-### Distance Calculation (Haversine Formula):
+### สูตรคำนวณระยะทาง (Haversine Formula):
 
 ```javascript
 function calculateDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371; // Earth radius in km
+  const R = 6371; // รัศมีโลก (กม.)
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLng = ((lng2 - lng1) * Math.PI) / 180;
   const a =
@@ -120,21 +120,21 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
       Math.sin(dLng / 2) *
       Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // Distance in km
+  return R * c; // ระยะทางเป็นกิโลเมตร
 }
 ```
 
-### Map Provider: Leaflet (Free)
+### ผู้ให้บริการแผนที่: Leaflet (ฟรี)
 
 ```javascript
-// Initialize map
+// เริ่มต้นแผนที่
 const map = L.map("map").setView([13.7563, 100.5018], 10);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-// Add marker
+// เพิ่มหมุด (Marker)
 L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
 
-// Draw distance line
+// วาดเส้นระยะทาง
 L.polyline(
   [
     [lat1, lng1],
@@ -146,19 +146,19 @@ L.polyline(
 
 ---
 
-## 🔍 RULE 6: Admin Filter Options
+## 🔍 กฎข้อที่ 6: ตัวเลือกตัวกรองแอดมิน (Admin Filters)
 
-### Required Filters:
+### ตัวกรองที่จำเป็น:
 
-| Filter        | Options              | Default |
-| ------------- | -------------------- | ------- |
-| **ทีม**       | All, A-O, Z          | All     |
-| **เขต**       | All, เขต 1-7         | All     |
-| **สาขา**      | All, 24 branches     | All     |
-| **วันที่**    | Date range picker    | Today   |
-| **การแสดงผล** | All, Visible, Hidden | All     |
+| ตัวกรอง       | ตัวเลือก            | ค่าเริ่มต้น |
+| ------------- | ------------------- | ----------- |
+| **ทีม**       | ทั้งหมด, A-O, Z     | ทั้งหมด     |
+| **เขต**       | ทั้งหมด, เขต 1-7    | ทั้งหมด     |
+| **สาขา**      | ทั้งหมด, 24 สาขา    | ทั้งหมด     |
+| **วันที่**    | เลือกช่วงวันที่     | วันนี้      |
+| **การแสดงผล** | ทั้งหมด, แสดง, ซ่อน | ทั้งหมด     |
 
-### Filter Query Example:
+### ตัวอย่าง Query:
 
 ```javascript
 let query = db.collection("checkins");
@@ -181,9 +181,24 @@ if (dateFilter) {
 
 ---
 
-## 📸 RULE 7: Photo Handling
+## 📸 กฎข้อที่ 7: การจัดการรูปภาพ (Photo Handling)
 
-### Image Compression (Before Upload):
+### การถ่ายรูปบนมือถือ (Mobile Camera Input):
+
+```html
+<!-- บังคับให้ถ่ายรูปจากกล้อง (ไม่ใช่เลือกจาก Gallery) -->
+<!-- ป้องกันปัญหา HEIC จาก iPhone -->
+<input type="file" accept="image/jpeg,image/png" capture="environment">
+```
+
+| Attribute | ค่า | คำอธิบาย |
+|-----------|-----|----------|
+| `accept` | `image/jpeg,image/png` | รับเฉพาะ JPEG/PNG (ไม่รับ HEIC) |
+| `capture` | `environment` | ใช้กล้องหลัง (ถ่ายหน้าบ้าน, เลขสัญญา) |
+
+**หมายเหตุ**: เมื่อใช้ `capture` บน iPhone/Android Browser จะแปลงเป็น JPEG อัตโนมัติ ไม่มีปัญหา HEIC
+
+### บีบอัดรูปภาพ (ก่อนอัปโหลด):
 
 ```javascript
 async function compressImage(file, maxWidth = 1200, quality = 0.7) {
@@ -205,89 +220,89 @@ async function compressImage(file, maxWidth = 1200, quality = 0.7) {
 }
 ```
 
-### Storage Path:
+### เส้นทางจัดเก็บไฟล์ info (Storage Path):
 
 ```
 checkins/{year}/{month}/{checkinId}/house_front.jpg
 checkins/{year}/{month}/{checkinId}/contract.jpg
 ```
 
-### Target File Size: **100-200 KB per image**
+### ขนาดไฟล์เป้าหมาย: **100-200 KB ต่อรูป**
 
 ---
 
-## 📊 RULE 8: Firebase Quota (Spark Plan)
+## 📊 กฎข้อที่ 8: โควต้า Firebase (Spark Plan)
 
-**Free Tier Limits:**
+**ขีดจำกัดแบบใช้ฟรี (Free Tier):**
 
-| Resource  | Limit       | Safe Usage |
-| --------- | ----------- | ---------- |
-| Storage   | 10 GB       | 1 GB/month |
-| Writes    | 20K/day     | 500/day    |
-| Reads     | 50K/day     | 5K/day     |
-| Downloads | 10 GB/month | 5 GB/month |
+| ทรัพยากร  | ขีดจำกัด    | การใช้งานที่ปลอดภัย |
+| --------- | ----------- | ------------------- |
+| Storage   | 10 GB       | 1 GB/เดือน          |
+| Writes    | 20K/วัน     | 500/วัน             |
+| Reads     | 50K/วัน     | 5K/วัน              |
+| Downloads | 10 GB/เดือน | 5 GB/เดือน          |
 
-### For 2,500 check-ins/month (~83/day):
+### สำหรับการ Check-in 2,500 ครั้ง/เดือน (~83 ครั้ง/วัน):
 
-- ✅ Writes: 83/day (0.4% of limit)
-- ✅ Reads: ~300/day (0.6% of limit)
-- ⚠️ Storage: ~1GB/month (10 months to full)
+- ✅ **Writes**: 83/วัน (0.4% ของโควต้า)
+- ✅ **Reads**: ~300/วัน (0.6% ของโควต้า)
+- ⚠️ **Storage**: ~1GB/เดือน (ใช้ได้ประมาณ 10 เดือนก่อนเต็ม)
 
-### Best Practices:
+### แนวทางปฏิบัติที่ดี (Best Practices):
 
-- ✅ Compress images to 100-200 KB
-- ✅ Cache data locally when possible
-- ✅ Use pagination (limit 50 per query)
-- ✅ Archive old data (> 6 months)
-
----
-
-## 🔐 RULE 9: User Roles
-
-| Role      | Access      | Permissions                                 |
-| --------- | ----------- | ------------------------------------------- |
-| **TEAM**  | Mobile only | Check-in, View own history                  |
-| **ADMIN** | Desktop     | View all, Filter, Export, Toggle visibility |
-| **OWNER** | Full        | All admin + Settings, Delete                |
+- ✅ บีบอัดรูปให้เหลือ 100-200 KB
+- ✅ เก็บ Cache ข้อมูลไว้ในเครื่องเมื่อทำได้
+- ✅ ใช้ Pagination (โหลดทีละ 50 รายการ)
+- ✅ Archive ข้อมูลเก่า (> 6 เดือน)
 
 ---
 
-## 📱 RULE 10: Mobile UI Guidelines
+## 🔐 กฎข้อที่ 9: บทบาทผู้ใช้ (User Roles)
 
-**Target: Field team on mobile (Android/iOS)**
-
-| Specification    | Value    |
-| ---------------- | -------- |
-| Min Touch Target | 44x44px  |
-| Font Size        | 14-18px  |
-| Button Height    | min 48px |
-| Padding          | 12-16px  |
-
-### Required Features:
-
-- ✅ GPS location capture
-- ✅ Camera access (environment)
-- ✅ Offline detection + warning
-- ✅ Loading states
-- ✅ Error handling with Thai messages
+| บทบาท     | การเข้าถึง     | สิทธิ์การใช้งาน                              |
+| --------- | -------------- | -------------------------------------------- |
+| **TEAM**  | มือถือเท่านั้น | Check-in, ดูประวัติของตัวเอง                 |
+| **ADMIN** | คอมพิวเตอร์    | ดูทั้งหมด, กรองข้อมูล, Export, ซ่อน/แสดงหมุด |
+| **OWNER** | เต็มรูปแบบ     | ทำได้ทุกอย่าง + ตั้งค่าระบบ, ลบข้อมูล        |
 
 ---
 
-## 🖥️ RULE 11: Desktop Admin Features
+## 📱 กฎข้อที่ 10: แนวทาง UI มือถือ (Mobile UI)
 
-### Must-Have:
+**เป้าหมาย: ทีมภาคสนามใช้งานบนมือถือ (Android/iOS)**
 
-- ✅ Interactive map with all check-in markers
-- ✅ Visibility toggle (show/hide on map)
-- ✅ Multi-filter system (team, zone, branch, date)
-- ✅ Distance measurement between points
-- ✅ Export to Excel/CSV
-- ✅ Search by customer name or contract number
+| รายละเอียด           | ค่าที่กำหนด  |
+| -------------------- | ------------ |
+| ขนาดจุดสัมผัสขั้นต่ำ | 44x44px      |
+| ขนาดตัวอักษร         | 14-18px      |
+| ความสูงปุ่ม          | ขั้นต่ำ 48px |
+| ระยะห่าง (Padding)   | 12-16px      |
 
-### Distance Measurement UI:
+### ฟีเจอร์ที่จำเป็น:
+
+- ✅ จับพิกัด GPS
+- ✅ เข้าถึงกล้อง (กล้องหลังเป็นหลัก)
+- ✅ ตรวจสอบและแจ้งเตือนเมื่อไม่มีเน็ต (Offline detection)
+- ✅ สถานะกำลังโหลด (Loading states)
+- ✅ แจ้งเตือน Error เป็นภาษาไทย
+
+---
+
+## 🖥️ กฎข้อที่ 11: ฟีเจอร์หน้าแอดมิน (Desktop Admin)
+
+### สิ่งที่ต้องมี:
+
+- ✅ แผนที่ตอบโต้ได้ (Interactive Map) พร้อมหมุดทั้งหมด
+- ✅ ปุ่มเปิด/ปิดการมองเห็น (Show/Hide)
+- ✅ ระบบกรองหลายชั้น (ทีม, เขต, สาขา, วันที่)
+- ✅ วัดระยะทางระหว่างจุด
+- ✅ ส่งออกเป็น Excel/CSV
+- ✅ ค้นหาด้วยชื่อลูกค้า หรือเลขที่สัญญา
+
+### UI วัดระยะทาง:
 
 ```javascript
-// Click two points on map to measure
+// คลิก 2 จุดบนแผนที่เพื่อวัดระยะ
 map.on("click", (e) => {
   if (measureMode) {
     addMeasurePoint(e.latlng);
@@ -300,29 +315,29 @@ map.on("click", (e) => {
 
 ---
 
-## 📅 RULE 12: Date Format
+## 📅 กฎข้อที่ 12: รูปแบบวันที่ (Date Format)
 
-**Always use: `DD-MM-YYYY` (Christian Era / ค.ศ.)**
+**บังคับใช้: `DD-MM-YYYY` (ปี ค.ศ.)**
 
 - ✅ `22-01-2026`
-- ❌ `2026-01-22` (wrong format)
-- ❌ `22-01-2569` (Buddhist Era - wrong)
+- ❌ `2026-01-22` (ผิดรูปแบบ)
+- ❌ `22-01-2569` (ปี พ.ศ. - ห้ามใช้)
 
 ---
 
-## 📁 Project Structure
+## 📁 โครงสร้างโปรเจกต์ (Project Structure)
 
 ```
 Bait Check-In Webapp/
-├── index.html              # Main app (redirects)
-├── mockup-mobile.html      # Mobile check-in mockup
-├── mockup-desktop.html     # Desktop admin mockup
-├── copilot-instructions.md # This file
+├── index.html              # หน้าหลัก (redirects)
+├── mockup-mobile.html      # หน้าจอมือถือ (Mobile mockup)
+├── mockup-desktop.html     # หน้าจอแอดมิน (Desktop mockup)
+├── copilot-instructions.md # ไฟล์คำสั่งนี้
 │
 ├── src/
-│   ├── mobile/             # Mobile check-in app
-│   ├── admin/              # Desktop admin dashboard
-│   └── shared/             # Shared utilities
+│   ├── mobile/             # โค้ดส่วนมือถือ
+│   ├── admin/              # โค้ดส่วนแอดมิน
+│   └── shared/             # โค้ดที่ใช้ร่วมกัน
 │
 ├── assets/
 │   └── icons/
@@ -333,26 +348,37 @@ Bait Check-In Webapp/
 
 ---
 
-## ⚡ Quick Reference Functions
+## ⚡ ฟังก์ชันอ้างอิงด่วน (Quick Reference)
 
 ```javascript
-// Zone from branch
+// หาเขตจากชื่อสาขา
 getZoneFromBranch(branchName);
 
-// Distance between two points (km)
+// คำนวณระยะทาง (กม.)
 calculateDistance(lat1, lng1, lat2, lng2);
 
-// Compress image before upload
+// บีบอัดรูปภาพ
 compressImage(file, maxWidth, quality);
 
-// Format coordinates
+// จัดรูปแบบพิกัด
 formatCoords(lat, lng); // Returns "13.7563, 100.5018"
 
-// Format Thai date
+// จัดรูปแบบวันที่ไทย
 formatThaiDate(timestamp); // Returns "22-01-2026"
 ```
 
 ---
 
-**Last Updated:** 22-01-2026
-**Version:** V.1.0.0 (22-01-2026)
+## 🗣️ กฎข้อที่ 13: ภาษาในการสื่อสาร (Communication Language)
+
+**ภาษาหลัก: ไทย (Thai Language)**
+
+- ✅ สื่อสารกับผู้ใช้เป็น **ภาษาไทย**
+- ✅ ใช้ภาษาไทยในการอธิบาย, เขียน Commit Message, และ PR Description
+- ✅ Comment ในโค้ดใช้ได้ทั้งอังกฤษและไทย (แต่ถ้าอธิบาย Logic ยากๆ ขอเป็นไทย)
+- ✅ คำศัพท์เทคนิคทับศัพท์ภาษาอังกฤษได้ (เช่น "Function", "Variable", "Deploy")
+
+---
+
+**อัปเดตล่าสุด:** 22-01-2026
+**เวอร์ชัน:** V.1.0.0 (22-01-2026)

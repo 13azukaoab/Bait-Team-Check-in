@@ -67,11 +67,29 @@
 
         .team-badge {
             background: rgba(255, 255, 255, 0.2);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .team-badge:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .team-badge i {
+            font-size: 0.9em;
+            opacity: 0.9;
         }
 
         /* Main Content */
@@ -79,61 +97,120 @@
             flex: 1;
             padding: 20px;
             padding-bottom: 100px;
-            overflow-y: auto;
+            overflow-y: auto; /* Scroll internally */
+            height: 100%; /* Fill available space */
         }
 
         /* Team Selector */
         .team-selector {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-sm);
+            background: linear-gradient(145deg, #ffffff, #f0f9ff);
+            border-radius: 20px;
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            box-shadow: 
+                0 10px 30px rgba(14, 165, 233, 0.08),
+                inset 0 0 20px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-selector::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 100px; height: 100px;
+            background: radial-gradient(circle at top right, rgba(14, 165, 233, 0.1), transparent 70%);
+            pointer-events: none;
         }
 
         .team-selector label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 10px;
+            margin-bottom: 16px;
+        }
+
+        .team-selector label i {
+            color: var(--primary);
+            background: rgba(14, 165, 233, 0.1);
+            padding: 6px;
+            border-radius: 8px;
         }
 
         .team-grid {
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 6px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
         }
 
         .team-btn {
-            padding: 10px 4px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            aspect-ratio: 1;
+            padding: 0;
+            border: none;
+            border-radius: 16px;
             background: white;
-            font-size: 0.85rem;
+            font-size: 1.1rem;
             font-weight: 600;
             font-family: 'Prompt', sans-serif;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             color: var(--text-secondary);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .team-btn span {
+            position: relative;
+            z-index: 2;
         }
 
         .team-btn:hover {
-            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(14, 165, 233, 0.15);
             color: var(--primary);
         }
 
         .team-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
             color: white;
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+            transform: scale(1.05);
+        }
+
+        .team-btn.active::before {
+            opacity: 1;
         }
 
         .team-btn.team-z {
-            grid-column: span 2;
-            background: linear-gradient(135deg, #8b5cf6, #a855f7);
-            border-color: #8b5cf6;
-            color: white;
+            /* Z is normal size in 4x4 grid */
+            background: linear-gradient(135deg, #f5f3ff, #fff);
+            color: #8b5cf6;
+        }
+
+        .team-btn.team-z::before {
+            background: linear-gradient(135deg, #8b5cf6, #d946ef);
+        }
+
+        .team-btn.team-z:hover {
+            color: #7c3aed;
+            box-shadow: 0 8px 15px rgba(139, 92, 246, 0.15);
         }
 
         /* Check-in Button */
@@ -281,6 +358,7 @@
             background: var(--bg-card);
             transition: all 0.3s ease;
             -webkit-appearance: none;
+            appearance: none;
         }
 
         .input-group input:focus,
@@ -596,6 +674,232 @@
             border-top: 1px solid rgba(255, 255, 255, 0.5);
         }
 
+        /* Login Page */
+        #loginPage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 24px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Prompt', sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Custom Team Picker Modal */
+        .team-picker-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .team-picker-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .picker-card {
+            background: white;
+            width: 90%;
+            max-width: 380px;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-picker-modal.active .picker-card {
+            transform: translateY(0);
+        }
+
+        .picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .picker-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .picker-close {
+            background: #f1f5f9;
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .picker-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            overflow-y: auto;
+            padding-bottom: 10px;
+        }
+
+        .picker-item {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .picker-item:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .picker-item.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        .picker-item.team-z {
+             background: linear-gradient(135deg, #f5f3ff, #fff);
+             color: #8b5cf6;
+             border-color: #ddd6fe;
+        }
+        
+        .picker-item.team-z.active {
+            background: #8b5cf6;
+            color: white;
+            border-color: #8b5cf6;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Styled Select Trigger */
+        .select-trigger {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .select-trigger:active {
+            transform: scale(0.98);
+            border-color: var(--primary);
+        }
+
+        .select-trigger i.fa-chevron-down {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+
+        /* App Page Layout (Single Page) */
+        #appPage {
+            display: none; /* Hidden by default */
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Nav Item Styles */
         .nav-item {
             display: flex;
             flex-direction: column;
@@ -701,36 +1005,50 @@
 </head>
 <body>
     <div class="mobile-container">
-        <!-- Header -->
-        <div class="header">
-            <h1><i class="fas fa-map-marker-alt"></i> Bait Check-In</h1>
-            <span class="team-badge" id="teamBadge">Team A</span>
-        </div>
-
-        <!-- Main Content: Check-in View -->
-        <div class="main-content" id="checkinView">
-            <!-- Team Selector -->
-            <div class="team-selector">
-                <label><i class="fas fa-users"></i> เลือกทีม</label>
-                <div class="team-grid">
-                    <button class="team-btn active" onclick="selectTeam('A')">A</button>
-                    <button class="team-btn" onclick="selectTeam('B')">B</button>
-                    <button class="team-btn" onclick="selectTeam('C')">C</button>
-                    <button class="team-btn" onclick="selectTeam('D')">D</button>
-                    <button class="team-btn" onclick="selectTeam('E')">E</button>
-                    <button class="team-btn" onclick="selectTeam('F')">F</button>
-                    <button class="team-btn" onclick="selectTeam('G')">G</button>
-                    <button class="team-btn" onclick="selectTeam('H')">H</button>
-                    <button class="team-btn" onclick="selectTeam('I')">I</button>
-                    <button class="team-btn" onclick="selectTeam('J')">J</button>
-                    <button class="team-btn" onclick="selectTeam('K')">K</button>
-                    <button class="team-btn" onclick="selectTeam('L')">L</button>
-                    <button class="team-btn" onclick="selectTeam('M')">M</button>
-                    <button class="team-btn" onclick="selectTeam('N')">N</button>
-                    <button class="team-btn" onclick="selectTeam('O')">O</button>
-                    <button class="team-btn team-z" onclick="selectTeam('Z')">Z</button>
+        
+        <!-- Login Page -->
+        <div id="loginPage">
+            <div class="login-card">
+                <div class="login-logo">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h2 class="login-title">Bait Check-In</h2>
+                <p class="login-subtitle">ระบบเช็คอินทีมปฏิบัติงาน</p>
+                
+                <div class="login-form">
+                    <div class="input-group">
+                        <label style="justify-content: center;"><i class="fas fa-users-viewfinder"></i> เลือกทีมปฏิบัติงาน</label>
+                        
+                        <!-- Custom Select Trigger -->
+                        <div class="select-trigger" onclick="openTeamPicker()">
+                            <span id="selectedTeamDisplay">-- กรุณาเลือกทีม --</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <input type="hidden" id="loginTeamSelect">
+                    </div>
+                    <button class="login-btn" onclick="handleLogin()">
+                        เข้าสู่ระบบ <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
+        </div>
+
+        <!-- App Page -->
+        <div id="appPage" style="display: none;">
+            <!-- Header -->
+            <div class="header">
+                <h1><i class="fas fa-map-marker-alt"></i> Bait Check-In</h1>
+                <div class="team-badge" id="teamBadge" onclick="confirmLogout()">
+                    <i class="fas fa-layer-group"></i>
+                    <span id="teamBadgeText">Team A</span>
+                    <i class="fas fa-sign-out-alt" style="margin-left: 8px; font-size: 0.8em; opacity: 0.7;"></i>
+                </div>
+            </div>
+
+            <!-- Main Content: Check-in View -->
+            <div class="main-content" id="checkinView">
+                <!-- Removed Team Selector (Moved to Login) -->
+
 
             <!-- Check-in Button -->
             <div class="checkin-section">
@@ -904,6 +1222,37 @@
                 <span>โปรไฟล์</span>
             </div>
         </div>
+        </div> <!-- End App Page -->
+    </div> <!-- End Mobile Container -->
+
+    <!-- Team Picker Modal -->
+    <div class="team-picker-modal" id="teamPickerModal">
+        <div class="picker-card">
+            <div class="picker-header">
+                <div class="picker-title"><i class="fas fa-users"></i> เลือกทีม</div>
+                <button class="picker-close" onclick="closeTeamPicker()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="picker-grid">
+                <!-- A-O -->
+                <div class="picker-item" onclick="selectLoginTeam('A')">A</div>
+                <div class="picker-item" onclick="selectLoginTeam('B')">B</div>
+                <div class="picker-item" onclick="selectLoginTeam('C')">C</div>
+                <div class="picker-item" onclick="selectLoginTeam('D')">D</div>
+                <div class="picker-item" onclick="selectLoginTeam('E')">E</div>
+                <div class="picker-item" onclick="selectLoginTeam('F')">F</div>
+                <div class="picker-item" onclick="selectLoginTeam('G')">G</div>
+                <div class="picker-item" onclick="selectLoginTeam('H')">H</div>
+                <div class="picker-item" onclick="selectLoginTeam('I')">I</div>
+                <div class="picker-item" onclick="selectLoginTeam('J')">J</div>
+                <div class="picker-item" onclick="selectLoginTeam('K')">K</div>
+                <div class="picker-item" onclick="selectLoginTeam('L')">L</div>
+                <div class="picker-item" onclick="selectLoginTeam('M')">M</div>
+                <div class="picker-item" onclick="selectLoginTeam('N')">N</div>
+                <div class="picker-item" onclick="selectLoginTeam('O')">O</div>
+                <!-- Z -->
+                <div class="picker-item team-z" onclick="selectLoginTeam('Z')">Z</div>
+            </div>
+        </div>
     </div>
 
     <!-- Camera Modal -->
@@ -933,14 +1282,76 @@
 
     <script>
         let isCheckedIn = false;
-        let selectedTeam = 'A';
+        let selectedTeam = '';
         let photos = { 1: null, 2: null };
 
-        function selectTeam(team) {
+        // Initialize Session
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTeam = localStorage.getItem('bait_team');
+            if (savedTeam) {
+                // Auto login
+                login(savedTeam);
+            } else {
+                // Show login page
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('appPage').style.display = 'none';
+            }
+        });
+
+        function handleLogin() {
+            const team = document.getElementById('loginTeamSelect').value;
+            if (!team) {
+                alert('กรุณาเลือกทีมปฏิบัติงาน');
+                return;
+            }
+            login(team);
+        }
+
+        // Custom Team Picker Logic
+        function openTeamPicker() {
+            document.getElementById('teamPickerModal').classList.add('active');
+        }
+
+        function closeTeamPicker() {
+            document.getElementById('teamPickerModal').classList.remove('active');
+        }
+
+        function selectLoginTeam(team) {
+            // Set value
+            document.getElementById('loginTeamSelect').value = team;
+            document.getElementById('selectedTeamDisplay').textContent = 'Team ' + team;
+            
+            // Visual feedback
+            document.querySelectorAll('.picker-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Close modal with slight delay for visual confirmation
+            setTimeout(() => {
+                closeTeamPicker();
+            }, 200);
+        }
+
+        function login(team) {
             selectedTeam = team;
-            document.querySelectorAll('.team-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('teamBadge').textContent = 'Team ' + team;
+            localStorage.setItem('bait_team', team);
+            
+            // Update UI
+            document.getElementById('teamBadgeText').textContent = 'Team ' + team;
+            
+            // Switch Views
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appPage').style.display = 'flex';
+        }
+
+        function confirmLogout() {
+            if (confirm('ต้องการออกจากระบบ หรือเปลี่ยนทีม?')) {
+                logout();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('bait_team');
+            location.reload(); // Reload to clear states and show login
         }
 
         function toggleCheckin() {
