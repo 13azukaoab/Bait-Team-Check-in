@@ -49,23 +49,45 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* Sidebar - Collapsible Animation */
         .sidebar {
-            width: 260px;
+            width: 72px;
             background: var(--sidebar-bg);
             color: white;
-            padding: 24px 0;
+            padding: 16px 0;
             display: flex;
             flex-direction: column;
             position: fixed;
             height: 100vh;
-            z-index: 100;
+            z-index: 1000;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .sidebar:hover {
+            width: 260px;
+        }
+
+        .sidebar:hover .logo-text,
+        .sidebar:hover .nav-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .sidebar:hover .logo {
+            padding: 0 24px 20px;
+        }
+
+        .sidebar:hover .nav-item {
+            padding: 14px 24px;
         }
 
         .logo {
-            padding: 0 24px 24px;
+            padding: 0 16px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 24px;
+            margin-bottom: 16px;
+            transition: padding 0.3s ease;
+            white-space: nowrap;
         }
 
         .logo h1 {
@@ -76,6 +98,12 @@
             gap: 12px;
         }
 
+        .logo-text {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease 0.1s;
+        }
+
         .logo h1 i {
             color: var(--primary);
         }
@@ -84,6 +112,7 @@
         .app-logo {
             width: 40px;
             height: 34px;
+            min-width: 40px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -106,11 +135,19 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            padding: 14px 24px;
+            padding: 14px 16px;
             color: var(--text-light);
             cursor: pointer;
             transition: all 0.3s ease;
             border-left: 3px solid transparent;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-text {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease 0.1s;
         }
 
         .nav-item:hover {
@@ -125,9 +162,38 @@
         }
 
         .nav-item i {
-            width: 20px;
+            width: 24px;
+            min-width: 24px;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Tooltip for collapsed sidebar */
+        .nav-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 72px;
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .sidebar:not(:hover) .nav-item:hover::after {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Team Badges */
@@ -170,8 +236,30 @@
         /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 260px;
+            margin-left: 72px;
             padding: 24px;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Sidebar Expand Indicator */
+        .sidebar-expand-hint {
+            position: fixed;
+            left: 72px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 60px;
+            background: linear-gradient(to right, rgba(30, 41, 59, 0.3), transparent);
+            border-radius: 0 8px 8px 0;
+            z-index: 99;
+            pointer-events: none;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover ~ .sidebar-expand-hint,
+        .sidebar-expand-hint:hover {
+            opacity: 0;
         }
 
         /* Top Header */
@@ -472,6 +560,16 @@
             width: 100%;
         }
 
+        /* Leaflet zoom controls - ให้อยู่ต่ำกว่า sidebar */
+        .leaflet-control-container .leaflet-top,
+        .leaflet-control-container .leaflet-left {
+            z-index: 500 !important;
+        }
+
+        .leaflet-control-zoom {
+            z-index: 500 !important;
+        }
+
         /* Checkins List */
         .checkins-section {
             background: var(--bg-card);
@@ -540,6 +638,11 @@
             margin-top: 4px;
         }
 
+        .checkin-info .time .actual-time {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
         .checkin-status {
             padding: 6px 12px;
             border-radius: 20px;
@@ -606,6 +709,17 @@
 
         .toggle-switch input:checked + .toggle-slider:before {
             transform: translateX(22px);
+        }
+
+        /* Toggle switch in table - ensure proper display */
+        .data-table .toggle-switch {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .data-table .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
         }
 
         /* Table View */
@@ -792,6 +906,466 @@
         .map-container {
             position: relative;
         }
+
+        /* Photo Gallery Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header h2 i {
+            color: var(--primary);
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: none;
+            background: var(--bg-main);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item .gallery-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+        }
+
+        .gallery-item .gallery-info .name {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .gallery-item .gallery-info .meta {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        /* Image Viewer */
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .image-viewer.active {
+            display: flex;
+        }
+
+        .image-viewer img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 12px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+
+        .image-viewer .viewer-info {
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .image-viewer .viewer-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-viewer .viewer-close:hover {
+            background: var(--danger);
+        }
+
+        /* Charts Container */
+        .chart-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-header h3 {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-header h3 i {
+            color: var(--primary);
+        }
+
+        .chart-wrapper {
+            height: 250px;
+            position: relative;
+        }
+
+        /* Bar Chart (CSS-based) */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .bar {
+            width: 40px;
+            border-radius: 8px 8px 0 0;
+            background: linear-gradient(to top, var(--primary), var(--accent));
+            transition: height 0.5s ease;
+            position: relative;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .bar-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* Donut Chart (CSS-based) */
+        .donut-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: var(--bg-card);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut-center .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .donut-center .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Real-time Indicator */
+        .realtime-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--success);
+        }
+
+        .realtime-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Export Dropdown */
+        .export-dropdown {
+            position: relative;
+        }
+
+        .export-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            min-width: 180px;
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+        }
+
+        .export-menu.active {
+            display: block;
+        }
+
+        .export-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'Prompt', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .export-menu-item:hover {
+            background: var(--bg-main);
+        }
+
+        .export-menu-item i {
+            width: 20px;
+            color: var(--text-secondary);
+        }
+
+        .export-menu-item.excel i { color: #217346; }
+        .export-menu-item.csv i { color: #0ea5e9; }
+        .export-menu-item.pdf i { color: #ef4444; }
+
+        /* Team Filter Dropdown */
+        .team-filter-dropdown {
+            position: relative;
+        }
+
+        .team-filter-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            min-width: 320px;
+            z-index: 2000;
+            display: none;
+            overflow: visible;
+        }
+
+        .team-filter-menu.active {
+            display: block;
+        }
+
+        .team-filter-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-mini {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-main);
+            cursor: pointer;
+            font-family: 'Prompt', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .btn-mini:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .team-filter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding: 16px;
+        }
+
+        .team-filter-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--bg-main);
+        }
+
+        .team-filter-item:hover {
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        .team-filter-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .team-filter-item input[type="checkbox"]:not(:checked) + .team-badge {
+            opacity: 0.4;
+        }
     </style>
 </head>
 <body>
@@ -799,32 +1373,36 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <h1><span class="app-logo"><i class="fas fa-paper-plane"></i></span> Bait Check-In</h1>
+                <h1><span class="app-logo"><i class="fas fa-paper-plane"></i></span> <span class="logo-text">Bait Check-In</span></h1>
             </div>
             <nav class="nav-menu">
-                <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+                <div class="nav-item active" data-page="dashboard" data-tooltip="Dashboard" onclick="showPage('dashboard')">
                     <i class="fas fa-chart-pie"></i>
-                    <span>Dashboard</span>
+                    <span class="nav-text">Dashboard</span>
                 </div>
-                <div class="nav-item" data-page="mapview" onclick="showPage('mapview')">
+                <div class="nav-item" data-page="mapview" data-tooltip="Map View" onclick="showPage('mapview')">
                     <i class="fas fa-map-location-dot"></i>
-                    <span>Map View</span>
+                    <span class="nav-text">Map View</span>
                 </div>
-                <div class="nav-item" data-page="checkins" onclick="showPage('checkins')">
+                <div class="nav-item" data-page="checkins" data-tooltip="Check-ins List" onclick="showPage('checkins')">
                     <i class="fas fa-list-check"></i>
-                    <span>Check-ins List</span>
+                    <span class="nav-text">Check-ins List</span>
                 </div>
-                <div class="nav-item" data-page="customers" onclick="showPage('customers')">
+                <div class="nav-item" data-page="customers" data-tooltip="Customers" onclick="showPage('customers')">
                     <i class="fas fa-users"></i>
-                    <span>Customers</span>
+                    <span class="nav-text">Customers</span>
                 </div>
-                <div class="nav-item" data-page="reports" onclick="showPage('reports')">
+                <div class="nav-item" data-page="reports" data-tooltip="Reports" onclick="showPage('reports')">
                     <i class="fas fa-chart-line"></i>
-                    <span>Reports</span>
+                    <span class="nav-text">Reports</span>
                 </div>
-                <div class="nav-item" data-page="settings" onclick="showPage('settings')">
+                <div class="nav-item" data-page="gallery" data-tooltip="Photo Gallery" onclick="showPage('gallery')">
+                    <i class="fas fa-images"></i>
+                    <span class="nav-text">Photo Gallery</span>
+                </div>
+                <div class="nav-item" data-page="settings" data-tooltip="Settings" onclick="showPage('settings')">
                     <i class="fas fa-cog"></i>
-                    <span>Settings</span>
+                    <span class="nav-text">Settings</span>
                 </div>
             </nav>
         </aside>
@@ -835,13 +1413,17 @@
             <div class="top-header">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="ค้นหาลูกค้า, สถานที่...">
+                    <input type="text" placeholder="ค้นหาลูกค้า, สถานที่..." id="globalSearch" onkeyup="handleGlobalSearch(this.value)">
                 </div>
                 <div class="header-actions">
-                    <!-- Dark mode toggle removed -->
+                    <!-- Real-time Indicator -->
+                    <div class="realtime-badge" id="realtimeBadge">
+                        <span class="realtime-dot"></span>
+                        <span>Live</span>
+                    </div>
                     <button class="notification-btn">
                         <i class="fas fa-bell"></i>
-                        <span class="badge">5</span>
+                        <span class="badge" id="notificationCount">5</span>
                     </button>
                     <div class="admin-profile">
                         <div class="admin-avatar">JS</div>
@@ -1035,77 +1617,123 @@
                 <div class="checkins-section">
                     <div class="section-header">
                         <h2><i class="fas fa-clock-rotate-left"></i> Recent Check-ins</h2>
-                        <button class="btn btn-outline" style="padding: 8px 14px;" onclick="exportToExcel('recent-checkins')">
-                            <i class="fas fa-download"></i> Export
-                        </button>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <!-- Team Filter for Map -->
+                            <div class="team-filter-dropdown">
+                                <button class="btn btn-outline" style="padding: 8px 14px;" onclick="toggleTeamFilterMenu()">
+                                    <i class="fas fa-users"></i> ทีม <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
+                                </button>
+                                <div class="team-filter-menu" id="teamFilterMenu">
+                                    <div class="team-filter-header">
+                                        <span style="font-weight: 600;">เลือกทีมที่จะแสดง</span>
+                                        <div style="display: flex; gap: 8px;">
+                                            <button onclick="selectAllTeams(true)" class="btn-mini">เลือกทั้งหมด</button>
+                                            <button onclick="selectAllTeams(false)" class="btn-mini">ยกเลิกทั้งหมด</button>
+                                        </div>
+                                    </div>
+                                    <div class="team-filter-grid">
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('A', this.checked)"><span class="team-badge team-badge-sm team-a">A</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('B', this.checked)"><span class="team-badge team-badge-sm team-b">B</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('C', this.checked)"><span class="team-badge team-badge-sm team-c">C</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('D', this.checked)"><span class="team-badge team-badge-sm team-d">D</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('E', this.checked)"><span class="team-badge team-badge-sm team-e">E</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('F', this.checked)"><span class="team-badge team-badge-sm team-f">F</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('G', this.checked)"><span class="team-badge team-badge-sm team-g">G</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('H', this.checked)"><span class="team-badge team-badge-sm team-h">H</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('I', this.checked)"><span class="team-badge team-badge-sm team-i">I</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('J', this.checked)"><span class="team-badge team-badge-sm team-j">J</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('K', this.checked)"><span class="team-badge team-badge-sm team-k">K</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('L', this.checked)"><span class="team-badge team-badge-sm team-l">L</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('M', this.checked)"><span class="team-badge team-badge-sm team-m">M</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('N', this.checked)"><span class="team-badge team-badge-sm team-n">N</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('O', this.checked)"><span class="team-badge team-badge-sm team-o">O</span></label>
+                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('Z', this.checked)"><span class="team-badge team-badge-sm team-z">Z</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Export Dropdown -->
+                            <div class="export-dropdown">
+                                <button class="btn btn-outline" style="padding: 8px 14px;" onclick="toggleExportMenu('recent')">
+                                    <i class="fas fa-download"></i> Export <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
+                                </button>
+                                <div class="export-menu" id="exportMenuRecent">
+                                    <button class="export-menu-item excel" onclick="exportToExcel('recent-checkins')">
+                                        <i class="fas fa-file-excel"></i> Export Excel
+                                    </button>
+                                    <button class="export-menu-item csv" onclick="exportToCSV('recent-checkins')">
+                                        <i class="fas fa-file-csv"></i> Export CSV
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="checkins-list">
-                        <div class="checkin-item">
+                        <div class="checkin-item" data-checkin-id="0">
                             <span class="team-badge team-badge-sm team-a">A</span>
                             <div class="checkin-avatar">อร</div>
                             <div class="checkin-info">
                                 <div class="name">อรุณี วงศ์ประเสริฐ</div>
                                 <div class="location"><i class="fas fa-location-dot"></i> Central World, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 2 นาทีที่แล้ว</div>
+                                <div class="time"><i class="far fa-clock"></i> 2 นาทีที่แล้ว <span class="actual-time">(10:01)</span></div>
                             </div>
                             <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" checked onchange="toggleMarker(0, this.checked)">
+                                <input type="checkbox" checked onchange="syncToggleMarker(0, this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
 
-                        <div class="checkin-item">
+                        <div class="checkin-item" data-checkin-id="1">
                             <span class="team-badge team-badge-sm team-b">B</span>
                             <div class="checkin-avatar">สม</div>
                             <div class="checkin-info">
                                 <div class="name">สมชาย ใจดี</div>
                                 <div class="location"><i class="fas fa-location-dot"></i> Siam Paragon, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 15 นาทีที่แล้ว</div>
+                                <div class="time"><i class="far fa-clock"></i> 15 นาทีที่แล้ว <span class="actual-time">(09:48)</span></div>
                             </div>
                             <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" checked onchange="toggleMarker(1, this.checked)">
+                                <input type="checkbox" checked onchange="syncToggleMarker(1, this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
 
-                        <div class="checkin-item">
+                        <div class="checkin-item" data-checkin-id="2">
                             <span class="team-badge team-badge-sm team-c">C</span>
                             <div class="checkin-avatar">วร</div>
                             <div class="checkin-info">
                                 <div class="name">วรรณา สุขสันต์</div>
                                 <div class="location"><i class="fas fa-location-dot"></i> EmQuartier, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 32 นาทีที่แล้ว</div>
+                                <div class="time"><i class="far fa-clock"></i> 32 นาทีที่แล้ว <span class="actual-time">(09:31)</span></div>
                             </div>
                             <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" checked onchange="toggleMarker(2, this.checked)">
+                                <input type="checkbox" checked onchange="syncToggleMarker(2, this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
 
-                        <div class="checkin-item">
+                        <div class="checkin-item" data-checkin-id="3">
                             <span class="team-badge team-badge-sm team-d">D</span>
                             <div class="checkin-avatar">ปร</div>
                             <div class="checkin-info">
                                 <div class="name">ประเสริฐ รุ่งเรือง</div>
                                 <div class="location"><i class="fas fa-location-dot"></i> Terminal 21, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 1 ชั่วโมงที่แล้ว</div>
+                                <div class="time"><i class="far fa-clock"></i> 1 ชั่วโมงที่แล้ว <span class="actual-time">(09:03)</span></div>
                             </div>
                             <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" onchange="toggleMarker(3, this.checked)">
+                                <input type="checkbox" onchange="syncToggleMarker(3, this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
 
-                        <div class="checkin-item">
+                        <div class="checkin-item" data-checkin-id="4">
                             <span class="team-badge team-badge-sm team-e">E</span>
                             <div class="checkin-avatar">มา</div>
                             <div class="checkin-info">
                                 <div class="name">มานี มีศรี</div>
                                 <div class="location"><i class="fas fa-location-dot"></i> ICONSIAM, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 2 ชั่วโมงที่แล้ว</div>
+                                <div class="time"><i class="far fa-clock"></i> 2 ชั่วโมงที่แล้ว <span class="actual-time">(08:05)</span></div>
                             </div>
                             <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" checked onchange="toggleMarker(4, this.checked)">
+                                <input type="checkbox" checked onchange="syncToggleMarker(4, this.checked)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
@@ -1118,12 +1746,25 @@
                 <div class="section-header">
                     <h2><i class="fas fa-table"></i> All Check-ins Data</h2>
                     <div class="header-actions-group">
-                        <button class="btn btn-outline">
+                        <button class="btn btn-outline" onclick="toggleFilter()">
                             <i class="fas fa-filter"></i> Filter
                         </button>
-                        <button class="btn btn-primary" onclick="exportToExcel('full-data')">
-                            <i class="fas fa-file-export"></i> Export to Excel
-                        </button>
+                        <div class="export-dropdown">
+                            <button class="btn btn-primary" onclick="toggleExportMenu('full')">
+                                <i class="fas fa-file-export"></i> Export <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
+                            </button>
+                            <div class="export-menu" id="exportMenuFull">
+                                <button class="export-menu-item excel" onclick="exportToExcel('full-data')">
+                                    <i class="fas fa-file-excel"></i> Export Excel (.xlsx)
+                                </button>
+                                <button class="export-menu-item csv" onclick="exportToCSV('full-data')">
+                                    <i class="fas fa-file-csv"></i> Export CSV
+                                </button>
+                                <button class="export-menu-item pdf" onclick="exportToPDF()">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <table class="data-table">
@@ -1139,7 +1780,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr data-checkin-id="0">
                             <td><span class="team-badge team-a">A</span></td>
                             <td><strong>อรุณี วงศ์ประเสริฐ</strong></td>
                             <td>Central World, กรุงเทพฯ</td>
@@ -1148,12 +1789,12 @@
                             <td><span class="checkin-status active">Active</span></td>
                             <td>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" checked>
+                                    <input type="checkbox" checked onchange="syncToggleMarker(0, this.checked)">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </td>
                         </tr>
-                        <tr>
+                        <tr data-checkin-id="1">
                             <td><span class="team-badge team-b">B</span></td>
                             <td><strong>สมชาย ใจดี</strong></td>
                             <td>Siam Paragon, กรุงเทพฯ</td>
@@ -1162,12 +1803,12 @@
                             <td><span class="checkin-status active">Active</span></td>
                             <td>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" checked>
+                                    <input type="checkbox" checked onchange="syncToggleMarker(1, this.checked)">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </td>
                         </tr>
-                        <tr>
+                        <tr data-checkin-id="2">
                             <td><span class="team-badge team-c">C</span></td>
                             <td><strong>วรรณา สุขสันต์</strong></td>
                             <td>EmQuartier, กรุงเทพฯ</td>
@@ -1176,12 +1817,12 @@
                             <td><span class="checkin-status active">Active</span></td>
                             <td>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" checked>
+                                    <input type="checkbox" checked onchange="syncToggleMarker(2, this.checked)">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </td>
                         </tr>
-                        <tr>
+                        <tr data-checkin-id="3">
                             <td><span class="team-badge team-d">D</span></td>
                             <td><strong>ประเสริฐ รุ่งเรือง</strong></td>
                             <td>Terminal 21, กรุงเทพฯ</td>
@@ -1190,12 +1831,12 @@
                             <td><span class="checkin-status pending">Pending</span></td>
                             <td>
                                 <label class="toggle-switch">
-                                    <input type="checkbox">
+                                    <input type="checkbox" onchange="syncToggleMarker(3, this.checked)">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </td>
                         </tr>
-                        <tr>
+                        <tr data-checkin-id="4">
                             <td><span class="team-badge team-e">E</span></td>
                             <td><strong>มานี มีศรี</strong></td>
                             <td>ICONSIAM, กรุงเทพฯ</td>
@@ -1204,7 +1845,7 @@
                             <td><span class="checkin-status active">Active</span></td>
                             <td>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" checked>
+                                    <input type="checkbox" checked onchange="syncToggleMarker(4, this.checked)">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </td>
@@ -1222,14 +1863,39 @@
                 <div class="map-section" style="height: calc(100vh - 200px); position: relative;">
                     <div class="section-header">
                         <div class="header-actions-group">
-                            <select id="mapViewTeamFilter" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;">
-                                <option value="all">ทุกทีม</option>
-                                <option value="A">Team A</option>
-                                <option value="B">Team B</option>
-                                <option value="C">Team C</option>
-                                <option value="D">Team D</option>
-                                <option value="E">Team E</option>
-                            </select>
+                            <!-- Team Filter Dropdown with Checkboxes -->
+                            <div class="team-filter-dropdown" id="mapViewTeamFilterDropdown">
+                                <button class="btn btn-outline team-filter-btn" onclick="toggleMapViewTeamFilter()">
+                                    <i class="fas fa-users"></i> ทีม <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.8rem;"></i>
+                                </button>
+                                <div class="team-filter-menu" id="mapViewTeamFilterMenu">
+                                    <div class="team-filter-header">
+                                        <span>เลือกทีมที่จะแสดง</span>
+                                        <div>
+                                            <button class="btn-link" onclick="mapViewSelectAllTeams()">เลือกทั้งหมด</button>
+                                            <button class="btn-link" onclick="mapViewDeselectAllTeams()">ยกเลิกทั้งหมด</button>
+                                        </div>
+                                    </div>
+                                    <div class="team-filter-grid">
+                                        <label class="team-checkbox"><input type="checkbox" value="A" checked onchange="filterMapViewByTeam()"><span class="team-badge team-a">A</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="B" checked onchange="filterMapViewByTeam()"><span class="team-badge team-b">B</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="C" checked onchange="filterMapViewByTeam()"><span class="team-badge team-c">C</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="D" checked onchange="filterMapViewByTeam()"><span class="team-badge team-d">D</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="E" checked onchange="filterMapViewByTeam()"><span class="team-badge team-e">E</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="F" checked onchange="filterMapViewByTeam()"><span class="team-badge team-f">F</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="G" checked onchange="filterMapViewByTeam()"><span class="team-badge team-g">G</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="H" checked onchange="filterMapViewByTeam()"><span class="team-badge team-h">H</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="I" checked onchange="filterMapViewByTeam()"><span class="team-badge team-i">I</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="J" checked onchange="filterMapViewByTeam()"><span class="team-badge team-j">J</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="K" checked onchange="filterMapViewByTeam()"><span class="team-badge team-k">K</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="L" checked onchange="filterMapViewByTeam()"><span class="team-badge team-l">L</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="M" checked onchange="filterMapViewByTeam()"><span class="team-badge team-m">M</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="N" checked onchange="filterMapViewByTeam()"><span class="team-badge team-n">N</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="O" checked onchange="filterMapViewByTeam()"><span class="team-badge team-o">O</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" value="Z" checked onchange="filterMapViewByTeam()"><span class="team-badge team-z">Z</span></label>
+                                    </div>
+                                </div>
+                            </div>
                             <select style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;">
                                 <option>วันนี้</option>
                                 <option>เมื่อวาน</option>
@@ -1450,6 +2116,169 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Charts Section -->
+                <div class="content-grid" style="grid-template-columns: 2fr 1fr; margin-bottom: 24px;">
+                    <!-- Bar Chart - Check-ins per Day -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-bar"></i> Check-ins รายวัน (7 วันล่าสุด)</h3>
+                            <select style="padding: 8px 12px; border: 2px solid var(--border); border-radius: 8px; font-family: 'Prompt', sans-serif;">
+                                <option>7 วัน</option>
+                                <option>14 วัน</option>
+                                <option>30 วัน</option>
+                            </select>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="bar-chart" id="barChart">
+                                <div class="bar-item">
+                                    <div class="bar" style="height: 120px;"><span class="bar-value">98</span></div>
+                                    <span class="bar-label">จ.</span>
+                                </div>
+                                <div class="bar-item">
+                                    <div class="bar" style="height: 150px; background: linear-gradient(to top, #10b981, #34d399);"><span class="bar-value">122</span></div>
+                                    <span class="bar-label">อ.</span>
+                                </div>
+                                <div class="bar-item">
+                                    <div class="bar" style="height: 100px;"><span class="bar-value">82</span></div>
+                                    <span class="bar-label">พ.</span>
+                                </div>
+                                <div class="bar-item">
+                                    <div class="bar" style="height: 170px; background: linear-gradient(to top, #10b981, #34d399);"><span class="bar-value">139</span></div>
+                                    <span class="bar-label">พฤ.</span>
+                                </div>
+                                <div class="bar-item">
+                                    <div class="bar" style="height: 130px;"><span class="bar-value">106</span></div>
+                                    <span class="bar-label">ศ.</span>
+                                </div>
+                                <div class="bar-item">
+                                    <div class="bar" style="height: 80px; background: linear-gradient(to top, #f59e0b, #fbbf24);"><span class="bar-value">65</span></div>
+                                    <span class="bar-label">ส.</span>
+                                </div>
+                                <div class="bar-item">
+                                    <div class="bar" style="height: 60px; background: linear-gradient(to top, #f59e0b, #fbbf24);"><span class="bar-value">49</span></div>
+                                    <span class="bar-label">อา.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Donut Chart - Status Distribution -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-pie"></i> สถานะ Check-in</h3>
+                        </div>
+                        <div class="chart-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div class="donut-chart" style="background: conic-gradient(#10b981 0deg 277deg, #f59e0b 277deg 324deg, #ef4444 324deg 360deg);">
+                                <div class="donut-center">
+                                    <span class="value">661</span>
+                                    <span class="label">รายการ</span>
+                                </div>
+                            </div>
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #10b981;"></span>
+                                    <span>สำเร็จ (77%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #f59e0b;"></span>
+                                    <span>รอดำเนินการ (13%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #ef4444;"></span>
+                                    <span>ยกเลิก (10%)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Performance Chart -->
+                <div class="chart-container" style="margin-bottom: 24px;">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-users"></i> Performance รายทีม</h3>
+                        <div class="export-dropdown">
+                            <button class="btn btn-outline" onclick="toggleExportMenu('team-perf')">
+                                <i class="fas fa-download"></i> Export <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                            </button>
+                            <div class="export-menu" id="exportMenuTeam-perf">
+                                <button class="export-menu-item excel" onclick="exportToExcel('team-performance')">
+                                    <i class="fas fa-file-excel"></i> Export Excel
+                                </button>
+                                <button class="export-menu-item csv" onclick="exportToCSV('team-performance')">
+                                    <i class="fas fa-file-csv"></i> Export CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; padding: 20px 0;">
+                        <div style="text-align: center;">
+                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+                                <div style="width: 50px; height: 120px; background: linear-gradient(to top, #ef4444, #f87171); border-radius: 8px 8px 0 0; position: relative;">
+                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">245</span>
+                                </div>
+                            </div>
+                            <span class="team-badge team-a" style="margin-top: 10px;">A</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+                                <div style="width: 50px; height: 110px; background: linear-gradient(to top, #10b981, #34d399); border-radius: 8px 8px 0 0; position: relative;">
+                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">231</span>
+                                </div>
+                            </div>
+                            <span class="team-badge team-b" style="margin-top: 10px;">B</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+                                <div style="width: 50px; height: 100px; background: linear-gradient(to top, #f59e0b, #fbbf24); border-radius: 8px 8px 0 0; position: relative;">
+                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">218</span>
+                                </div>
+                            </div>
+                            <span class="team-badge team-c" style="margin-top: 10px;">C</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+                                <div style="width: 50px; height: 90px; background: linear-gradient(to top, #0ea5e9, #38bdf8); border-radius: 8px 8px 0 0; position: relative;">
+                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">205</span>
+                                </div>
+                            </div>
+                            <span class="team-badge team-d" style="margin-top: 10px;">D</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+                                <div style="width: 50px; height: 85px; background: linear-gradient(to top, #8b5cf6, #a78bfa); border-radius: 8px 8px 0 0; position: relative;">
+                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">198</span>
+                                </div>
+                            </div>
+                            <span class="team-badge team-e" style="margin-top: 10px;">E</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+                                <div style="width: 50px; height: 75px; background: linear-gradient(to top, #ec4899, #f472b6); border-radius: 8px 8px 0 0; position: relative;">
+                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">185</span>
+                                </div>
+                            </div>
+                            <span class="team-badge team-f" style="margin-top: 10px;">F</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+                                <div style="width: 50px; height: 65px; background: linear-gradient(to top, #06b6d4, #22d3ee); border-radius: 8px 8px 0 0; position: relative;">
+                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">172</span>
+                                </div>
+                            </div>
+                            <span class="team-badge team-g" style="margin-top: 10px;">G</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+                                <div style="width: 50px; height: 55px; background: linear-gradient(to top, #84cc16, #a3e635); border-radius: 8px 8px 0 0; position: relative;">
+                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">156</span>
+                                </div>
+                            </div>
+                            <span class="team-badge team-h" style="margin-top: 10px;">H</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="content-grid" style="grid-template-columns: 1fr 1fr;">
                     <div class="table-section">
                         <div class="section-header"><h2><i class="fas fa-trophy"></i> Top Teams</h2></div>
@@ -1474,6 +2303,140 @@
                                 <tr><td>ลาดพร้าว</td><td>115</td><td>58</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Gallery Page -->
+            <div class="page-content" id="page-gallery" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-images" style="color: var(--primary);"></i> Photo Gallery
+                    </h2>
+                    <div style="display: flex; gap: 12px;">
+                        <select id="galleryTeamFilter" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" onchange="filterGallery()">
+                            <option value="all">ทุกทีม</option>
+                            <option value="A">Team A</option>
+                            <option value="B">Team B</option>
+                            <option value="C">Team C</option>
+                            <option value="D">Team D</option>
+                            <option value="E">Team E</option>
+                        </select>
+                        <select id="galleryTypeFilter" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" onchange="filterGallery()">
+                            <option value="all">ทุกประเภท</option>
+                            <option value="house">รูปหน้าบ้าน</option>
+                            <option value="contract">รูปสัญญา</option>
+                        </select>
+                        <input type="date" id="galleryDateFilter" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" value="2026-01-25" onchange="filterGallery()">
+                    </div>
+                </div>
+
+                <!-- Gallery Stats -->
+                <div class="stat-cards" style="margin-bottom: 24px; grid-template-columns: repeat(3, 1fr);">
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fas fa-images"></i></div>
+                        <div class="stat-info">
+                            <h3 id="galleryTotalCount">254</h3>
+                            <p>รูปภาพทั้งหมด</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fas fa-home"></i></div>
+                        <div class="stat-info">
+                            <h3>127</h3>
+                            <p>รูปหน้าบ้าน</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="fas fa-file-contract"></i></div>
+                        <div class="stat-info">
+                            <h3>127</h3>
+                            <p>รูปสัญญา</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div class="table-section" style="padding: 24px;">
+                    <div class="gallery-grid" id="galleryGrid">
+                        <!-- Gallery Item 1 -->
+                        <div class="gallery-item" onclick="openImageViewer(0)">
+                            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop" alt="House Front">
+                            <div class="gallery-info">
+                                <div class="name">อรุณี วงศ์ประเสริฐ</div>
+                                <div class="meta"><span class="team-badge team-badge-sm team-a" style="width: 18px; height: 18px; font-size: 0.6rem;">A</span> หน้าบ้าน • 10:01</div>
+                            </div>
+                        </div>
+                        <!-- Gallery Item 2 -->
+                        <div class="gallery-item" onclick="openImageViewer(1)">
+                            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop" alt="House Front">
+                            <div class="gallery-info">
+                                <div class="name">สมชาย ใจดี</div>
+                                <div class="meta"><span class="team-badge team-badge-sm team-b" style="width: 18px; height: 18px; font-size: 0.6rem;">B</span> หน้าบ้าน • 09:48</div>
+                            </div>
+                        </div>
+                        <!-- Gallery Item 3 -->
+                        <div class="gallery-item" onclick="openImageViewer(2)">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop" alt="House Front">
+                            <div class="gallery-info">
+                                <div class="name">วรรณา สุขสันต์</div>
+                                <div class="meta"><span class="team-badge team-badge-sm team-c" style="width: 18px; height: 18px; font-size: 0.6rem;">C</span> หน้าบ้าน • 09:31</div>
+                            </div>
+                        </div>
+                        <!-- Gallery Item 4 -->
+                        <div class="gallery-item" onclick="openImageViewer(3)">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop" alt="House Front">
+                            <div class="gallery-info">
+                                <div class="name">ประเสริฐ รุ่งเรือง</div>
+                                <div class="meta"><span class="team-badge team-badge-sm team-d" style="width: 18px; height: 18px; font-size: 0.6rem;">D</span> หน้าบ้าน • 09:03</div>
+                            </div>
+                        </div>
+                        <!-- Gallery Item 5 -->
+                        <div class="gallery-item" onclick="openImageViewer(4)">
+                            <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop" alt="House Front">
+                            <div class="gallery-info">
+                                <div class="name">มานี มีศรี</div>
+                                <div class="meta"><span class="team-badge team-badge-sm team-e" style="width: 18px; height: 18px; font-size: 0.6rem;">E</span> หน้าบ้าน • 08:05</div>
+                            </div>
+                        </div>
+                        <!-- Gallery Item 6 -->
+                        <div class="gallery-item" onclick="openImageViewer(5)">
+                            <img src="https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=400&h=300&fit=crop" alt="House Front">
+                            <div class="gallery-info">
+                                <div class="name">สุนทร โชคดี</div>
+                                <div class="meta"><span class="team-badge team-badge-sm team-a" style="width: 18px; height: 18px; font-size: 0.6rem;">A</span> หน้าบ้าน • 07:45</div>
+                            </div>
+                        </div>
+                        <!-- Gallery Item 7 -->
+                        <div class="gallery-item" onclick="openImageViewer(6)">
+                            <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=400&h=300&fit=crop" alt="House Front">
+                            <div class="gallery-info">
+                                <div class="name">พิมพ์ใจ รักดี</div>
+                                <div class="meta"><span class="team-badge team-badge-sm team-b" style="width: 18px; height: 18px; font-size: 0.6rem;">B</span> หน้าบ้าน • 07:30</div>
+                            </div>
+                        </div>
+                        <!-- Gallery Item 8 -->
+                        <div class="gallery-item" onclick="openImageViewer(7)">
+                            <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop" alt="House Front">
+                            <div class="gallery-info">
+                                <div class="name">วิชัย ใจกว้าง</div>
+                                <div class="meta"><span class="team-badge team-badge-sm team-c" style="width: 18px; height: 18px; font-size: 0.6rem;">C</span> หน้าบ้าน • 07:15</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div style="padding: 20px 0; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); margin-top: 24px;">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">แสดง 1-8 จาก 254 รูปภาพ</span>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-left"></i></button>
+                            <button class="btn btn-primary" style="padding: 8px 12px;">1</button>
+                            <button class="btn btn-outline" style="padding: 8px 12px;">2</button>
+                            <button class="btn btn-outline" style="padding: 8px 12px;">3</button>
+                            <button class="btn btn-outline" style="padding: 8px 12px;">...</button>
+                            <button class="btn btn-outline" style="padding: 8px 12px;">32</button>
+                            <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-right"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1588,26 +2551,33 @@
                     }
                 });
             }
-            // Update markers whenever map view is shown
-            updateMapViewMarkers();
+            // Update markers whenever map view is shown (use team filter version)
+            updateMapViewMarkersWithTeamFilter();
         }
 
         // Custom marker icon generator
         function createCustomIcon(team) {
-            let gradient = 'linear-gradient(135deg, #0ea5e9, #06b6d4)'; // Default Blue
-            
-            // Define gradients based on team
+            // Define gradients based on team (16 teams: A-O, Z)
             const gradients = {
                 'A': 'linear-gradient(135deg, #ef4444, #dc2626)', // Red
                 'B': 'linear-gradient(135deg, #10b981, #059669)', // Green
                 'C': 'linear-gradient(135deg, #f59e0b, #d97706)', // Orange
                 'D': 'linear-gradient(135deg, #0ea5e9, #0284c7)', // Blue
-                'E': 'linear-gradient(135deg, #8b5cf6, #7c3aed)'  // Purple
+                'E': 'linear-gradient(135deg, #8b5cf6, #7c3aed)', // Purple
+                'F': 'linear-gradient(135deg, #ec4899, #db2777)', // Pink
+                'G': 'linear-gradient(135deg, #14b8a6, #0d9488)', // Teal
+                'H': 'linear-gradient(135deg, #f97316, #ea580c)', // Deep Orange
+                'I': 'linear-gradient(135deg, #6366f1, #4f46e5)', // Indigo
+                'J': 'linear-gradient(135deg, #84cc16, #65a30d)', // Lime
+                'K': 'linear-gradient(135deg, #06b6d4, #0891b2)', // Cyan
+                'L': 'linear-gradient(135deg, #a855f7, #9333ea)', // Violet
+                'M': 'linear-gradient(135deg, #f43f5e, #e11d48)', // Rose
+                'N': 'linear-gradient(135deg, #22c55e, #16a34a)', // Emerald
+                'O': 'linear-gradient(135deg, #eab308, #ca8a04)', // Yellow
+                'Z': 'linear-gradient(135deg, #64748b, #475569)'  // Slate (Special Team)
             };
 
-            if (gradients[team]) {
-                gradient = gradients[team];
-            }
+            const gradient = gradients[team] || 'linear-gradient(135deg, #0ea5e9, #06b6d4)'; // Default Blue
 
             return L.divIcon({
                 className: 'custom-marker',
@@ -1653,7 +2623,11 @@
             const filterTeam = document.getElementById('mapViewTeamFilter').value;
 
             locations.forEach(loc => {
-                if (filterTeam === 'all' || loc.team === filterTeam) {
+                // Check both dropdown filter and team visibility checkbox
+                const teamVisible = teamVisibility[loc.team];
+                const matchesDropdown = filterTeam === 'all' || loc.team === filterTeam;
+                
+                if (matchesDropdown && teamVisible) {
                     const marker = L.marker([loc.lat, loc.lng], { icon: createCustomIcon(loc.team) })
                         .bindPopup(`
                             <div style="font-family: 'Prompt', sans-serif; padding: 5px;">
@@ -1683,6 +2657,167 @@
                 map.removeLayer(markers[index]);
             }
         }
+
+        // Sync toggle between Recent Check-ins and All Check-ins Data table
+        function syncToggleMarker(index, visible) {
+            // Update map marker
+            toggleMarker(index, visible);
+            
+            // Sync all checkboxes with the same checkin ID
+            const allToggles = document.querySelectorAll(`[data-checkin-id="${index}"] input[type="checkbox"]`);
+            allToggles.forEach(toggle => {
+                toggle.checked = visible;
+            });
+        }
+
+        // ===========================
+        // Team Filter for Map
+        // ===========================
+        let teamVisibility = {
+            'A': true, 'B': true, 'C': true, 'D': true, 'E': true,
+            'F': true, 'G': true, 'H': true, 'I': true, 'J': true,
+            'K': true, 'L': true, 'M': true, 'N': true, 'O': true, 'Z': true
+        };
+
+        function toggleTeamFilterMenu() {
+            const menu = document.getElementById('teamFilterMenu');
+            menu.classList.toggle('active');
+            // Close Map View team filter if open
+            const mapViewMenu = document.getElementById('mapViewTeamFilterMenu');
+            if (mapViewMenu) mapViewMenu.classList.remove('active');
+        }
+
+        // Map View Team Filter Functions
+        let mapViewTeamVisibility = {
+            'A': true, 'B': true, 'C': true, 'D': true, 'E': true,
+            'F': true, 'G': true, 'H': true, 'I': true, 'J': true,
+            'K': true, 'L': true, 'M': true, 'N': true, 'O': true, 'Z': true
+        };
+
+        function toggleMapViewTeamFilter() {
+            const menu = document.getElementById('mapViewTeamFilterMenu');
+            menu.classList.toggle('active');
+            // Close dashboard team filter if open
+            const dashboardMenu = document.getElementById('teamFilterMenu');
+            if (dashboardMenu) dashboardMenu.classList.remove('active');
+        }
+
+        function filterMapViewByTeam() {
+            const checkboxes = document.querySelectorAll('#mapViewTeamFilterMenu .team-checkbox input');
+            checkboxes.forEach(cb => {
+                mapViewTeamVisibility[cb.value] = cb.checked;
+            });
+            updateMapViewMarkersWithTeamFilter();
+        }
+
+        function mapViewSelectAllTeams() {
+            const checkboxes = document.querySelectorAll('#mapViewTeamFilterMenu .team-checkbox input');
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+                mapViewTeamVisibility[cb.value] = true;
+            });
+            updateMapViewMarkersWithTeamFilter();
+        }
+
+        function mapViewDeselectAllTeams() {
+            const checkboxes = document.querySelectorAll('#mapViewTeamFilterMenu .team-checkbox input');
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+                mapViewTeamVisibility[cb.value] = false;
+            });
+            updateMapViewMarkersWithTeamFilter();
+        }
+
+        function updateMapViewMarkersWithTeamFilter() {
+            if (!mapView) return;
+            
+            // Clear existing layers
+            mapViewLayers.forEach(layer => mapView.removeLayer(layer));
+            mapViewLayers = [];
+            
+            // Re-add markers based on team visibility (ใช้ icon เหมือน Dashboard)
+            locations.forEach(loc => {
+                if (mapViewTeamVisibility[loc.team]) {
+                    const marker = L.marker([loc.lat, loc.lng], { icon: createCustomIcon(loc.team) })
+                        .bindPopup(`
+                            <div style="font-family: 'Prompt', sans-serif; padding: 5px;">
+                                <strong style="font-size: 1rem;">${loc.name}</strong> 
+                                <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b;">Team ${loc.team}</span><br>
+                                <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${loc.place}</span>
+                            </div>
+                        `)
+                        .addTo(mapView);
+                    mapViewLayers.push(marker);
+                }
+            });
+        }
+
+        function filterByTeam(team, visible) {
+            teamVisibility[team] = visible;
+            updateMarkersVisibility();
+            updateCheckinListVisibility();
+        }
+
+        function selectAllTeams(selectAll) {
+            const checkboxes = document.querySelectorAll('.team-filter-grid input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll;
+            });
+            
+            // Update teamVisibility object
+            Object.keys(teamVisibility).forEach(team => {
+                teamVisibility[team] = selectAll;
+            });
+            
+            updateMarkersVisibility();
+            updateCheckinListVisibility();
+        }
+
+        function updateMarkersVisibility() {
+            // Update markers on main map
+            locations.forEach((loc, index) => {
+                if (teamVisibility[loc.team]) {
+                    // Check if individual toggle is on
+                    const toggles = document.querySelectorAll('.checkins-list .toggle-switch input');
+                    if (toggles[index] && toggles[index].checked) {
+                        markers[index].addTo(map);
+                    }
+                } else {
+                    map.removeLayer(markers[index]);
+                }
+            });
+
+            // Update markers on Map View if it exists
+            if (mapView) {
+                updateMapViewMarkers();
+            }
+        }
+
+        function updateCheckinListVisibility() {
+            // Show/hide checkin items based on team filter
+            const checkinItems = document.querySelectorAll('.checkins-list .checkin-item');
+            checkinItems.forEach(item => {
+                const teamBadge = item.querySelector('.team-badge');
+                if (teamBadge) {
+                    const team = teamBadge.textContent.trim();
+                    if (teamVisibility[team]) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Close team filter menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.team-filter-dropdown')) {
+                const menu = document.getElementById('teamFilterMenu');
+                if (menu) menu.classList.remove('active');
+                const mapViewMenu = document.getElementById('mapViewTeamFilterMenu');
+                if (mapViewMenu) mapViewMenu.classList.remove('active');
+            }
+        });
 
         // Filter Panel Toggle
         function toggleFilter() {
@@ -1915,30 +3050,23 @@
     <script>
         // Excel Export Functionality (dark mode removed)
         function exportToExcel(type) {
-            // Mock data or get from logic
+            // For real Excel export, we use SheetJS library approach
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM for Thai support
             let filename = "export_data.csv";
 
             if (type === 'recent-checkins') {
-                csvContent += "Team,Name,Location,Time\n";
-                // Get data from checkins list (mocking selector logic)
+                csvContent += "ทีม,ชื่อ,สถานที่,เวลา\n";
                 const items = document.querySelectorAll('.checkins-list .checkin-item');
                 items.forEach(item => {
                    const team = item.querySelector('.team-badge').innerText;
                    const name = item.querySelector('.name').innerText;
-                   const loc = item.querySelector('.location').innerText.replace(',', ' '); // simple escape
-                   const time = item.querySelector('.time').innerText;
-                   csvContent += `${team},${name},${loc},${time}\n`;
+                   const loc = item.querySelector('.location').innerText.replace(',', ' ').replace(/\s+/g, ' ').trim();
+                   const time = item.querySelector('.time').innerText.replace(/\s+/g, ' ').trim();
+                   csvContent += `"${team}","${name}","${loc}","${time}"\n`;
                 });
-                filename = "recent_checkins.csv";
+                filename = "recent_checkins_" + formatDateForFilename() + ".csv";
             } else if (type === 'full-data') {
-                csvContent += "Team,Customer,Location,Coordinates,Time,Status\n";
-                 // Get data from table
-                const rows = document.querySelectorAll('.page-content:not([style*="none"]) .data-table tbody tr'); // visible table
-                // IF dashboard is active, use the main dashboard table
-                const dashboardTable = document.querySelector('#page-dashboard .data-table tbody tr');
-                
-                // For simplicity in this mockup, we just grab rows from the visible table or dashboard table
+                csvContent += "ทีม,ลูกค้า,สถานที่,พิกัด,เวลา,สถานะ\n";
                 let targetRows = document.querySelectorAll('#page-dashboard .data-table tbody tr');
                 if(document.getElementById('page-checkins').style.display !== 'none') {
                     targetRows = document.querySelectorAll('#page-checkins .data-table tbody tr');
@@ -1946,19 +3074,46 @@
 
                 targetRows.forEach(row => {
                     const cols = row.querySelectorAll('td');
-                    const team = cols[0].innerText;
-                    const name = cols[1].innerText.replace('\n', ' ');
-                    const loc = cols[2].innerText.replace(',', ' ');
-                    const coord = cols[3] ? cols[3].innerText : '';
-                    const time = cols[4] ? cols[4].innerText : '';
-                    const status = cols[5] ? cols[5].innerText : '';
+                    const team = cols[0].innerText.trim();
+                    const name = cols[1].innerText.replace('\n', ' ').trim();
+                    const loc = cols[2].innerText.replace(',', ' ').trim();
+                    const coord = cols[3] ? cols[3].innerText.trim() : '';
+                    const time = cols[4] ? cols[4].innerText.trim() : '';
+                    const status = cols[5] ? cols[5].innerText.trim() : '';
                     
-                    csvContent += `${team},${name},${loc},${coord},${time},${status}\n`;
+                    csvContent += `"${team}","${name}","${loc}","${coord}","${time}","${status}"\n`;
                 });
-                filename = "checkin_data.csv";
+                filename = "checkin_data_" + formatDateForFilename() + ".csv";
+            } else if (type === 'team-performance') {
+                csvContent += "ทีม,จำนวน Check-ins,อัตราสำเร็จ\n";
+                csvContent += '"A","245","98.5%"\n';
+                csvContent += '"B","231","97.8%"\n';
+                csvContent += '"C","218","96.5%"\n';
+                csvContent += '"D","205","95.2%"\n';
+                csvContent += '"E","198","94.8%"\n';
+                csvContent += '"F","185","93.5%"\n';
+                csvContent += '"G","172","92.1%"\n';
+                csvContent += '"H","156","91.0%"\n';
+                filename = "team_performance_" + formatDateForFilename() + ".csv";
             }
 
-            const encodedUri = encodeURI(csvContent);
+            downloadFile(csvContent, filename);
+            showExportNotification('CSV', filename);
+            closeAllExportMenus();
+        }
+
+        function exportToCSV(type) {
+            exportToExcel(type); // Same as Excel for CSV
+        }
+
+        function exportToPDF() {
+            // Mock PDF export - in real implementation, use jsPDF or similar
+            alert('กำลังสร้างไฟล์ PDF...\n\nหมายเหตุ: ฟีเจอร์นี้ต้องเชื่อมต่อ Backend เพื่อสร้าง PDF จริง');
+            closeAllExportMenus();
+        }
+
+        function downloadFile(content, filename) {
+            const encodedUri = encodeURI(content);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", filename);
@@ -1966,6 +3121,287 @@
             link.click();
             document.body.removeChild(link);
         }
+
+        function formatDateForFilename() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+
+        function showExportNotification(type, filename) {
+            // Create toast notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-family: 'Prompt', sans-serif;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> ส่งออก ${type} สำเร็จ: ${filename}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Export Dropdown Toggle
+        function toggleExportMenu(type) {
+            closeAllExportMenus();
+            const menu = document.getElementById('exportMenu' + type.charAt(0).toUpperCase() + type.slice(1));
+            if (menu) {
+                menu.classList.toggle('active');
+            }
+        }
+
+        function closeAllExportMenus() {
+            document.querySelectorAll('.export-menu').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.export-dropdown')) {
+                closeAllExportMenus();
+            }
+        });
+
+        // ===========================
+        // Photo Gallery Functions
+        // ===========================
+        const galleryImages = [
+            { src: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800', name: 'อรุณี วงศ์ประเสริฐ', team: 'A', type: 'หน้าบ้าน', time: '10:01', contract: 'CT-12345' },
+            { src: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800', name: 'สมชาย ใจดี', team: 'B', type: 'หน้าบ้าน', time: '09:48', contract: 'CT-67890' },
+            { src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800', name: 'วรรณา สุขสันต์', team: 'C', type: 'หน้าบ้าน', time: '09:31', contract: 'CT-11223' },
+            { src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800', name: 'ประเสริฐ รุ่งเรือง', team: 'D', type: 'หน้าบ้าน', time: '09:03', contract: 'CT-44556' },
+            { src: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800', name: 'มานี มีศรี', team: 'E', type: 'หน้าบ้าน', time: '08:05', contract: 'CT-77889' },
+            { src: 'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800', name: 'สุนทร โชคดี', team: 'A', type: 'หน้าบ้าน', time: '07:45', contract: 'CT-99001' },
+            { src: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800', name: 'พิมพ์ใจ รักดี', team: 'B', type: 'หน้าบ้าน', time: '07:30', contract: 'CT-22334' },
+            { src: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800', name: 'วิชัย ใจกว้าง', team: 'C', type: 'หน้าบ้าน', time: '07:15', contract: 'CT-55667' }
+        ];
+
+        let currentImageIndex = 0;
+
+        function openImageViewer(index) {
+            currentImageIndex = index;
+            const img = galleryImages[index];
+            
+            // Create viewer if not exists
+            let viewer = document.getElementById('imageViewer');
+            if (!viewer) {
+                viewer = document.createElement('div');
+                viewer.id = 'imageViewer';
+                viewer.className = 'image-viewer';
+                viewer.innerHTML = `
+                    <button class="viewer-close" onclick="closeImageViewer()"><i class="fas fa-times"></i></button>
+                    <img id="viewerImage" src="" alt="">
+                    <div class="viewer-info">
+                        <h3 id="viewerName" style="margin-bottom: 8px;"></h3>
+                        <p id="viewerMeta" style="opacity: 0.8;"></p>
+                    </div>
+                    <div style="position: absolute; bottom: 20px; display: flex; gap: 16px;">
+                        <button onclick="prevImage()" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;">
+                            <i class="fas fa-chevron-left"></i> ก่อนหน้า
+                        </button>
+                        <button onclick="nextImage()" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;">
+                            ถัดไป <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(viewer);
+            }
+            
+            document.getElementById('viewerImage').src = img.src;
+            document.getElementById('viewerName').textContent = img.name;
+            document.getElementById('viewerMeta').innerHTML = `
+                <span class="team-badge team-badge-sm team-${img.team.toLowerCase()}" style="width: 20px; height: 20px; font-size: 0.7rem;">${img.team}</span>
+                ${img.type} • ${img.time} • สัญญา: ${img.contract}
+            `;
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageViewer() {
+            const viewer = document.getElementById('imageViewer');
+            if (viewer) {
+                viewer.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+            openImageViewer(currentImageIndex);
+        }
+
+        function prevImage() {
+            currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+            openImageViewer(currentImageIndex);
+        }
+
+        function filterGallery() {
+            const team = document.getElementById('galleryTeamFilter').value;
+            const type = document.getElementById('galleryTypeFilter').value;
+            // In real implementation, this would filter and reload the gallery
+            console.log('Filtering gallery:', { team, type });
+        }
+
+        // Keyboard navigation for image viewer
+        document.addEventListener('keydown', function(e) {
+            const viewer = document.getElementById('imageViewer');
+            if (viewer && viewer.classList.contains('active')) {
+                if (e.key === 'Escape') closeImageViewer();
+                if (e.key === 'ArrowRight') nextImage();
+                if (e.key === 'ArrowLeft') prevImage();
+            }
+        });
+
+        // ===========================
+        // Real-time Updates System
+        // ===========================
+        let realtimeInterval = null;
+        let lastUpdateTime = new Date();
+
+        function startRealtime() {
+            if (realtimeInterval) return;
+            
+            realtimeInterval = setInterval(() => {
+                simulateNewCheckin();
+                updateRealtimeBadge();
+            }, 30000); // Check every 30 seconds
+            
+            console.log('Real-time updates started');
+        }
+
+        function stopRealtime() {
+            if (realtimeInterval) {
+                clearInterval(realtimeInterval);
+                realtimeInterval = null;
+            }
+        }
+
+        function updateRealtimeBadge() {
+            const badge = document.getElementById('realtimeBadge');
+            if (badge) {
+                const now = new Date();
+                const diff = Math.floor((now - lastUpdateTime) / 1000);
+                if (diff < 60) {
+                    badge.innerHTML = '<span class="realtime-dot"></span><span>Live</span>';
+                } else {
+                    badge.innerHTML = `<span class="realtime-dot" style="background: #f59e0b;"></span><span>${Math.floor(diff/60)}m ago</span>`;
+                }
+            }
+        }
+
+        function simulateNewCheckin() {
+            // Simulate receiving new check-in data
+            const teams = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+            const names = ['สมศักดิ์ รักงาน', 'อารยา ดีใจ', 'ประภาส สุขใส', 'วิไล งามเด่น'];
+            const places = ['สยาม', 'อโศก', 'สีลม', 'พระราม 9', 'รัชดา'];
+            
+            const randomTeam = teams[Math.floor(Math.random() * teams.length)];
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            const randomPlace = places[Math.floor(Math.random() * places.length)];
+            
+            // Update notification count
+            const notifCount = document.getElementById('notificationCount');
+            if (notifCount) {
+                const current = parseInt(notifCount.textContent) || 0;
+                notifCount.textContent = current + 1;
+            }
+            
+            // Update stat card
+            const statCards = document.querySelectorAll('.stat-card .stat-info h3');
+            if (statCards[0]) {
+                const current = parseInt(statCards[0].textContent) || 0;
+                statCards[0].textContent = current + 1;
+            }
+            
+            lastUpdateTime = new Date();
+            
+            // Show notification toast
+            showNewCheckinNotification(randomTeam, randomName, randomPlace);
+        }
+
+        function showNewCheckinNotification(team, name, place) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 24px;
+                background: white;
+                padding: 16px 20px;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-family: 'Prompt', sans-serif;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                border-left: 4px solid #0ea5e9;
+                animation: slideInRight 0.3s ease;
+                max-width: 350px;
+            `;
+            toast.innerHTML = `
+                <span class="team-badge team-${team.toLowerCase()}" style="width: 36px; height: 36px;">${team}</span>
+                <div>
+                    <strong style="display: block; margin-bottom: 2px;">Check-in ใหม่!</strong>
+                    <span style="color: #64748b; font-size: 0.9rem;">${name} - ${place}</span>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Global Search Handler
+        function handleGlobalSearch(query) {
+            if (query.length < 2) return;
+            console.log('Searching for:', query);
+            // In real implementation, this would filter data across all tables
+        }
+
+        // Start real-time on page load
+        startRealtime();
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100px); opacity: 0; }
+            }
+            @keyframes slideInRight {
+                from { transform: translateX(100px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
