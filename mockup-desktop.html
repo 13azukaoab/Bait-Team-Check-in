@@ -758,6 +758,33 @@
             border-radius: 0 12px 0 0;
         }
 
+        /* Sortable Table Headers */
+        .data-table th.sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .data-table th.sortable:hover {
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        .data-table th .sort-icon {
+            margin-left: 6px;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .data-table th.sortable:hover .sort-icon {
+            color: var(--primary);
+        }
+
+        .data-table th.sort-asc .sort-icon,
+        .data-table th.sort-desc .sort-icon {
+            color: var(--primary);
+        }
+
         .data-table td {
             border-bottom: 1px solid var(--border);
             font-size: 0.95rem;
@@ -769,6 +796,55 @@
 
         .data-table tr:hover td {
             background: rgba(14, 165, 233, 0.02);
+        }
+
+        /* Scrollable Table Container */
+        .table-scroll-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+
+        .table-scroll-container .data-table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-scroll-container .data-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table-scroll-container .data-table thead th {
+            background: var(--bg-main);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        .table-scroll-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-scroll-container::-webkit-scrollbar-track {
+            background: var(--bg-main);
+            border-radius: 4px;
+        }
+
+        .table-scroll-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), #0284c7);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .table-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #0ea5e9, #0369a1);
+        }
+
+        /* Firefox Scrollbar */
+        .table-scroll-container {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-main);
         }
 
         .visibility-label {
@@ -900,6 +976,234 @@
         .btn-measure:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-radius {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+        }
+
+        .btn-radius.active {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+        }
+
+        .btn-radius:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+
+        /* Radius Panel - Compact Design like Distance Panel */
+        .radius-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            min-width: 200px;
+            display: none;
+        }
+        
+        .radius-panel .radius-presets {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+        
+        .radius-panel .preset-btn {
+            padding: 6px 12px;
+            border: 2px solid #0ea5e9;
+            background: white;
+            color: #0ea5e9;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .radius-panel .preset-btn:hover,
+        .radius-panel .preset-btn.active {
+            background: #0ea5e9;
+            color: white;
+        }
+        
+        .radius-panel .radius-slider-group {
+            margin: 16px 0;
+        }
+        
+        .radius-panel .radius-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 8px 0;
+        }
+        
+        .radius-panel .radius-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(14, 165, 233, 0.4);
+        }
+        
+        .radius-panel .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .radius-panel .action-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .radius-panel .btn-apply {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+        }
+        
+        .radius-panel .btn-apply:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+        }
+        
+        .radius-panel .btn-clear {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .radius-panel .btn-clear:hover {
+            background: #fecaca;
+        }
+        
+        /* Resize Handle for Radius Circle */
+        .resize-handle {
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 3px solid #0ea5e9;
+            border-radius: 50%;
+            cursor: nwse-resize;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 1001;
+        }
+        
+        .resize-handle:hover {
+            background: #0ea5e9;
+            transform: scale(1.2);
+        }
+        
+        /* Active circle indicator */
+        .radius-circle-active {
+            stroke: #0ea5e9 !important;
+            stroke-width: 3px !important;
+            stroke-dasharray: none !important;
+        }
+
+        /* HQ Button */
+        .btn-hq {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .btn-hq:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        /* HQ Marker */
+        .hq-marker {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: hqPulse 2s infinite;
+        }
+        
+        @keyframes hqPulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(245, 158, 11, 0.7); }
+        }
+
+        .radius-panel.active {
+            display: block;
+        }
+
+        .radius-panel h4 {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radius-panel h4 i {
+            color: #0ea5e9;
+        }
+
+        .radius-input-group {
+            margin-bottom: 12px;
+        }
+
+        .radius-input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .radius-input-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .radius-input-group input:focus {
+            outline: none;
+            border-color: #0ea5e9;
+        }
+
+        .radius-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0ea5e9;
+        }
+
+        .radius-value span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .radius-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
         }
 
         /* Map container for distance panel positioning */
@@ -1400,10 +1704,6 @@
                     <i class="fas fa-images"></i>
                     <span class="nav-text">Photo Gallery</span>
                 </div>
-                <div class="nav-item" data-page="settings" data-tooltip="Settings" onclick="showPage('settings')">
-                    <i class="fas fa-cog"></i>
-                    <span class="nav-text">Settings</span>
-                </div>
             </nav>
         </aside>
 
@@ -1591,11 +1891,17 @@
                     <div class="section-header">
                         <h2><i class="fas fa-map"></i> Location Map</h2>
                         <div class="header-actions-group">
+                            <button class="btn btn-hq" onclick="goToHQ()" title="ไปสำนักงานใหญ่">
+                                <i class="fas fa-building"></i> HQ
+                            </button>
                             <button class="btn btn-outline" onclick="toggleFilter()">
                                 <i class="fas fa-filter"></i> Filter
                             </button>
                             <button class="btn btn-measure" id="measureBtn" onclick="toggleMeasure()">
                                 <i class="fas fa-ruler"></i> วัดระยะ
+                            </button>
+                            <button class="btn btn-radius" id="radiusBtn" onclick="toggleRadius()">
+                                <i class="fas fa-circle"></i> วัดรัศมี
                             </button>
                             <button class="btn btn-primary">
                                 <i class="fas fa-expand"></i> Full Screen
@@ -1609,6 +1915,18 @@
                             <h4><i class="fas fa-ruler"></i> วัดระยะทาง</h4>
                             <div class="distance-info" id="distanceInfo">คลิกจุดแรกบนแผนที่...</div>
                             <div class="distance-value" id="distanceValue">-- <span>กม.</span></div>
+                        </div>
+                        
+                        <!-- Radius Panel - Drag to Draw Design -->
+                        <div class="radius-panel" id="radiusPanel">
+                            <h4><i class="fas fa-circle"></i> วาดวงกลมรัศมี</h4>
+                            <div class="radius-info" id="radiusInfo">
+                                <i class="fas fa-mouse-pointer"></i> คลิกค้าง + ลากเพื่อวาดวงกลม
+                            </div>
+                            <div class="radius-value" id="radiusValue">0 <span>เมตร</span></div>
+                            <div class="action-buttons">
+                                <button class="btn-clear" onclick="clearRadius()"><i class="fas fa-trash"></i> ล้าง</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1905,8 +2223,14 @@
                             <button class="btn btn-primary" onclick="filterMapView()"><i class="fas fa-search"></i> ค้นหา</button>
                         </div>
                         <div class="header-actions-group">
+                            <button class="btn btn-hq" onclick="goToHQMapView()">
+                                <i class="fas fa-building"></i> HQ
+                            </button>
                              <button class="btn btn-measure" id="measureBtnFull" onclick="toggleMeasureFull()">
                                 <i class="fas fa-ruler"></i> วัดระยะ
+                            </button>
+                            <button class="btn btn-radius" id="radiusBtnFull" onclick="toggleRadiusFull()">
+                                <i class="fas fa-circle"></i> วัดรัศมี
                             </button>
                         </div>
                     </div>
@@ -1918,6 +2242,18 @@
                         <h4><i class="fas fa-ruler"></i> วัดระยะทาง</h4>
                         <div class="distance-info" id="distanceInfoFull">คลิกจุดแรกบนแผนที่...</div>
                         <div class="distance-value" id="distanceValueFull">-- <span>กม.</span></div>
+                    </div>
+                    
+                    <!-- Radius Panel for Map View -->
+                    <div class="radius-panel" id="radiusPanelFull">
+                        <h4><i class="fas fa-circle"></i> วาดวงกลมรัศมี</h4>
+                        <div class="radius-info" id="radiusInfoFull">
+                            <i class="fas fa-mouse-pointer"></i> คลิกค้าง + ลากเพื่อวาดวงกลม
+                        </div>
+                        <div class="radius-value" id="radiusValueFull">0 <span>เมตร</span></div>
+                        <div class="action-buttons">
+                            <button class="btn-clear" onclick="clearRadiusFull()"><i class="fas fa-trash"></i> ล้าง</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1947,15 +2283,28 @@
                             <button class="btn btn-primary"><i class="fas fa-file-export"></i> Export</button>
                         </div>
                     </div>
-                    <table class="data-table">
+                    <div class="table-scroll-container">
+                    <table class="data-table" id="checkins-table">
                         <thead>
                             <tr>
-                                <th>ทีม</th>
-                                <th>ลูกค้า</th>
-                                <th>เลขสัญญา</th>
-                                <th>สาขา</th>
-                                <th>เวลา</th>
-                                <th>สถานะ</th>
+                                <th class="sortable" data-column="0" onclick="sortTable('checkins-table', 0)">
+                                    ทีม <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="1" onclick="sortTable('checkins-table', 1)">
+                                    ลูกค้า <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="2" onclick="sortTable('checkins-table', 2)">
+                                    เลขสัญญา <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="3" onclick="sortTable('checkins-table', 3)">
+                                    สาขา <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="4" onclick="sortTable('checkins-table', 4)">
+                                    เวลา <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="5" onclick="sortTable('checkins-table', 5)">
+                                    สถานะ <i class="fas fa-sort sort-icon"></i>
+                                </th>
                                 <th>ภาพ</th>
                             </tr>
                         </thead>
@@ -1965,7 +2314,7 @@
                                 <td><strong>อรุณี วงศ์ประเสริฐ</strong></td>
                                 <td><code>CT-12345</code></td>
                                 <td>สาทร</td>
-                                <td>22 ม.ค. 2026, 10:01</td>
+                                <td>26 ม.ค. 2026, 10:01</td>
                                 <td><span class="checkin-status active">Active</span></td>
                                 <td><i class="fas fa-image" style="color: var(--success);"></i></td>
                             </tr>
@@ -1974,7 +2323,7 @@
                                 <td><strong>สมชาย ใจดี</strong></td>
                                 <td><code>CT-67890</code></td>
                                 <td>ปทุมวัน</td>
-                                <td>22 ม.ค. 2026, 09:48</td>
+                                <td>26 ม.ค. 2026, 09:48</td>
                                 <td><span class="checkin-status active">Active</span></td>
                                 <td><i class="fas fa-image" style="color: var(--success);"></i></td>
                             </tr>
@@ -1983,7 +2332,7 @@
                                 <td><strong>วรรณา สุขสันต์</strong></td>
                                 <td><code>CT-11223</code></td>
                                 <td>นนทบุรี</td>
-                                <td>22 ม.ค. 2026, 09:31</td>
+                                <td>26 ม.ค. 2026, 09:31</td>
                                 <td><span class="checkin-status active">Active</span></td>
                                 <td><i class="fas fa-image" style="color: var(--success);"></i></td>
                             </tr>
@@ -1992,14 +2341,69 @@
                                 <td><strong>ประเสริฐ รุ่งเรือง</strong></td>
                                 <td><code>CT-44556</code></td>
                                 <td>ลาดพร้าว</td>
-                                <td>22 ม.ค. 2026, 09:03</td>
+                                <td>26 ม.ค. 2026, 09:03</td>
                                 <td><span class="checkin-status pending">Pending</span></td>
                                 <td><i class="fas fa-image" style="color: var(--warning);"></i></td>
                             </tr>
+                            <tr>
+                                <td><span class="team-badge team-a">A</span></td>
+                                <td><strong>นภาพร แสงทอง</strong></td>
+                                <td><code>CT-55678</code></td>
+                                <td>บางนา</td>
+                                <td>26 ม.ค. 2026, 08:45</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
+                            </tr>
+                            <tr>
+                                <td><span class="team-badge team-b">B</span></td>
+                                <td><strong>ธนากร พิทักษ์</strong></td>
+                                <td><code>CT-77889</code></td>
+                                <td>รังสิต</td>
+                                <td>26 ม.ค. 2026, 08:30</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
+                            </tr>
+                            <tr>
+                                <td><span class="team-badge team-c">C</span></td>
+                                <td><strong>สุภาพร เจริญสุข</strong></td>
+                                <td><code>CT-99001</code></td>
+                                <td>พระราม 9</td>
+                                <td>26 ม.ค. 2026, 08:15</td>
+                                <td><span class="checkin-status pending">Pending</span></td>
+                                <td><i class="fas fa-image" style="color: var(--warning);"></i></td>
+                            </tr>
+                            <tr>
+                                <td><span class="team-badge team-d">D</span></td>
+                                <td><strong>วิชัย มงคลชัย</strong></td>
+                                <td><code>CT-22334</code></td>
+                                <td>อ่อนนุช</td>
+                                <td>26 ม.ค. 2026, 08:02</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
+                            </tr>
+                            <tr>
+                                <td><span class="team-badge team-a">A</span></td>
+                                <td><strong>พิมพ์ใจ ศรีสุข</strong></td>
+                                <td><code>CT-33445</code></td>
+                                <td>เอกมัย</td>
+                                <td>25 ม.ค. 2026, 17:45</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
+                            </tr>
+                            <tr>
+                                <td><span class="team-badge team-b">B</span></td>
+                                <td><strong>กิตติพงษ์ วัฒนา</strong></td>
+                                <td><code>CT-44667</code></td>
+                                <td>สุขุมวิท</td>
+                                <td>25 ม.ค. 2026, 16:30</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
+                            </tr>
                         </tbody>
                     </table>
+                    </div>
                     <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
-                        <span style="color: var(--text-secondary); font-size: 0.9rem;">แสดง 1-4 จาก 127 รายการ</span>
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">แสดง 1-10 จาก 127 รายการ</span>
                         <div style="display: flex; gap: 8px;">
                             <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-left"></i></button>
                             <button class="btn btn-primary" style="padding: 8px 12px;">1</button>
@@ -2044,15 +2448,28 @@
                         <input type="text" placeholder="ค้นหาลูกค้า..." style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; width: 300px; font-family: 'Prompt', sans-serif;">
                         <button class="btn btn-primary"><i class="fas fa-plus"></i> เพิ่มลูกค้า</button>
                     </div>
-                    <table class="data-table">
+                    <div class="table-scroll-container">
+                    <table class="data-table" id="customers-table">
                         <thead>
                             <tr>
-                                <th>ลูกค้า</th>
-                                <th>เลขสัญญา</th>
-                                <th>สาขา</th>
-                                <th>ติดตามล่าสุด</th>
-                                <th>Check-ins</th>
-                                <th>สถานะ</th>
+                                <th class="sortable" data-column="0" onclick="sortTable('customers-table', 0)">
+                                    ลูกค้า <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="1" onclick="sortTable('customers-table', 1)">
+                                    เลขสัญญา <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="2" onclick="sortTable('customers-table', 2)">
+                                    สาขา <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="3" onclick="sortTable('customers-table', 3)">
+                                    ติดตามล่าสุด <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="4" onclick="sortTable('customers-table', 4)">
+                                    Check-ins <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="5" onclick="sortTable('customers-table', 5)">
+                                    สถานะ <i class="fas fa-sort sort-icon"></i>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2060,7 +2477,7 @@
                                 <td><strong>อรุณี วงศ์ประเสริฐ</strong><br><small style="color: var(--text-secondary);">123/45 ซ.สุขุมวิท</small></td>
                                 <td><code>CT-12345</code></td>
                                 <td>สาทร</td>
-                                <td>22 ม.ค. 2026</td>
+                                <td>26 ม.ค. 2026</td>
                                 <td>12</td>
                                 <td><span class="checkin-status active">Active</span></td>
                             </tr>
@@ -2068,7 +2485,7 @@
                                 <td><strong>สมชาย ใจดี</strong><br><small style="color: var(--text-secondary);">789/12 ถ.พระราม 4</small></td>
                                 <td><code>CT-67890</code></td>
                                 <td>ปทุมวัน</td>
-                                <td>21 ม.ค. 2026</td>
+                                <td>25 ม.ค. 2026</td>
                                 <td>8</td>
                                 <td><span class="checkin-status active">Active</span></td>
                             </tr>
@@ -2076,12 +2493,79 @@
                                 <td><strong>วรรณา สุขสันต์</strong><br><small style="color: var(--text-secondary);">456 ถ.รัชดาภิเษก</small></td>
                                 <td><code>CT-11223</code></td>
                                 <td>นนทบุรี</td>
-                                <td>20 ม.ค. 2026</td>
+                                <td>24 ม.ค. 2026</td>
                                 <td>15</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>ประเสริฐ รุ่งเรือง</strong><br><small style="color: var(--text-secondary);">88/9 ซ.ลาดพร้าว 71</small></td>
+                                <td><code>CT-44556</code></td>
+                                <td>ลาดพร้าว</td>
+                                <td>23 ม.ค. 2026</td>
+                                <td>6</td>
+                                <td><span class="checkin-status pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>นภาพร แสงทอง</strong><br><small style="color: var(--text-secondary);">234/56 ถ.บางนา-ตราด</small></td>
+                                <td><code>CT-55678</code></td>
+                                <td>บางนา</td>
+                                <td>22 ม.ค. 2026</td>
+                                <td>20</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>ธนากร พิทักษ์</strong><br><small style="color: var(--text-secondary);">567/89 ถ.รังสิต-นครนายก</small></td>
+                                <td><code>CT-77889</code></td>
+                                <td>รังสิต</td>
+                                <td>21 ม.ค. 2026</td>
+                                <td>9</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>สุภาพร เจริญสุข</strong><br><small style="color: var(--text-secondary);">111/22 ซ.พระราม 9</small></td>
+                                <td><code>CT-99001</code></td>
+                                <td>พระราม 9</td>
+                                <td>20 ม.ค. 2026</td>
+                                <td>4</td>
+                                <td><span class="checkin-status pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>วิชัย มงคลชัย</strong><br><small style="color: var(--text-secondary);">333/44 ซ.อ่อนนุช 17</small></td>
+                                <td><code>CT-22334</code></td>
+                                <td>อ่อนนุช</td>
+                                <td>19 ม.ค. 2026</td>
+                                <td>18</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>พิมพ์ใจ ศรีสุข</strong><br><small style="color: var(--text-secondary);">55/66 ซ.เอกมัย 12</small></td>
+                                <td><code>CT-33445</code></td>
+                                <td>เอกมัย</td>
+                                <td>18 ม.ค. 2026</td>
+                                <td>11</td>
+                                <td><span class="checkin-status active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>กิตติพงษ์ วัฒนา</strong><br><small style="color: var(--text-secondary);">77/88 ถ.สุขุมวิท 101</small></td>
+                                <td><code>CT-44667</code></td>
+                                <td>สุขุมวิท</td>
+                                <td>17 ม.ค. 2026</td>
+                                <td>7</td>
                                 <td><span class="checkin-status active">Active</span></td>
                             </tr>
                         </tbody>
                     </table>
+                    </div>
+                    <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">แสดง 1-10 จาก 2,456 รายการ</span>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-left"></i></button>
+                            <button class="btn btn-primary" style="padding: 8px 12px;">1</button>
+                            <button class="btn btn-outline" style="padding: 8px 12px;">2</button>
+                            <button class="btn btn-outline" style="padding: 8px 12px;">3</button>
+                            <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2441,58 +2925,6 @@
                 </div>
             </div>
 
-            <!-- Settings Page -->
-            <div class="page-content" id="page-settings" style="display: none;">
-                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-cog" style="color: var(--primary);"></i> Settings
-                </h2>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                    <div class="table-section" style="padding: 24px;">
-                        <h3 style="margin-bottom: 20px;"><i class="fas fa-user-cog"></i> บัญชีผู้ใช้</h3>
-                        <div style="display: flex; flex-direction: column; gap: 16px;">
-                            <div>
-                                <label style="display: block; font-weight: 500; margin-bottom: 6px;">ชื่อผู้ใช้</label>
-                                <input type="text" value="John Smith" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;">
-                            </div>
-                            <div>
-                                <label style="display: block; font-weight: 500; margin-bottom: 6px;">อีเมล</label>
-                                <input type="email" value="john.smith@company.com" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;">
-                            </div>
-                            <div>
-                                <label style="display: block; font-weight: 500; margin-bottom: 6px;">บทบาท</label>
-                                <select style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;">
-                                    <option>Administrator</option>
-                                    <option>Team Leader</option>
-                                    <option>Staff</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-primary" style="margin-top: 10px;"><i class="fas fa-save"></i> บันทึก</button>
-                        </div>
-                    </div>
-                    <div class="table-section" style="padding: 24px;">
-                        <h3 style="margin-bottom: 20px;"><i class="fas fa-bell"></i> การแจ้งเตือน</h3>
-                        <div style="display: flex; flex-direction: column; gap: 16px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span>แจ้งเตือน Check-in ใหม่</span>
-                                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span>แจ้งเตือนทางอีเมล</span>
-                                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span>รายงานประจำวัน</span>
-                                <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span>แจ้งเตือนเมื่อมี Pending</span>
-                                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </main>
     </div>
 
@@ -2501,6 +2933,19 @@
     <script>
         // OpenStreetMap tiles (default)
         const osmTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        
+        // ===========================
+        // HQ (สำนักงานใหญ่) - 13°47'39.9"N 100°41'23.7"E
+        // ===========================
+        const HQ_LOCATION = {
+            lat: 13.794417,  // 13°47'39.9"N
+            lng: 100.689917, // 100°41'23.7"E
+            name: 'Advance Group Asia กำจัดปลวก ทำความสะอาด',
+            address: 'สำนักงานใหญ่ 234/9 ระหว่าง 48 ซอย เสรีไทย 46 แขวงคันนายาว เขตคันนายาว กรุงเทพมหานคร 10230',
+            googleMapsUrl: 'https://maps.app.goo.gl/xHfpwNhuuMNBnBHQ7'
+        };
+        let hqMarker = null;
+        let hqMarkerMapView = null;
 
         // Initialize Map
         const map = L.map('map').setView([13.7400, 100.5400], 13);
@@ -2509,6 +2954,98 @@
         L.tileLayer(osmTileUrl, {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
+        
+        // Add HQ Marker
+        function addHQMarker() {
+            const hqIcon = L.divIcon({
+                className: 'hq-marker-wrapper',
+                html: `
+                    <div class="hq-marker">
+                        <i class="fas fa-building" style="color: white; font-size: 18px;"></i>
+                    </div>
+                `,
+                iconSize: [44, 44],
+                iconAnchor: [22, 22]
+            });
+            
+            hqMarker = L.marker([HQ_LOCATION.lat, HQ_LOCATION.lng], { icon: hqIcon })
+                .bindPopup(`
+                    <div style="text-align: center; padding: 12px; min-width: 220px;">
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #f59e0b; margin-bottom: 8px;">
+                            <i class="fas fa-building"></i> ${HQ_LOCATION.name}
+                        </div>
+                        <div style="font-size: 0.8rem; color: #666; margin-bottom: 8px; line-height: 1.5;">
+                            ${HQ_LOCATION.address}
+                        </div>
+                        <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 12px;">
+                            <i class="fas fa-map-pin"></i> ${HQ_LOCATION.lat.toFixed(6)}, ${HQ_LOCATION.lng.toFixed(6)}
+                        </div>
+                        <a href="${HQ_LOCATION.googleMapsUrl}" 
+                           target="_blank" 
+                           style="display: inline-block; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 500;">
+                            <i class="fas fa-directions"></i> นำทาง Google Maps
+                        </a>
+                    </div>
+                `)
+                .addTo(map);
+        }
+        
+        // เรียกใช้ตอนโหลด
+        addHQMarker();
+        
+        // ไปที่ HQ
+        function goToHQ() {
+            map.setView([HQ_LOCATION.lat, HQ_LOCATION.lng], 16, { animate: true });
+            if (hqMarker) {
+                hqMarker.openPopup();
+            }
+        }
+        
+        // ไปที่ HQ ใน Map View
+        function goToHQMapView() {
+            if (mapView) {
+                mapView.setView([HQ_LOCATION.lat, HQ_LOCATION.lng], 16, { animate: true });
+                if (hqMarkerMapView) {
+                    hqMarkerMapView.openPopup();
+                }
+            }
+        }
+        
+        // Add HQ Marker to Map View
+        function addHQMarkerToMapView() {
+            if (!mapView || hqMarkerMapView) return;
+            
+            const hqIcon = L.divIcon({
+                className: 'hq-marker-wrapper',
+                html: `
+                    <div class="hq-marker">
+                        <i class="fas fa-building" style="color: white; font-size: 18px;"></i>
+                    </div>
+                `,
+                iconSize: [44, 44],
+                iconAnchor: [22, 22]
+            });
+            
+            hqMarkerMapView = L.marker([HQ_LOCATION.lat, HQ_LOCATION.lng], { icon: hqIcon })
+                .bindPopup(`
+                    <div style="text-align: center; padding: 12px; min-width: 220px;">
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #f59e0b; margin-bottom: 8px;">
+                            <i class="fas fa-building"></i> ${HQ_LOCATION.name}
+                        </div>
+                        <div style="font-size: 0.8rem; color: #666; margin-bottom: 8px; line-height: 1.5;">
+                            ${HQ_LOCATION.address}
+                        </div>
+                        <div style="font-size: 0.75rem; color: #999; margin-bottom: 12px;">
+                            <i class="fas fa-map-pin"></i> ${HQ_LOCATION.lat}, ${HQ_LOCATION.lng}
+                        </div>
+                        <a href="${HQ_LOCATION.googleMapsUrl}" target="_blank" 
+                           style="display: inline-block; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 500;">
+                            <i class="fas fa-directions"></i> นำทาง Google Maps
+                        </a>
+                    </div>
+                `)
+                .addTo(mapView);
+        }
 
         // Initialize Map View (Second Map)
         let mapView = null;
@@ -2551,6 +3088,9 @@
                     }
                 });
             }
+            // Add HQ Marker to Map View
+            addHQMarkerToMapView();
+            
             // Update markers whenever map view is shown (use team filter version)
             updateMapViewMarkersWithTeamFilter();
         }
@@ -2825,6 +3365,62 @@
             panel.classList.toggle('active');
         }
 
+        // Table Sorting
+        function sortTable(tableId, columnIndex) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const th = table.querySelectorAll('thead th')[columnIndex];
+            
+            // Determine sort direction
+            const isAsc = th.classList.contains('sort-asc');
+            
+            // Reset all headers
+            table.querySelectorAll('thead th').forEach(header => {
+                header.classList.remove('sort-asc', 'sort-desc');
+                const icon = header.querySelector('.sort-icon');
+                if (icon) {
+                    icon.classList.remove('fa-sort-up', 'fa-sort-down');
+                    icon.classList.add('fa-sort');
+                }
+            });
+            
+            // Set new sort direction
+            if (isAsc) {
+                th.classList.add('sort-desc');
+                th.querySelector('.sort-icon').classList.remove('fa-sort');
+                th.querySelector('.sort-icon').classList.add('fa-sort-down');
+            } else {
+                th.classList.add('sort-asc');
+                th.querySelector('.sort-icon').classList.remove('fa-sort');
+                th.querySelector('.sort-icon').classList.add('fa-sort-up');
+            }
+            
+            // Sort rows
+            rows.sort((a, b) => {
+                let aValue = a.cells[columnIndex].textContent.trim().toLowerCase();
+                let bValue = b.cells[columnIndex].textContent.trim().toLowerCase();
+                
+                // Try numeric sort
+                const aNum = parseFloat(aValue.replace(/[^\d.-]/g, ''));
+                const bNum = parseFloat(bValue.replace(/[^\d.-]/g, ''));
+                
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    return isAsc ? bNum - aNum : aNum - bNum;
+                }
+                
+                // String sort
+                if (isAsc) {
+                    return bValue.localeCompare(aValue, 'th');
+                } else {
+                    return aValue.localeCompare(bValue, 'th');
+                }
+            });
+            
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
         // Page Navigation
         function showPage(pageName) {
             // Hide all pages
@@ -2881,6 +3477,11 @@
             const panel = document.getElementById('distancePanel');
             
             if (measureMode) {
+                // ปิด radius mode ถ้าเปิดอยู่
+                if (radiusMode) {
+                    toggleRadius();
+                }
+                
                 btn.classList.add('active');
                 btn.innerHTML = '<i class="fas fa-times"></i> ยกเลิก';
                 panel.classList.add('active');
@@ -2908,6 +3509,371 @@
                 document.getElementById('distanceValue').innerHTML = '0.00 <span>กม.</span>';
             }
         }
+
+        // ===========================
+        // Radius Circle Measurement - DRAG TO DRAW (like PowerPoint/Figma)
+        // ===========================
+        let radiusMode = false;
+        let radiusCircles = [];       // Array of {circle, centerMarker, resizeHandle, center, radius}
+        let isDrawing = false;
+        let drawStartPoint = null;
+        let currentDrawCircle = null;
+        let selectedCircleIndex = null;
+        let isResizing = false;
+        let resizingCircleIndex = null;
+
+        function toggleRadius() {
+            radiusMode = !radiusMode;
+            const btn = document.getElementById('radiusBtn');
+            const panel = document.getElementById('radiusPanel');
+            
+            if (radiusMode) {
+                // ปิด measure mode ถ้าเปิดอยู่
+                if (measureMode) {
+                    toggleMeasure();
+                }
+                
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-times"></i> ยกเลิก';
+                panel.classList.add('active');
+                
+                document.getElementById('radiusInfo').innerHTML = '<i class="fas fa-mouse-pointer"></i> คลิกค้าง + ลากเพื่อวาดวงกลม';
+                document.getElementById('radiusValue').innerHTML = '0 <span>เมตร</span>';
+                
+                // เปลี่ยน cursor
+                document.getElementById('map').style.cursor = 'crosshair';
+                
+                // Disable map dragging while in radius mode (จะ enable เมื่อไม่ได้ draw)
+                map.dragging.enable();
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-circle"></i> วัดรัศมี';
+                panel.classList.remove('active');
+                
+                // คืน cursor
+                document.getElementById('map').style.cursor = '';
+                map.dragging.enable();
+            }
+        }
+
+        function clearRadius() {
+            // ลบวงกลมทั้งหมด
+            radiusCircles.forEach(item => {
+                map.removeLayer(item.circle);
+                map.removeLayer(item.centerMarker);
+                if (item.deleteMarker) {
+                    map.removeLayer(item.deleteMarker);
+                }
+                if (item.resizeHandle) {
+                    map.removeLayer(item.resizeHandle);
+                }
+            });
+            radiusCircles = [];
+            selectedCircleIndex = null;
+            
+            if (currentDrawCircle) {
+                map.removeLayer(currentDrawCircle);
+                currentDrawCircle = null;
+            }
+            
+            if (radiusMode) {
+                document.getElementById('radiusInfo').innerHTML = '<i class="fas fa-mouse-pointer"></i> คลิกค้าง + ลากเพื่อวาดวงกลม';
+                document.getElementById('radiusValue').innerHTML = '0 <span>เมตร</span>';
+            }
+        }
+        
+        function calculatePointAtDistance(lat, lng, distanceMeters, bearing) {
+            const R = 6371000; // Earth radius in meters
+            const d = distanceMeters;
+            const brng = bearing * Math.PI / 180;
+            const lat1 = lat * Math.PI / 180;
+            const lng1 = lng * Math.PI / 180;
+            
+            const lat2 = Math.asin(Math.sin(lat1) * Math.cos(d/R) + Math.cos(lat1) * Math.sin(d/R) * Math.cos(brng));
+            const lng2 = lng1 + Math.atan2(Math.sin(brng) * Math.sin(d/R) * Math.cos(lat1), Math.cos(d/R) - Math.sin(lat1) * Math.sin(lat2));
+            
+            return {
+                lat: lat2 * 180 / Math.PI,
+                lng: lng2 * 180 / Math.PI
+            };
+        }
+        
+        function updateRadiusInfo(radiusMeters) {
+            const km = radiusMeters / 1000;
+            if (km < 1) {
+                document.getElementById('radiusValue').innerHTML = `${Math.round(radiusMeters)} <span>เมตร</span>`;
+            } else {
+                document.getElementById('radiusValue').innerHTML = `${km.toFixed(2)} <span>กม.</span>`;
+            }
+        }
+        
+        function finalizeCircle(center, radius) {
+            // สร้าง circle ถาวร
+            const circle = L.circle(center, {
+                radius: radius,
+                color: '#0ea5e9',
+                fillColor: '#0ea5e9',
+                fillOpacity: 0.15,
+                weight: 2,
+                dashArray: '8, 8'
+            }).addTo(map);
+            
+            // สร้าง center marker
+            const centerMarker = L.marker(center, {
+                icon: L.divIcon({
+                    className: 'radius-center-marker',
+                    html: '<div style="background: #0ea5e9; width: 14px; height: 14px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                })
+            }).addTo(map);
+            
+            const index = radiusCircles.length;
+            
+            // สร้าง delete button marker
+            const deleteMarker = createDeleteMarker(center, index);
+            
+            // สร้าง resize handle
+            const resizeHandle = createResizeHandle(center, radius, index);
+            
+            // Add to array
+            radiusCircles.push({
+                circle: circle,
+                centerMarker: centerMarker,
+                deleteMarker: deleteMarker,
+                resizeHandle: resizeHandle,
+                center: center,
+                radius: radius
+            });
+            
+            // Click events to select
+            circle.on('click', function(e) {
+                L.DomEvent.stopPropagation(e);
+                highlightCircle(radiusCircles.indexOf(radiusCircles.find(item => item.circle === circle)));
+            });
+            centerMarker.on('click', function(e) {
+                L.DomEvent.stopPropagation(e);
+                const idx = radiusCircles.findIndex(item => item.centerMarker === centerMarker);
+                highlightCircle(idx);
+            });
+            
+            document.getElementById('radiusInfo').innerHTML = '✓ สร้างวงกลมแล้ว - ลาก ○ เพื่อปรับขนาด, กด ✕ เพื่อลบ';
+            updateRadiusInfo(radius);
+        }
+        
+        function createDeleteMarker(center, index) {
+            const deleteIcon = L.divIcon({
+                className: 'delete-marker-wrapper',
+                html: '<div style="background: #ef4444; width: 22px; height: 22px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; color: white; font-weight: bold;">✕</div>',
+                iconSize: [22, 22],
+                iconAnchor: [11, 11]
+            });
+            
+            // Position delete marker at top-left of center
+            const deletePos = calculatePointAtDistance(center.lat, center.lng, 50, 315); // 315° = NW
+            
+            const marker = L.marker([deletePos.lat, deletePos.lng], {
+                icon: deleteIcon,
+                zIndexOffset: 2000
+            }).addTo(map);
+            
+            marker.on('click', function(e) {
+                L.DomEvent.stopPropagation(e);
+                const idx = radiusCircles.findIndex(item => item.deleteMarker === marker);
+                if (idx !== -1) {
+                    deleteCircleByIndex(idx);
+                }
+            });
+            
+            return marker;
+        }
+        
+        function createResizeHandle(center, radius, index) {
+            const handleIcon = L.divIcon({
+                className: 'resize-handle-wrapper',
+                html: '<div style="background: white; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #0ea5e9; box-shadow: 0 2px 6px rgba(0,0,0,0.3); cursor: nwse-resize;"></div>',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            });
+            
+            // Calculate edge point (east side)
+            const edgePoint = calculatePointAtDistance(center.lat, center.lng, radius, 90);
+            
+            const handle = L.marker([edgePoint.lat, edgePoint.lng], {
+                icon: handleIcon,
+                draggable: true,
+                zIndexOffset: 1500
+            }).addTo(map);
+            
+            // Handle drag events
+            handle.on('dragstart', function() {
+                isResizing = true;
+                const idx = radiusCircles.findIndex(item => item.resizeHandle === handle);
+                resizingCircleIndex = idx;
+                map.dragging.disable();
+            });
+            
+            handle.on('drag', function(e) {
+                const idx = radiusCircles.findIndex(item => item.resizeHandle === handle);
+                if (idx === -1) return;
+                
+                const item = radiusCircles[idx];
+                const handlePos = e.target.getLatLng();
+                const newRadius = calculateDistance(item.center.lat, item.center.lng, handlePos.lat, handlePos.lng) * 1000;
+                
+                // Minimum radius 10 meters
+                if (newRadius >= 10) {
+                    item.circle.setRadius(newRadius);
+                    item.radius = newRadius;
+                    updateRadiusInfo(newRadius);
+                }
+            });
+            
+            handle.on('dragend', function(e) {
+                isResizing = false;
+                resizingCircleIndex = null;
+                map.dragging.enable();
+                
+                // Update handle position to exact edge
+                const idx = radiusCircles.findIndex(item => item.resizeHandle === handle);
+                if (idx !== -1) {
+                    const item = radiusCircles[idx];
+                    const newEdge = calculatePointAtDistance(item.center.lat, item.center.lng, item.radius, 90);
+                    handle.setLatLng([newEdge.lat, newEdge.lng]);
+                }
+            });
+            
+            return handle;
+        }
+        
+        function highlightCircle(index) {
+            if (index === -1 || !radiusCircles[index]) return;
+            
+            // Reset all circles
+            radiusCircles.forEach((item) => {
+                item.circle.setStyle({
+                    dashArray: '8, 8',
+                    weight: 2
+                });
+            });
+            
+            // Highlight selected
+            radiusCircles[index].circle.setStyle({
+                dashArray: null,
+                weight: 3
+            });
+            
+            selectedCircleIndex = index;
+            updateRadiusInfo(radiusCircles[index].radius);
+        }
+        
+        function deleteCircleByIndex(index) {
+            if (index === -1 || !radiusCircles[index]) return;
+            
+            const item = radiusCircles[index];
+            map.removeLayer(item.circle);
+            map.removeLayer(item.centerMarker);
+            map.removeLayer(item.deleteMarker);
+            if (item.resizeHandle) {
+                map.removeLayer(item.resizeHandle);
+            }
+            
+            radiusCircles.splice(index, 1);
+            
+            if (selectedCircleIndex === index) {
+                selectedCircleIndex = null;
+            }
+            
+            if (radiusMode) {
+                if (radiusCircles.length === 0) {
+                    document.getElementById('radiusInfo').innerHTML = '<i class="fas fa-mouse-pointer"></i> คลิกค้าง + ลากเพื่อวาดวงกลม';
+                    document.getElementById('radiusValue').innerHTML = '0 <span>เมตร</span>';
+                } else {
+                    document.getElementById('radiusInfo').innerHTML = `มี ${radiusCircles.length} วงกลม - วาดเพิ่มหรือลาก ○ เพื่อปรับขนาด`;
+                }
+            }
+        }
+        
+        // Mouse events for drag-to-draw
+        document.getElementById('map').addEventListener('mousedown', function(e) {
+            if (!radiusMode || isResizing) return;
+            
+            // ตรวจสอบว่าคลิกที่ marker (resize handle, delete marker, center marker) หรือไม่
+            // ถ้าคลิกที่ marker ให้ไม่สร้างวงกลมใหม่
+            if (e.target.closest('.resize-handle-wrapper') || 
+                e.target.closest('.delete-marker-wrapper') ||
+                e.target.closest('.radius-center-marker') ||
+                e.target.closest('.leaflet-marker-icon')) {
+                return;
+            }
+            
+            // Get map container position
+            const rect = document.getElementById('map').getBoundingClientRect();
+            const containerPoint = L.point(e.clientX - rect.left, e.clientY - rect.top);
+            const latlng = map.containerPointToLatLng(containerPoint);
+            
+            isDrawing = true;
+            drawStartPoint = latlng;
+            map.dragging.disable();
+            
+            // Create preview circle
+            currentDrawCircle = L.circle(latlng, {
+                radius: 0,
+                color: '#0ea5e9',
+                fillColor: '#0ea5e9',
+                fillOpacity: 0.2,
+                weight: 2,
+                dashArray: '5, 5'
+            }).addTo(map);
+        });
+        
+        document.getElementById('map').addEventListener('mousemove', function(e) {
+            if (!isDrawing || !drawStartPoint || !currentDrawCircle) return;
+            
+            const rect = document.getElementById('map').getBoundingClientRect();
+            const containerPoint = L.point(e.clientX - rect.left, e.clientY - rect.top);
+            const latlng = map.containerPointToLatLng(containerPoint);
+            
+            const radius = calculateDistance(drawStartPoint.lat, drawStartPoint.lng, latlng.lat, latlng.lng) * 1000;
+            currentDrawCircle.setRadius(radius);
+            updateRadiusInfo(radius);
+        });
+        
+        document.getElementById('map').addEventListener('mouseup', function(e) {
+            if (!isDrawing || !drawStartPoint) return;
+            
+            const rect = document.getElementById('map').getBoundingClientRect();
+            const containerPoint = L.point(e.clientX - rect.left, e.clientY - rect.top);
+            const latlng = map.containerPointToLatLng(containerPoint);
+            
+            const radius = calculateDistance(drawStartPoint.lat, drawStartPoint.lng, latlng.lat, latlng.lng) * 1000;
+            
+            // Remove preview
+            if (currentDrawCircle) {
+                map.removeLayer(currentDrawCircle);
+                currentDrawCircle = null;
+            }
+            
+            // Only create if radius > 10 meters (prevent accidental clicks)
+            if (radius > 10) {
+                finalizeCircle(drawStartPoint, radius);
+            }
+            
+            isDrawing = false;
+            drawStartPoint = null;
+            map.dragging.enable();
+        });
+        
+        // Handle mouse leaving map
+        document.getElementById('map').addEventListener('mouseleave', function() {
+            if (isDrawing && currentDrawCircle) {
+                map.removeLayer(currentDrawCircle);
+                currentDrawCircle = null;
+                isDrawing = false;
+                drawStartPoint = null;
+                map.dragging.enable();
+            }
+        });
 
         // Calculate distance using Haversine formula
         function calculateDistance(lat1, lng1, lat2, lng2) {
@@ -2949,20 +3915,20 @@
 
         // Map click handler for distance measurement
         map.on('click', function(e) {
-            if (!measureMode) return;
-            
-            // Create marker with point number
-            const pointNum = measurePoints.length + 1;
-            const pointIcon = L.divIcon({
-                className: 'measure-point',
-                html: `<div style="background: #ef4444; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold;">${pointNum}</div>`,
-                iconSize: [24, 24],
-                iconAnchor: [12, 12]
-            });
-            
-            const marker = L.marker(e.latlng, { icon: pointIcon }).addTo(map);
-            measureMarkers.push(marker);
-            measurePoints.push(e.latlng);
+            if (measureMode) {
+                // Distance measurement mode
+                // Create marker with point number
+                const pointNum = measurePoints.length + 1;
+                const pointIcon = L.divIcon({
+                    className: 'measure-point',
+                    html: `<div style="background: #ef4444; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold;">${pointNum}</div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+                
+                const marker = L.marker(e.latlng, { icon: pointIcon }).addTo(map);
+                measureMarkers.push(marker);
+                measurePoints.push(e.latlng);
             
             // Update the line
             updateMeasureLine();
@@ -2981,6 +3947,7 @@
                     document.getElementById('distanceValue').innerHTML = `${totalDistance.toFixed(2)} <span>กม.</span>`;
                 }
             }
+            }
         });
 
         // -------------------------
@@ -2997,6 +3964,11 @@
             const panel = document.getElementById('distancePanelFull');
             
             if (measureModeFull) {
+                // ปิด radius mode ถ้าเปิดอยู่
+                if (radiusModeFull) {
+                    toggleRadiusFull();
+                }
+                
                 btn.classList.add('active');
                 btn.innerHTML = '<i class="fas fa-times"></i> ยกเลิก';
                 panel.classList.add('active');
@@ -3046,6 +4018,293 @@
                 }).addTo(mapView);
             }
         }
+
+        // -------------------------
+        // Map View Radius Tool
+        // -------------------------
+        let radiusModeFull = false;
+        let radiusCirclesFull = [];
+        let isDrawingFull = false;
+        let drawStartPointFull = null;
+        let currentDrawCircleFull = null;
+        let isResizingFull = false;
+
+        function toggleRadiusFull() {
+            radiusModeFull = !radiusModeFull;
+            const btn = document.getElementById('radiusBtnFull');
+            const panel = document.getElementById('radiusPanelFull');
+            
+            if (radiusModeFull) {
+                // ปิด measure mode ถ้าเปิดอยู่
+                if (measureModeFull) {
+                    toggleMeasureFull();
+                }
+                
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-times"></i> ยกเลิก';
+                panel.classList.add('active');
+                
+                document.getElementById('radiusInfoFull').innerHTML = '<i class="fas fa-mouse-pointer"></i> คลิกค้าง + ลากเพื่อวาดวงกลม';
+                document.getElementById('radiusValueFull').innerHTML = '0 <span>เมตร</span>';
+                
+                document.getElementById('map-view').style.cursor = 'crosshair';
+                mapView.dragging.enable();
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-circle"></i> วัดรัศมี';
+                panel.classList.remove('active');
+                
+                document.getElementById('map-view').style.cursor = '';
+                mapView.dragging.enable();
+            }
+        }
+
+        function clearRadiusFull() {
+            radiusCirclesFull.forEach(item => {
+                mapView.removeLayer(item.circle);
+                mapView.removeLayer(item.centerMarker);
+                if (item.deleteMarker) {
+                    mapView.removeLayer(item.deleteMarker);
+                }
+                if (item.resizeHandle) {
+                    mapView.removeLayer(item.resizeHandle);
+                }
+            });
+            radiusCirclesFull = [];
+            
+            if (currentDrawCircleFull) {
+                mapView.removeLayer(currentDrawCircleFull);
+                currentDrawCircleFull = null;
+            }
+            
+            if (radiusModeFull) {
+                document.getElementById('radiusInfoFull').innerHTML = '<i class="fas fa-mouse-pointer"></i> คลิกค้าง + ลากเพื่อวาดวงกลม';
+                document.getElementById('radiusValueFull').innerHTML = '0 <span>เมตร</span>';
+            }
+        }
+
+        function updateRadiusInfoFull(radiusMeters) {
+            const km = radiusMeters / 1000;
+            if (km < 1) {
+                document.getElementById('radiusValueFull').innerHTML = `${Math.round(radiusMeters)} <span>เมตร</span>`;
+            } else {
+                document.getElementById('radiusValueFull').innerHTML = `${km.toFixed(2)} <span>กม.</span>`;
+            }
+        }
+
+        function finalizeCircleFull(center, radius) {
+            const circle = L.circle(center, {
+                radius: radius,
+                color: '#0ea5e9',
+                fillColor: '#0ea5e9',
+                fillOpacity: 0.15,
+                weight: 2,
+                dashArray: '8, 8'
+            }).addTo(mapView);
+            
+            const centerMarker = L.marker(center, {
+                icon: L.divIcon({
+                    className: 'radius-center-marker',
+                    html: '<div style="background: #0ea5e9; width: 14px; height: 14px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                })
+            }).addTo(mapView);
+            
+            const index = radiusCirclesFull.length;
+            
+            const deleteMarker = createDeleteMarkerFull(center, index);
+            const resizeHandle = createResizeHandleFull(center, radius, index);
+            
+            radiusCirclesFull.push({
+                circle: circle,
+                centerMarker: centerMarker,
+                deleteMarker: deleteMarker,
+                resizeHandle: resizeHandle,
+                center: center,
+                radius: radius
+            });
+            
+            document.getElementById('radiusInfoFull').innerHTML = '✓ สร้างวงกลมแล้ว - ลาก ○ เพื่อปรับขนาด, กด ✕ เพื่อลบ';
+            updateRadiusInfoFull(radius);
+        }
+
+        function createDeleteMarkerFull(center, index) {
+            const deleteIcon = L.divIcon({
+                className: 'delete-marker-wrapper',
+                html: '<div style="background: #ef4444; width: 22px; height: 22px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; color: white; font-weight: bold;">✕</div>',
+                iconSize: [22, 22],
+                iconAnchor: [11, 11]
+            });
+            
+            const deletePos = calculatePointAtDistance(center.lat, center.lng, 50, 315);
+            
+            const marker = L.marker([deletePos.lat, deletePos.lng], {
+                icon: deleteIcon,
+                zIndexOffset: 2000
+            }).addTo(mapView);
+            
+            marker.on('click', function(e) {
+                L.DomEvent.stopPropagation(e);
+                const idx = radiusCirclesFull.findIndex(item => item.deleteMarker === marker);
+                if (idx !== -1) {
+                    deleteCircleByIndexFull(idx);
+                }
+            });
+            
+            return marker;
+        }
+
+        function createResizeHandleFull(center, radius, index) {
+            const handleIcon = L.divIcon({
+                className: 'resize-handle-wrapper',
+                html: '<div style="background: white; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #0ea5e9; box-shadow: 0 2px 6px rgba(0,0,0,0.3); cursor: nwse-resize;"></div>',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            });
+            
+            const edgePoint = calculatePointAtDistance(center.lat, center.lng, radius, 90);
+            
+            const handle = L.marker([edgePoint.lat, edgePoint.lng], {
+                icon: handleIcon,
+                draggable: true,
+                zIndexOffset: 1500
+            }).addTo(mapView);
+            
+            handle.on('dragstart', function() {
+                isResizingFull = true;
+                mapView.dragging.disable();
+            });
+            
+            handle.on('drag', function(e) {
+                const idx = radiusCirclesFull.findIndex(item => item.resizeHandle === handle);
+                if (idx === -1) return;
+                
+                const item = radiusCirclesFull[idx];
+                const handlePos = e.target.getLatLng();
+                const newRadius = calculateDistance(item.center.lat, item.center.lng, handlePos.lat, handlePos.lng) * 1000;
+                
+                if (newRadius >= 10) {
+                    item.circle.setRadius(newRadius);
+                    item.radius = newRadius;
+                    updateRadiusInfoFull(newRadius);
+                }
+            });
+            
+            handle.on('dragend', function(e) {
+                isResizingFull = false;
+                mapView.dragging.enable();
+                
+                const idx = radiusCirclesFull.findIndex(item => item.resizeHandle === handle);
+                if (idx !== -1) {
+                    const item = radiusCirclesFull[idx];
+                    const newEdge = calculatePointAtDistance(item.center.lat, item.center.lng, item.radius, 90);
+                    handle.setLatLng([newEdge.lat, newEdge.lng]);
+                }
+            });
+            
+            return handle;
+        }
+
+        function deleteCircleByIndexFull(index) {
+            if (index === -1 || !radiusCirclesFull[index]) return;
+            
+            const item = radiusCirclesFull[index];
+            mapView.removeLayer(item.circle);
+            mapView.removeLayer(item.centerMarker);
+            mapView.removeLayer(item.deleteMarker);
+            if (item.resizeHandle) {
+                mapView.removeLayer(item.resizeHandle);
+            }
+            
+            radiusCirclesFull.splice(index, 1);
+            
+            if (radiusModeFull) {
+                if (radiusCirclesFull.length === 0) {
+                    document.getElementById('radiusInfoFull').innerHTML = '<i class="fas fa-mouse-pointer"></i> คลิกค้าง + ลากเพื่อวาดวงกลม';
+                    document.getElementById('radiusValueFull').innerHTML = '0 <span>เมตร</span>';
+                } else {
+                    document.getElementById('radiusInfoFull').innerHTML = `มี ${radiusCirclesFull.length} วงกลม - วาดเพิ่มหรือลาก ○ เพื่อปรับขนาด`;
+                }
+            }
+        }
+
+        // Mouse events for Map View drag-to-draw
+        document.getElementById('map-view').addEventListener('mousedown', function(e) {
+            if (!radiusModeFull || isResizingFull) return;
+            if (!mapView) return;
+            
+            if (e.target.closest('.resize-handle-wrapper') || 
+                e.target.closest('.delete-marker-wrapper') ||
+                e.target.closest('.radius-center-marker') ||
+                e.target.closest('.leaflet-marker-icon')) {
+                return;
+            }
+            
+            const rect = document.getElementById('map-view').getBoundingClientRect();
+            const containerPoint = L.point(e.clientX - rect.left, e.clientY - rect.top);
+            const latlng = mapView.containerPointToLatLng(containerPoint);
+            
+            isDrawingFull = true;
+            drawStartPointFull = latlng;
+            mapView.dragging.disable();
+            
+            currentDrawCircleFull = L.circle(latlng, {
+                radius: 0,
+                color: '#0ea5e9',
+                fillColor: '#0ea5e9',
+                fillOpacity: 0.2,
+                weight: 2,
+                dashArray: '5, 5'
+            }).addTo(mapView);
+        });
+
+        document.getElementById('map-view').addEventListener('mousemove', function(e) {
+            if (!isDrawingFull || !drawStartPointFull || !currentDrawCircleFull) return;
+            if (!mapView) return;
+            
+            const rect = document.getElementById('map-view').getBoundingClientRect();
+            const containerPoint = L.point(e.clientX - rect.left, e.clientY - rect.top);
+            const latlng = mapView.containerPointToLatLng(containerPoint);
+            
+            const radius = calculateDistance(drawStartPointFull.lat, drawStartPointFull.lng, latlng.lat, latlng.lng) * 1000;
+            currentDrawCircleFull.setRadius(radius);
+            updateRadiusInfoFull(radius);
+        });
+
+        document.getElementById('map-view').addEventListener('mouseup', function(e) {
+            if (!isDrawingFull || !drawStartPointFull) return;
+            if (!mapView) return;
+            
+            const rect = document.getElementById('map-view').getBoundingClientRect();
+            const containerPoint = L.point(e.clientX - rect.left, e.clientY - rect.top);
+            const latlng = mapView.containerPointToLatLng(containerPoint);
+            
+            const radius = calculateDistance(drawStartPointFull.lat, drawStartPointFull.lng, latlng.lat, latlng.lng) * 1000;
+            
+            if (currentDrawCircleFull) {
+                mapView.removeLayer(currentDrawCircleFull);
+                currentDrawCircleFull = null;
+            }
+            
+            if (radius > 10) {
+                finalizeCircleFull(drawStartPointFull, radius);
+            }
+            
+            isDrawingFull = false;
+            drawStartPointFull = null;
+            mapView.dragging.enable();
+        });
+
+        document.getElementById('map-view').addEventListener('mouseleave', function() {
+            if (isDrawingFull && currentDrawCircleFull && mapView) {
+                mapView.removeLayer(currentDrawCircleFull);
+                currentDrawCircleFull = null;
+                isDrawingFull = false;
+                drawStartPointFull = null;
+                mapView.dragging.enable();
+            }
+        });
     </script>
     <script>
         // Excel Export Functionality (dark mode removed)
