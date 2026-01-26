@@ -10,6 +10,9 @@ coverage/
 build/
 dist/
 
+# Firebase
+.firebase/
+
 # System Files
 .DS_Store
 Thumbs.db
@@ -28,6 +31,9 @@ yarn-error.log*
 
 # Environment variables
 .env
+
+# Screenshots (temp)
+*.png
 .env.local
 .env.development.local
 .env.test.local

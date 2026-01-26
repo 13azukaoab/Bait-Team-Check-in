@@ -3205,6 +3205,153 @@
             alert(`รายละเอียด Check-in\n\nลูกค้า: ${item.customerName}\nเลขสัญญา: ${item.contractNumber}\nสาขา: ${item.branch}\nเขต: ${item.zone}\nที่อยู่: ${item.address}\nพิกัด: ${item.lat}, ${item.lng}`);
         }
         
+        // ===========================
+        // Real-time Listener
+        // ===========================
+        let realtimeUnsubscribe = null;
+        
+        function startRealtimeListener() {
+            if (realtimeUnsubscribe) {
+                realtimeUnsubscribe(); // หยุด listener เก่า
+            }
+            
+            console.log('Starting real-time listener...');
+            
+            realtimeUnsubscribe = db.collection('checkins')
+                .orderBy('createdAt', 'desc')
+                .limit(100)
+                .onSnapshot(
+                    (snapshot) => {
+                        console.log('Real-time update received:', snapshot.size, 'documents');
+                        
+                        // ตรวจสอบว่ามีการเปลี่ยนแปลงจริงหรือไม่
+                        let hasChanges = false;
+                        snapshot.docChanges().forEach(change => {
+                            if (change.type === 'added') {
+                                console.log('New check-in:', change.doc.id);
+                                hasChanges = true;
+                                // แสดง Toast เมื่อมี check-in ใหม่ (ยกเว้นตอนโหลดครั้งแรก)
+                                if (firestoreCheckins.length > 0) {
+                                    showRealtimeToast('เช็คอินใหม่!', change.doc.data().customerName);
+                                }
+                            } else if (change.type === 'modified') {
+                                console.log('Modified check-in:', change.doc.id);
+                                hasChanges = true;
+                            } else if (change.type === 'removed') {
+                                console.log('Removed check-in:', change.doc.id);
+                                hasChanges = true;
+                            }
+                        });
+                        
+                        // อัพเดทข้อมูลใน memory
+                        firestoreCheckins = [];
+                        snapshot.forEach(doc => {
+                            const data = doc.data();
+                            firestoreCheckins.push({
+                                id: doc.id,
+                                ...data,
+                                lat: data.location?.lat || 0,
+                                lng: data.location?.lng || 0,
+                                address: data.location?.address || '',
+                                houseFrontUrl: data.photos?.houseFront || '',
+                                contractPhotoUrl: data.photos?.contractPhoto || '',
+                                checkinTime: timestampToDate(data.checkinTime || data.createdAt),
+                                visible: data.visible !== false
+                            });
+                        });
+                        
+                        // Refresh UI
+                        updateDashboardStats();
+                        updateRecentCheckins();
+                        updateMapMarkersFromFirestore();
+                        updateCheckinsTable();
+                        
+                        // อัพเดท Live Badge
+                        updateLiveBadge();
+                    },
+                    (error) => {
+                        console.error('Real-time listener error:', error);
+                        // Fallback to polling
+                        setTimeout(() => startRealtimeListener(), 5000);
+                    }
+                );
+        }
+        
+        // แสดง Toast เมื่อมี Check-in ใหม่
+        function showRealtimeToast(title, customerName) {
+            const toastContainer = document.getElementById('realtimeToast') || createToastContainer();
+            
+            const toast = document.createElement('div');
+            toast.className = 'realtime-toast';
+            toast.innerHTML = `
+                <i class="fas fa-map-marker-alt" style="color: #10b981;"></i>
+                <div>
+                    <strong>${title}</strong>
+                    <div style="font-size: 0.85rem; color: #64748b;">${customerName || 'ลูกค้าใหม่'}</div>
+                </div>
+            `;
+            toastContainer.appendChild(toast);
+            
+            // Auto remove
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+        
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'realtimeToast';
+            container.style.cssText = 'position:fixed;top:80px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;';
+            document.body.appendChild(container);
+            
+            // Add toast styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .realtime-toast {
+                    background: white;
+                    padding: 14px 18px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    min-width: 250px;
+                    animation: slideIn 0.3s ease;
+                    transition: all 0.3s ease;
+                }
+                @keyframes slideIn {
+                    from { opacity: 0; transform: translateX(100%); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            return container;
+        }
+        
+        // อัพเดท Live Badge (สถานะ Real-time)
+        function updateLiveBadge() {
+            let badge = document.getElementById('liveBadge');
+            if (!badge) {
+                // สร้าง badge ถ้ายังไม่มี
+                const header = document.querySelector('.header-left h1');
+                if (header) {
+                    badge = document.createElement('span');
+                    badge.id = 'liveBadge';
+                    badge.style.cssText = 'display:inline-flex;align-items:center;gap:5px;background:#10b981;color:white;font-size:0.7rem;padding:3px 8px;border-radius:12px;margin-left:10px;animation:pulse 2s infinite;';
+                    badge.innerHTML = '<span style="width:6px;height:6px;background:white;border-radius:50%;"></span> LIVE';
+                    header.appendChild(badge);
+                    
+                    // Add pulse animation
+                    const style = document.createElement('style');
+                    style.textContent = '@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }';
+                    document.head.appendChild(style);
+                }
+            }
+        }
+        
         // โหลดข้อมูลเมื่อเปิดหน้า
         async function initializeFirestoreData() {
             await loadCheckinsFromFirestore();
@@ -3212,7 +3359,17 @@
             updateRecentCheckins();
             updateMapMarkersFromFirestore();
             updateCheckinsTable();
+            
+            // เริ่ม Real-time Listener
+            startRealtimeListener();
         }
+        
+        // หยุด Listener เมื่อปิดหน้า
+        window.addEventListener('beforeunload', () => {
+            if (realtimeUnsubscribe) {
+                realtimeUnsubscribe();
+            }
+        });
         
         // เรียกใช้เมื่อ DOM พร้อม
         document.addEventListener('DOMContentLoaded', () => {

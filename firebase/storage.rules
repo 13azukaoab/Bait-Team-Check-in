@@ -1,10 +1,44 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Check-in photos - อนุญาตให้อ่าน/เขียนได้ (Development Mode)
+    
+    // ===========================
+    // Helper Functions
+    // ===========================
+    
+    // ตรวจสอบประเภทไฟล์ (เฉพาะรูปภาพ)
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    // ตรวจสอบขนาดไฟล์ (จำกัด 500KB)
+    function isValidSize() {
+      return request.resource.size < 500 * 1024;
+    }
+    
+    // ===========================
+    // Check-in Photos
+    // Path: checkins/{year}/{month}/{checkinId}/{filename}
+    // ===========================
+    match /checkins/{year}/{month}/{checkinId}/{filename} {
+      // อ่านได้ทุกคน (สำหรับแสดงใน Dashboard)
+      allow read: if true;
+      
+      // เขียนได้ - ต้องเป็นรูปภาพและขนาดไม่เกิน 500KB
+      allow write: if isImage() && isValidSize();
+    }
+    
+    // Legacy path (สำหรับไฟล์เก่า)
     match /checkins/{allPaths=**} {
       allow read: if true;
-      allow write: if request.resource.size < 500 * 1024; // จำกัด 500KB ต่อไฟล์
+      allow write: if isImage() && isValidSize();
+    }
+    
+    // ===========================
+    // Test Files
+    // ===========================
+    match /_test/{filename} {
+      allow read, write: if true;
     }
   }
 }

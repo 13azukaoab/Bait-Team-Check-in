@@ -1,21 +1,84 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Check-ins collection - อนุญาตให้อ่าน/เขียนได้ (Development Mode)
-    match /checkins/{document=**} {
+    
+    // ===========================
+    // Helper Functions
+    // ===========================
+    
+    // ตรวจสอบว่าเป็น Request จาก App ของเรา (มี valid fields)
+    function isValidCheckin() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['team', 'customerName', 'contractNumber', 'branch', 'location', 'createdAt'])
+        && data.team is string
+        && data.team.size() <= 2
+        && data.customerName is string
+        && data.customerName.size() <= 200
+        && data.contractNumber is string
+        && data.contractNumber.size() <= 50
+        && data.branch is string;
+    }
+    
+    // ===========================
+    // Check-ins Collection
+    // ===========================
+    match /checkins/{checkinId} {
+      // อ่านได้ทุกคน (สำหรับ Dashboard)
+      allow read: if true;
+      
+      // เขียนได้ - Development Mode (ต้องมี valid fields)
+      // Production Mode: เพิ่ม request.auth != null
+      allow create: if isValidCheckin();
+      allow update: if true;
+      allow delete: if false; // ป้องกันการลบข้อมูล
+    }
+    
+    // ===========================
+    // Teams Collection (สำหรับข้อมูลทีม)
+    // ===========================
+    match /teams/{teamId} {
+      allow read: if true;
+      allow write: if false; // Admin only (ผ่าน Firebase Console)
+    }
+    
+    // ===========================
+    // Branches Collection (สำหรับข้อมูลสาขา)
+    // ===========================
+    match /branches/{branchId} {
+      allow read: if true;
+      allow write: if false; // Admin only
+    }
+    
+    // ===========================
+    // Customers Collection (สำหรับข้อมูลลูกค้า)
+    // ===========================
+    match /customers/{customerId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['name', 'contractNumber']);
+      allow update: if true;
+      allow delete: if false;
+    }
+    
+    // ===========================
+    // Stats Collection (สถิติ)
+    // ===========================
+    match /stats/{statId} {
+      allow read: if true;
+      allow write: if false; // Cloud Functions only
+    }
+    
+    // ===========================
+    // Connection Test (สำหรับทดสอบ)
+    // ===========================
+    match /_connection_test/{docId} {
       allow read, write: if true;
     }
     
-    // Teams collection (ถ้ามี)
-    match /teams/{document=**} {
-      allow read: if true;
-      allow write: if true;
-    }
-    
-    // Branches collection (ถ้ามี)
-    match /branches/{document=**} {
-      allow read: if true;
-      allow write: if true;
+    // ===========================
+    // Test Collection (สำหรับทดสอบ)
+    // ===========================
+    match /_test/{docId} {
+      allow read, write: if true;
     }
   }
 }

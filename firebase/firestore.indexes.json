@@ -1,0 +1,45 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "checkins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "team", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "checkins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "visible", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "checkins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "branch", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "checkins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "zone", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "checkins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "team", "order": "ASCENDING" },
+        { "fieldPath": "checkinTime", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
