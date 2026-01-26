@@ -35,6 +35,7 @@ yarn-error.log*
 
 # API Keys - ห้าม commit!
 secrets/
+src/firebase-config.js
 Longdo API KEY
 *.key
 *.secret

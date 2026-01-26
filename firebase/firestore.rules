@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Check-ins collection - อนุญาตให้อ่าน/เขียนได้ (Development Mode)
+    match /checkins/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Teams collection (ถ้ามี)
+    match /teams/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    // Branches collection (ถ้ามี)
+    match /branches/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

@@ -7,6 +7,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCDvOxdpMIQoadHlod90EtQgpEU4tDcHUY",
+            authDomain: "bait-check-in-webapp.firebaseapp.com",
+            projectId: "bait-check-in-webapp",
+            storageBucket: "bait-check-in-webapp.firebasestorage.app",
+            messagingSenderId: "850336159440",
+            appId: "1:850336159440:web:c104204bd3f2d18b5b70d5",
+            measurementId: "G-V52G8M5H6Z"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+    </script>
+    
     <style>
         :root {
             --primary: #0ea5e9;
@@ -2931,6 +2955,270 @@
     <!-- Leaflet Map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // ===========================
+        // Firebase Helper Functions
+        // ===========================
+        let firestoreCheckins = []; // เก็บข้อมูลจาก Firestore
+        
+        // แปลง Firestore Timestamp เป็น Date
+        function timestampToDate(timestamp) {
+            if (!timestamp) return new Date();
+            if (timestamp.toDate) return timestamp.toDate();
+            if (timestamp.seconds) return new Date(timestamp.seconds * 1000);
+            return new Date(timestamp);
+        }
+        
+        // Format วันที่ไทย DD-MM-YYYY
+        function formatThaiDate(date) {
+            const d = new Date(date);
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const yyyy = String(d.getFullYear());
+            return `${dd}-${mm}-${yyyy}`;
+        }
+        
+        // ดึงข้อมูล Check-ins จาก Firestore
+        async function loadCheckinsFromFirestore() {
+            try {
+                console.log('Loading check-ins from Firestore...');
+                const querySnapshot = await db.collection('checkins')
+                    .orderBy('createdAt', 'desc')
+                    .limit(100)
+                    .get();
+                
+                firestoreCheckins = [];
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    firestoreCheckins.push({
+                        id: doc.id,
+                        ...data,
+                        // Normalize location
+                        lat: data.location?.lat || 0,
+                        lng: data.location?.lng || 0,
+                        address: data.location?.address || '',
+                        // Normalize photos
+                        houseFrontUrl: data.photos?.houseFront || '',
+                        contractPhotoUrl: data.photos?.contractPhoto || '',
+                        // Time
+                        checkinTime: timestampToDate(data.checkinTime || data.createdAt),
+                        // Visibility
+                        visible: data.visible !== false
+                    });
+                });
+                
+                console.log('Loaded', firestoreCheckins.length, 'check-ins');
+                return firestoreCheckins;
+            } catch (error) {
+                console.error('Error loading check-ins:', error);
+                return [];
+            }
+        }
+        
+        // อัพเดท Dashboard Stats
+        function updateDashboardStats() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const todayCheckins = firestoreCheckins.filter(c => {
+                const checkinDate = new Date(c.checkinTime);
+                checkinDate.setHours(0, 0, 0, 0);
+                return checkinDate.getTime() === today.getTime();
+            });
+            
+            // นับจำนวนทีมที่ทำงานวันนี้
+            const teamsToday = new Set(todayCheckins.map(c => c.team));
+            
+            // อัพเดท UI
+            const statElements = document.querySelectorAll('.stat-number');
+            if (statElements[0]) statElements[0].textContent = todayCheckins.length;
+            if (statElements[1]) statElements[1].textContent = teamsToday.size;
+            if (statElements[2]) statElements[2].textContent = firestoreCheckins.length;
+        }
+        
+        // อัพเดท Recent Check-ins
+        function updateRecentCheckins() {
+            const container = document.querySelector('.checkin-list');
+            if (!container) return;
+            
+            // แสดง 5 รายการล่าสุด
+            const recentItems = firestoreCheckins.slice(0, 5);
+            
+            container.innerHTML = recentItems.map((item, index) => `
+                <div class="checkin-item" data-checkin-id="${index}">
+                    <div class="checkin-image">
+                        ${item.houseFrontUrl 
+                            ? `<img src="${item.houseFrontUrl}" alt="house" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">` 
+                            : '<i class="fas fa-home" style="color:#94a3b8;font-size:1.5rem;"></i>'
+                        }
+                    </div>
+                    <div class="checkin-info">
+                        <div class="checkin-title">${item.customerName || '-'}</div>
+                        <div class="checkin-details">
+                            <span><i class="fas fa-file-contract"></i> ${item.contractNumber || '-'}</span>
+                            <span><i class="fas fa-building"></i> ${item.branch || '-'}</span>
+                        </div>
+                        <div class="checkin-meta">
+                            <span class="team-tag">Team ${item.team || '-'}</span>
+                            <span class="time">${formatThaiDate(item.checkinTime)} ${item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}</span>
+                        </div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${item.visible ? 'checked' : ''} onchange="toggleCheckinVisibility('${item.id}', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            `).join('');
+        }
+        
+        // Toggle visibility ของ Check-in
+        async function toggleCheckinVisibility(docId, visible) {
+            try {
+                await db.collection('checkins').doc(docId).update({
+                    visible: visible,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // อัพเดท local data
+                const item = firestoreCheckins.find(c => c.id === docId);
+                if (item) item.visible = visible;
+                
+                // Refresh maps
+                updateMapMarkersFromFirestore();
+                updateMapViewMarkersFromFirestore();
+                
+                console.log('Updated visibility:', docId, visible);
+            } catch (error) {
+                console.error('Error updating visibility:', error);
+            }
+        }
+        
+        // อัพเดท Markers บนแผนที่หลัก (Dashboard) จาก Firestore
+        function updateMapMarkersFromFirestore() {
+            if (!map) return;
+            
+            // Clear existing markers (except HQ)
+            markers.forEach(m => map.removeLayer(m));
+            markers.length = 0;
+            
+            firestoreCheckins.forEach((item, index) => {
+                if (!item.visible || !item.lat || !item.lng) return;
+                if (!teamVisibility[item.team]) return;
+                
+                const marker = L.marker([item.lat, item.lng], { icon: createCustomIcon(item.team) })
+                    .bindPopup(`
+                        <div style="font-family: 'Prompt', sans-serif; padding: 8px; min-width: 200px;">
+                            <strong style="font-size: 1rem;">${item.customerName || '-'}</strong>
+                            <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b; margin-left: 8px;">Team ${item.team}</span>
+                            <br><br>
+                            <span style="color: #64748b;"><i class="fas fa-file-contract"></i> ${item.contractNumber || '-'}</span><br>
+                            <span style="color: #64748b;"><i class="fas fa-building"></i> ${item.branch || '-'} (${item.zone || '-'})</span><br>
+                            <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${item.address || 'ไม่มีที่อยู่'}</span><br>
+                            <span style="color: #94a3b8; font-size: 0.8rem;"><i class="far fa-clock"></i> ${formatThaiDate(item.checkinTime)} ${item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}</span>
+                            ${item.houseFrontUrl ? `<br><br><img src="${item.houseFrontUrl}" style="width:100%;max-width:180px;border-radius:8px;">` : ''}
+                        </div>
+                    `)
+                    .addTo(map);
+                markers.push(marker);
+            });
+        }
+        
+        // อัพเดท Markers บน Map View จาก Firestore
+        function updateMapViewMarkersFromFirestore() {
+            if (!mapView) return;
+            
+            // Clear existing layers
+            mapViewLayers.forEach(layer => mapView.removeLayer(layer));
+            mapViewLayers = [];
+            
+            const filterTeam = document.getElementById('mapViewTeamFilter')?.value || 'all';
+            
+            firestoreCheckins.forEach((item) => {
+                if (!item.visible || !item.lat || !item.lng) return;
+                
+                const teamVisible = teamVisibility[item.team];
+                const matchesDropdown = filterTeam === 'all' || item.team === filterTeam;
+                
+                if (matchesDropdown && teamVisible) {
+                    const marker = L.marker([item.lat, item.lng], { icon: createCustomIcon(item.team) })
+                        .bindPopup(`
+                            <div style="font-family: 'Prompt', sans-serif; padding: 8px; min-width: 200px;">
+                                <strong style="font-size: 1rem;">${item.customerName || '-'}</strong>
+                                <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b; margin-left: 8px;">Team ${item.team}</span>
+                                <br><br>
+                                <span style="color: #64748b;"><i class="fas fa-file-contract"></i> ${item.contractNumber || '-'}</span><br>
+                                <span style="color: #64748b;"><i class="fas fa-building"></i> ${item.branch || '-'}</span><br>
+                                <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${item.address || 'ไม่มีที่อยู่'}</span>
+                            </div>
+                        `)
+                        .addTo(mapView);
+                    mapViewLayers.push(marker);
+                }
+            });
+        }
+        
+        // อัพเดทตาราง Check-ins List
+        function updateCheckinsTable() {
+            const tbody = document.getElementById('checkinsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = firestoreCheckins.map((item, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: #f1f5f9; display: flex; align-items: center; justify-content: center;">
+                                ${item.houseFrontUrl 
+                                    ? `<img src="${item.houseFrontUrl}" style="width:100%;height:100%;object-fit:cover;">` 
+                                    : '<i class="fas fa-home" style="color:#94a3b8;"></i>'
+                                }
+                            </div>
+                            <div>
+                                <div style="font-weight: 500;">${item.customerName || '-'}</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">${item.contractNumber || '-'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="team-tag">Team ${item.team || '-'}</span></td>
+                    <td>${item.branch || '-'}</td>
+                    <td>${item.zone || '-'}</td>
+                    <td>${formatThaiDate(item.checkinTime)} ${item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}</td>
+                    <td>
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${item.visible ? 'checked' : ''} onchange="toggleCheckinVisibility('${item.id}', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <button onclick="viewCheckinDetail('${item.id}')" style="background: none; border: none; color: var(--primary); cursor: pointer; padding: 5px;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // ดูรายละเอียด Check-in
+        function viewCheckinDetail(docId) {
+            const item = firestoreCheckins.find(c => c.id === docId);
+            if (!item) return;
+            
+            alert(`รายละเอียด Check-in\n\nลูกค้า: ${item.customerName}\nเลขสัญญา: ${item.contractNumber}\nสาขา: ${item.branch}\nเขต: ${item.zone}\nที่อยู่: ${item.address}\nพิกัด: ${item.lat}, ${item.lng}`);
+        }
+        
+        // โหลดข้อมูลเมื่อเปิดหน้า
+        async function initializeFirestoreData() {
+            await loadCheckinsFromFirestore();
+            updateDashboardStats();
+            updateRecentCheckins();
+            updateMapMarkersFromFirestore();
+            updateCheckinsTable();
+        }
+        
+        // เรียกใช้เมื่อ DOM พร้อม
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFirestoreData();
+        });
+        
         // OpenStreetMap tiles (default)
         const osmTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         

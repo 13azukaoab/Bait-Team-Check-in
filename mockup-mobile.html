@@ -6,6 +6,30 @@
     <title>Bait Check-In | Mobile</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK (compat version for simplicity) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCDvOxdpMIQoadHlod90EtQgpEU4tDcHUY",
+            authDomain: "bait-check-in-webapp.firebaseapp.com",
+            projectId: "bait-check-in-webapp",
+            storageBucket: "bait-check-in-webapp.firebasestorage.app",
+            messagingSenderId: "850336159440",
+            appId: "1:850336159440:web:c104204bd3f2d18b5b70d5",
+            measurementId: "G-V52G8M5H6Z"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+    </script>
+    
     <style>
         :root {
             --primary: #0ea5e9;
@@ -1330,6 +1354,7 @@
         let isCheckedIn = false;
         let selectedTeam = '';
         let photos = { 1: null, 2: null };
+        let photoBlobs = { 1: null, 2: null }; // เก็บ Blob สำหรับ upload
         let photoQuality = 0.65; // 65% เพื่อให้ได้ขนาดไฟล์ 100-200 KB
         let maxWidth = 1000;     // 1000px เพื่อควบคุมขนาดไฟล์
 
@@ -1348,6 +1373,99 @@
                 if (branches.includes(branch)) return zone;
             }
             return null;
+        }
+
+        // ===== Firebase Helper Functions =====
+        
+        // แปลง Data URL เป็น Blob สำหรับ upload
+        function dataURLtoBlob(dataURL) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        }
+
+        // Upload รูปภาพไป Firebase Storage
+        async function uploadPhotoToStorage(photoDataURL, checkinId, photoType) {
+            if (!photoDataURL) return null;
+            
+            try {
+                const blob = dataURLtoBlob(photoDataURL);
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const fileName = photoType === 1 ? 'house_front.jpg' : 'contract.jpg';
+                const storagePath = `checkins/${year}/${month}/${checkinId}/${fileName}`;
+                
+                const storageRef = storage.ref(storagePath);
+                const snapshot = await storageRef.put(blob);
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                
+                console.log('Photo uploaded:', storagePath);
+                return downloadURL;
+            } catch (error) {
+                console.error('Upload error:', error);
+                throw error;
+            }
+        }
+
+        // บันทึก Check-in ลง Firestore
+        async function saveCheckinToFirestore(data) {
+            try {
+                const docRef = await db.collection('checkins').add({
+                    ...data,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('Checkin saved with ID:', docRef.id);
+                return docRef.id;
+            } catch (error) {
+                console.error('Firestore save error:', error);
+                throw error;
+            }
+        }
+
+        // ดึงประวัติ Check-in จาก Firestore
+        async function loadHistoryFromFirestore(teamId) {
+            try {
+                const querySnapshot = await db.collection('checkins')
+                    .where('team', '==', teamId)
+                    .orderBy('createdAt', 'desc')
+                    .limit(50)
+                    .get();
+                
+                const history = [];
+                querySnapshot.forEach(doc => {
+                    history.push({ id: doc.id, ...doc.data() });
+                });
+                return history;
+            } catch (error) {
+                console.error('Load history error:', error);
+                // ถ้า query ไม่ได้ (เช่น ต้องสร้าง index) ให้ลอง query แบบง่าย
+                try {
+                    const simpleQuery = await db.collection('checkins')
+                        .orderBy('createdAt', 'desc')
+                        .limit(50)
+                        .get();
+                    
+                    const history = [];
+                    simpleQuery.forEach(doc => {
+                        const data = doc.data();
+                        if (data.team === teamId) {
+                            history.push({ id: doc.id, ...data });
+                        }
+                    });
+                    return history;
+                } catch (e) {
+                    console.error('Simple query also failed:', e);
+                    return [];
+                }
+            }
         }
 
         // Initialize Session
@@ -1507,40 +1625,94 @@
             showToast('info', 'ยกเลิกสถานะ Check-in');
         }
 
-        function performCheckin(customerName, contractNumber, branch, zone) {
+        async function performCheckin(customerName, contractNumber, branch, zone) {
             const btn = document.getElementById('checkinBtn');
             const btnText = document.getElementById('btnText');
             const statusBadge = document.getElementById('statusBadge');
+            const notes = document.getElementById('notes').value;
             const now = new Date();
 
-            isCheckedIn = true;
-            btn.classList.add('checked');
-            btnText.textContent = 'CHECKED!';
-            btn.querySelector('i').className = 'fas fa-check';
-            statusBadge.className = 'status-badge success';
-            statusBadge.innerHTML = '<i class="fas fa-check-circle"></i><span>Check-in สำเร็จ! ' + formatThaiDate(now) + ' ' + now.toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'}) + '</span>';
-
-            // Persist to local history with GPS coordinates
-            const history = JSON.parse(localStorage.getItem('bait_history') || '[]');
-            history.unshift({
-                team: selectedTeam,
-                customerName,
-                contractNumber,
-                branch,
-                zone,
-                location: currentLocation,
-                time: now.toISOString(),
-                photo: photos[1]
-            });
-            localStorage.setItem('bait_history', JSON.stringify(history));
-            renderHistory();
-            
-            setTimeout(() => {
+            try {
+                // 1. สร้าง Document ID ก่อน
+                const tempId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+                
+                // 2. Upload รูปภาพไป Firebase Storage
+                let houseFrontURL = null;
+                let contractPhotoURL = null;
+                
+                if (photos[1]) {
+                    houseFrontURL = await uploadPhotoToStorage(photos[1], tempId, 1);
+                }
+                if (photos[2]) {
+                    contractPhotoURL = await uploadPhotoToStorage(photos[2], tempId, 2);
+                }
+                
+                // 3. สร้างข้อมูล Check-in
+                const checkinData = {
+                    team: selectedTeam,
+                    customerName: customerName,
+                    contractNumber: contractNumber,
+                    branch: branch,
+                    zone: zone,
+                    location: {
+                        lat: currentLocation.lat,
+                        lng: currentLocation.lng,
+                        address: currentLocation.address || '',
+                        accuracy: currentLocation.accuracy
+                    },
+                    photos: {
+                        houseFront: houseFrontURL,
+                        contractPhoto: contractPhotoURL
+                    },
+                    notes: notes,
+                    visible: true,
+                    checkinTime: firebase.firestore.Timestamp.fromDate(now)
+                };
+                
+                // 4. บันทึกลง Firestore
+                const docId = await saveCheckinToFirestore(checkinData);
+                
+                // 5. Update UI
+                isCheckedIn = true;
+                btn.classList.add('checked');
+                btnText.textContent = 'CHECKED!';
+                btn.querySelector('i').className = 'fas fa-check';
+                statusBadge.className = 'status-badge success';
+                statusBadge.innerHTML = '<i class="fas fa-check-circle"></i><span>Check-in สำเร็จ! ' + formatThaiDate(now) + ' ' + now.toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'}) + '</span>';
+                
+                // 6. Reload history from Firestore
+                await renderHistoryFromFirestore();
+                
                 showLoading(false);
-                showToast('success', 'บันทึก Check-in สำเร็จ (พิกัดจริง)');
+                showToast('success', 'บันทึก Check-in ไป Firebase สำเร็จ!');
+                
                 // Reset form for next check-in
-                resetForm();
-            }, 500);
+                setTimeout(() => {
+                    resetForm();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Check-in error:', error);
+                showLoading(false);
+                showToast('error', 'เกิดข้อผิดพลาด: ' + error.message);
+                
+                // Fallback: บันทึกลง localStorage
+                const history = JSON.parse(localStorage.getItem('bait_history') || '[]');
+                history.unshift({
+                    team: selectedTeam,
+                    customerName,
+                    contractNumber,
+                    branch,
+                    zone,
+                    location: currentLocation,
+                    time: now.toISOString(),
+                    photo: photos[1],
+                    offline: true
+                });
+                localStorage.setItem('bait_history', JSON.stringify(history));
+                renderHistory();
+                showToast('info', 'บันทึก Offline สำเร็จ (จะ sync เมื่อมีเน็ต)');
+            }
         }
 
         function showView(view) {
@@ -1555,6 +1727,8 @@
                 document.getElementById('checkinView').style.display = 'none';
                 document.getElementById('historyView').classList.add('active');
                 navItems[1].classList.add('active');
+                // โหลดประวัติจาก Firestore
+                renderHistoryFromFirestore();
             }
         }
 
@@ -1844,18 +2018,72 @@
             return `${dd}-${mm}-${yyyy}`;
         }
 
+        // แปลง Firestore Timestamp เป็น Date
+        function timestampToDate(timestamp) {
+            if (!timestamp) return new Date();
+            if (timestamp.toDate) return timestamp.toDate();
+            if (timestamp.seconds) return new Date(timestamp.seconds * 1000);
+            return new Date(timestamp);
+        }
+
+        // Render History จาก Firestore
+        async function renderHistoryFromFirestore() {
+            const listEl = document.getElementById('historyList');
+            if (!listEl) return;
+            
+            listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;"><i class="fas fa-spinner fa-spin"></i> กำลังโหลด...</div>';
+            
+            try {
+                const history = await loadHistoryFromFirestore(selectedTeam);
+                listEl.innerHTML = '';
+                
+                if (history.length === 0) {
+                    listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-inbox" style="font-size:2rem;margin-bottom:10px;display:block;"></i>ยังไม่มีประวัติ Check-in</div>';
+                    return;
+                }
+                
+                history.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'history-item';
+                    const time = timestampToDate(item.checkinTime || item.createdAt);
+                    const photoUrl = item.photos?.houseFront || item.photo || '';
+                    
+                    div.innerHTML = `
+                        <div class="photo-thumb">${photoUrl ? `<img src="${photoUrl}" alt="house">` : '<i class="fas fa-home" style="color:#94a3b8;font-size:1.5rem;"></i>'}</div>
+                        <div class="info">
+                            <div class="time"><i class="far fa-clock"></i> ${formatThaiDate(time)} ${time.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})} | Team ${item.team}</div>
+                            <div class="customer-name">${item.customerName || '-'}</div>
+                            <div class="contract">${item.contractNumber || '-'}</div>
+                            <div class="branch"><i class="fas fa-building"></i> ${item.branch || '-'} (${item.zone || '-'})</div>
+                        </div>
+                    `;
+                    listEl.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Render history error:', error);
+                // Fallback to localStorage
+                renderHistory();
+            }
+        }
+
         function renderHistory() {
             const listEl = document.getElementById('historyList');
             if (!listEl) return;
             const history = JSON.parse(localStorage.getItem('bait_history') || '[]');
             listEl.innerHTML = '';
+            
+            if (history.length === 0) {
+                listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-inbox" style="font-size:2rem;margin-bottom:10px;display:block;"></i>ยังไม่มีประวัติ Check-in (Offline)</div>';
+                return;
+            }
+            
             history.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'history-item';
                 div.innerHTML = `
                     <div class="photo-thumb">${item.photo ? `<img src="${item.photo}" alt="house">` : ''}</div>
                     <div class="info">
-                        <div class="time"><i class="far fa-clock"></i> ${formatThaiDate(item.time)} ${new Date(item.time).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})} | Team ${item.team}</div>
+                        <div class="time"><i class="far fa-clock"></i> ${formatThaiDate(item.time)} ${new Date(item.time).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})} | Team ${item.team}${item.offline ? ' <span style="color:#f59e0b;">(Offline)</span>' : ''}</div>
                         <div class="customer-name">${item.customerName}</div>
                         <div class="contract">${item.contractNumber}</div>
                         <div class="branch"><i class="fas fa-building"></i> ${item.branch} (${item.zone || '-'})</div>

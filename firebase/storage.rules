@@ -1,0 +1,10 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Check-in photos - อนุญาตให้อ่าน/เขียนได้ (Development Mode)
+    match /checkins/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 500 * 1024; // จำกัด 500KB ต่อไฟล์
+    }
+  }
+}
