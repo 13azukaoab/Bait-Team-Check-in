@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bait Check-In | Admin Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="image/favicon.svg">
+    <link rel="apple-touch-icon" href="image/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -386,40 +388,139 @@
             justify-content: center;
         }
 
-        .admin-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 16px;
-            background: var(--bg-main);
-            border-radius: 12px;
-            cursor: pointer;
+        .notification-btn .badge.hidden {
+            display: none;
         }
 
-        .admin-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+        /* Notification Dropdown */
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 360px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .notification-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            color: white;
+        }
+
+        .notification-header h4 {
+            margin: 0;
+            font-size: 1rem;
             font-weight: 600;
         }
 
-        .admin-info {
-            text-align: left;
+        .notification-header .mark-all {
+            font-size: 0.8rem;
+            color: var(--primary);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Prompt', sans-serif;
         }
 
-        .admin-info .name {
-            font-weight: 500;
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 14px 20px;
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-main);
+        }
+
+        .notification-item.unread {
+            background: rgba(14, 165, 233, 0.05);
+        }
+
+        .notification-item .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-item .icon.checkin {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .notification-item .icon.warning {
+            background: rgba(249, 115, 22, 0.1);
+            color: var(--warning);
+        }
+
+        .notification-item .icon.info {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--primary);
+        }
+
+        .notification-item .content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-item .content .title {
             font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--text-primary);
         }
 
-        .admin-info .role {
+        .notification-item .content .desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .notification-item .content .time {
             font-size: 0.75rem;
             color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .notification-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .notification-empty i {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.3;
+        }
+
+        .notification-wrapper {
+            position: relative;
         }
 
         /* Stat Cards */
@@ -517,6 +618,26 @@
             border-radius: 16px;
             box-shadow: var(--shadow);
             overflow: hidden;
+        }
+
+        .map-section.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            border-radius: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .map-section.fullscreen .map-container {
+            height: calc(100vh - 80px);
+        }
+        
+        .map-section.fullscreen #map {
+            height: 100%;
         }
 
         .section-header {
@@ -687,6 +808,15 @@
         .checkin-status.inactive {
             background: rgba(100, 116, 139, 0.1);
             color: var(--text-secondary);
+        }
+
+        /* Checkin Actions (Toggle + Navigate) */
+        .checkin-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
         }
 
         /* Toggle Switch */
@@ -1352,6 +1482,79 @@
             opacity: 0.8;
         }
 
+        /* Gallery Album */
+        .gallery-album {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-album:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .gallery-album .album-cover {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+        }
+
+        .gallery-album .album-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-album:hover .album-cover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-album .photo-count {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .gallery-album .album-info {
+            padding: 14px;
+        }
+
+        .gallery-album .album-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .gallery-album .album-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .gallery-album .album-contract {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-family: monospace;
+        }
+
         /* Image Viewer */
         .image-viewer {
             position: fixed;
@@ -1365,6 +1568,8 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
+            padding: 60px 80px;
+            box-sizing: border-box;
         }
 
         .image-viewer.active {
@@ -1372,16 +1577,22 @@
         }
 
         .image-viewer img {
-            max-width: 90%;
-            max-height: 80%;
+            max-width: 100%;
+            max-height: calc(100% - 120px);
             border-radius: 12px;
             box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            object-fit: contain;
         }
 
         .image-viewer .viewer-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
             color: white;
             text-align: center;
-            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
         }
 
         .image-viewer .viewer-close {
@@ -1397,10 +1608,53 @@
             font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            z-index: 10;
         }
 
         .image-viewer .viewer-close:hover {
             background: var(--danger);
+        }
+
+        .image-viewer .viewer-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-viewer .viewer-nav:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .image-viewer .viewer-nav.prev {
+            left: 20px;
+        }
+
+        .image-viewer .viewer-nav.next {
+            right: 20px;
+        }
+
+        .image-viewer .viewer-counter {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
         }
 
         /* Charts Container */
@@ -1745,17 +1999,23 @@
                         <span class="realtime-dot"></span>
                         <span>Live</span>
                     </div>
-                    <button class="notification-btn">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge" id="notificationCount">5</span>
-                    </button>
-                    <div class="admin-profile">
-                        <div class="admin-avatar">JS</div>
-                        <div class="admin-info">
-                            <div class="name">John Smith</div>
-                            <div class="role">Administrator</div>
+                    <div class="notification-wrapper">
+                        <button class="notification-btn" id="notificationBtn" onclick="toggleNotificationDropdown(event)">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge hidden" id="notificationCount">0</span>
+                        </button>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h4><i class="fas fa-bell" style="margin-right: 8px;"></i>การแจ้งเตือน</h4>
+                                <button class="mark-all" onclick="clearAllNotifications()">ล้างทั้งหมด</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <div class="notification-empty">
+                                    <i class="fas fa-bell-slash"></i>
+                                    <p>ยังไม่มีการแจ้งเตือน</p>
+                                </div>
+                            </div>
                         </div>
-                        <i class="fas fa-chevron-down" style="color: var(--text-secondary); font-size: 0.8rem;"></i>
                     </div>
                 </div>
             </div>
@@ -1769,10 +2029,10 @@
                         <i class="fas fa-location-check"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>127</h3>
+                        <h3 id="statCheckinsToday">0</h3>
                         <p>Check-ins วันนี้</p>
-                        <div class="stat-trend up">
-                            <i class="fas fa-arrow-up"></i> +12% จากเมื่อวาน
+                        <div class="stat-trend" id="statCheckinsTrend" style="display: none;">
+                            <i class="fas fa-arrow-up"></i> <span></span>
                         </div>
                     </div>
                 </div>
@@ -1781,10 +2041,10 @@
                         <i class="fas fa-map-pin"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>89</h3>
+                        <h3 id="statActiveLocations">0</h3>
                         <p>Active Locations</p>
-                        <div class="stat-trend up">
-                            <i class="fas fa-arrow-up"></i> +5 ใหม่
+                        <div class="stat-trend" id="statLocationsTrend" style="display: none;">
+                            <i class="fas fa-arrow-up"></i> <span></span>
                         </div>
                     </div>
                 </div>
@@ -1793,10 +2053,10 @@
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>2,456</h3>
+                        <h3 id="statTotalCustomers">0</h3>
                         <p>Total Customers</p>
-                        <div class="stat-trend up">
-                            <i class="fas fa-arrow-up"></i> +23 สัปดาห์นี้
+                        <div class="stat-trend" id="statCustomersTrend" style="display: none;">
+                            <i class="fas fa-arrow-up"></i> <span></span>
                         </div>
                     </div>
                 </div>
@@ -1805,10 +2065,10 @@
                         <i class="fas fa-chart-simple"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>95.2%</h3>
+                        <h3 id="statSuccessRate">0%</h3>
                         <p>อัตราความสำเร็จ</p>
-                        <div class="stat-trend up">
-                            <i class="fas fa-arrow-up"></i> +2.1%
+                        <div class="stat-trend" id="statSuccessTrend" style="display: none;">
+                            <i class="fas fa-arrow-up"></i> <span></span>
                         </div>
                     </div>
                 </div>
@@ -1918,6 +2178,9 @@
                             <button class="btn btn-hq" onclick="goToHQ()" title="ไปสำนักงานใหญ่">
                                 <i class="fas fa-building"></i> HQ
                             </button>
+                            <button class="btn btn-navigate" onclick="navigateToSelected()" title="นำทางไปยังจุดที่เลือก" id="navigateBtn">
+                                <i class="fas fa-location-arrow"></i>
+                            </button>
                             <button class="btn btn-outline" onclick="toggleFilter()">
                                 <i class="fas fa-filter"></i> Filter
                             </button>
@@ -1927,7 +2190,7 @@
                             <button class="btn btn-radius" id="radiusBtn" onclick="toggleRadius()">
                                 <i class="fas fa-circle"></i> วัดรัศมี
                             </button>
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" onclick="toggleMapFullScreen()" id="fullScreenBtn">
                                 <i class="fas fa-expand"></i> Full Screen
                             </button>
                         </div>
@@ -2009,75 +2272,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="checkins-list">
-                        <div class="checkin-item" data-checkin-id="0">
-                            <span class="team-badge team-badge-sm team-a">A</span>
-                            <div class="checkin-avatar">อร</div>
-                            <div class="checkin-info">
-                                <div class="name">อรุณี วงศ์ประเสริฐ</div>
-                                <div class="location"><i class="fas fa-location-dot"></i> Central World, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 2 นาทีที่แล้ว <span class="actual-time">(10:01)</span></div>
-                            </div>
-                            <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" checked onchange="syncToggleMarker(0, this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="checkin-item" data-checkin-id="1">
-                            <span class="team-badge team-badge-sm team-b">B</span>
-                            <div class="checkin-avatar">สม</div>
-                            <div class="checkin-info">
-                                <div class="name">สมชาย ใจดี</div>
-                                <div class="location"><i class="fas fa-location-dot"></i> Siam Paragon, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 15 นาทีที่แล้ว <span class="actual-time">(09:48)</span></div>
-                            </div>
-                            <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" checked onchange="syncToggleMarker(1, this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="checkin-item" data-checkin-id="2">
-                            <span class="team-badge team-badge-sm team-c">C</span>
-                            <div class="checkin-avatar">วร</div>
-                            <div class="checkin-info">
-                                <div class="name">วรรณา สุขสันต์</div>
-                                <div class="location"><i class="fas fa-location-dot"></i> EmQuartier, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 32 นาทีที่แล้ว <span class="actual-time">(09:31)</span></div>
-                            </div>
-                            <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" checked onchange="syncToggleMarker(2, this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="checkin-item" data-checkin-id="3">
-                            <span class="team-badge team-badge-sm team-d">D</span>
-                            <div class="checkin-avatar">ปร</div>
-                            <div class="checkin-info">
-                                <div class="name">ประเสริฐ รุ่งเรือง</div>
-                                <div class="location"><i class="fas fa-location-dot"></i> Terminal 21, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 1 ชั่วโมงที่แล้ว <span class="actual-time">(09:03)</span></div>
-                            </div>
-                            <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" onchange="syncToggleMarker(3, this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="checkin-item" data-checkin-id="4">
-                            <span class="team-badge team-badge-sm team-e">E</span>
-                            <div class="checkin-avatar">มา</div>
-                            <div class="checkin-info">
-                                <div class="name">มานี มีศรี</div>
-                                <div class="location"><i class="fas fa-location-dot"></i> ICONSIAM, กรุงเทพฯ</div>
-                                <div class="time"><i class="far fa-clock"></i> 2 ชั่วโมงที่แล้ว <span class="actual-time">(08:05)</span></div>
-                            </div>
-                            <label class="toggle-switch" title="แสดงบนแผนที่">
-                                <input type="checkbox" checked onchange="syncToggleMarker(4, this.checked)">
-                                <span class="toggle-slider"></span>
-                            </label>
+                    <div class="checkins-list" id="recentCheckinsListContainer">
+                        <!-- Recent Check-ins จะถูก load จาก Firestore -->
+                        <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-spinner fa-spin fa-2x"></i>
+                            <p style="margin-top: 16px;">กำลังโหลดข้อมูล...</p>
                         </div>
                     </div>
                 </div>
@@ -2121,75 +2320,11 @@
                             <th>แสดงบนแผนที่</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr data-checkin-id="0">
-                            <td><span class="team-badge team-a">A</span></td>
-                            <td><strong>อรุณี วงศ์ประเสริฐ</strong></td>
-                            <td>Central World, กรุงเทพฯ</td>
-                            <td><code>13.7466, 100.5392</code></td>
-                            <td>22 ม.ค. 2026, 10:01</td>
-                            <td><span class="checkin-status active">Active</span></td>
-                            <td>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked onchange="syncToggleMarker(0, this.checked)">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr data-checkin-id="1">
-                            <td><span class="team-badge team-b">B</span></td>
-                            <td><strong>สมชาย ใจดี</strong></td>
-                            <td>Siam Paragon, กรุงเทพฯ</td>
-                            <td><code>13.7460, 100.5347</code></td>
-                            <td>22 ม.ค. 2026, 09:48</td>
-                            <td><span class="checkin-status active">Active</span></td>
-                            <td>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked onchange="syncToggleMarker(1, this.checked)">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr data-checkin-id="2">
-                            <td><span class="team-badge team-c">C</span></td>
-                            <td><strong>วรรณา สุขสันต์</strong></td>
-                            <td>EmQuartier, กรุงเทพฯ</td>
-                            <td><code>13.7311, 100.5696</code></td>
-                            <td>22 ม.ค. 2026, 09:31</td>
-                            <td><span class="checkin-status active">Active</span></td>
-                            <td>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked onchange="syncToggleMarker(2, this.checked)">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr data-checkin-id="3">
-                            <td><span class="team-badge team-d">D</span></td>
-                            <td><strong>ประเสริฐ รุ่งเรือง</strong></td>
-                            <td>Terminal 21, กรุงเทพฯ</td>
-                            <td><code>13.7378, 100.5603</code></td>
-                            <td>22 ม.ค. 2026, 09:03</td>
-                            <td><span class="checkin-status pending">Pending</span></td>
-                            <td>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" onchange="syncToggleMarker(3, this.checked)">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr data-checkin-id="4">
-                            <td><span class="team-badge team-e">E</span></td>
-                            <td><strong>มานี มีศรี</strong></td>
-                            <td>ICONSIAM, กรุงเทพฯ</td>
-                            <td><code>13.7268, 100.5100</code></td>
-                            <td>22 ม.ค. 2026, 08:05</td>
-                            <td><span class="checkin-status active">Active</span></td>
-                            <td>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked onchange="syncToggleMarker(4, this.checked)">
-                                    <span class="toggle-slider"></span>
-                                </label>
+                    <tbody id="mainCheckinsTableBody">
+                        <!-- Data loaded from Firestore -->
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                <i class="fas fa-spinner fa-spin"></i> กำลังโหลดข้อมูลจาก Firebase...
                             </td>
                         </tr>
                     </tbody>
@@ -2332,102 +2467,18 @@
                                 <th>ภาพ</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="checkinsTableBody">
+                            <!-- Data loaded from Firestore -->
                             <tr>
-                                <td><span class="team-badge team-a">A</span></td>
-                                <td><strong>อรุณี วงศ์ประเสริฐ</strong></td>
-                                <td><code>CT-12345</code></td>
-                                <td>สาทร</td>
-                                <td>26 ม.ค. 2026, 10:01</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-b">B</span></td>
-                                <td><strong>สมชาย ใจดี</strong></td>
-                                <td><code>CT-67890</code></td>
-                                <td>ปทุมวัน</td>
-                                <td>26 ม.ค. 2026, 09:48</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-c">C</span></td>
-                                <td><strong>วรรณา สุขสันต์</strong></td>
-                                <td><code>CT-11223</code></td>
-                                <td>นนทบุรี</td>
-                                <td>26 ม.ค. 2026, 09:31</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-d">D</span></td>
-                                <td><strong>ประเสริฐ รุ่งเรือง</strong></td>
-                                <td><code>CT-44556</code></td>
-                                <td>ลาดพร้าว</td>
-                                <td>26 ม.ค. 2026, 09:03</td>
-                                <td><span class="checkin-status pending">Pending</span></td>
-                                <td><i class="fas fa-image" style="color: var(--warning);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-a">A</span></td>
-                                <td><strong>นภาพร แสงทอง</strong></td>
-                                <td><code>CT-55678</code></td>
-                                <td>บางนา</td>
-                                <td>26 ม.ค. 2026, 08:45</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-b">B</span></td>
-                                <td><strong>ธนากร พิทักษ์</strong></td>
-                                <td><code>CT-77889</code></td>
-                                <td>รังสิต</td>
-                                <td>26 ม.ค. 2026, 08:30</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-c">C</span></td>
-                                <td><strong>สุภาพร เจริญสุข</strong></td>
-                                <td><code>CT-99001</code></td>
-                                <td>พระราม 9</td>
-                                <td>26 ม.ค. 2026, 08:15</td>
-                                <td><span class="checkin-status pending">Pending</span></td>
-                                <td><i class="fas fa-image" style="color: var(--warning);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-d">D</span></td>
-                                <td><strong>วิชัย มงคลชัย</strong></td>
-                                <td><code>CT-22334</code></td>
-                                <td>อ่อนนุช</td>
-                                <td>26 ม.ค. 2026, 08:02</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-a">A</span></td>
-                                <td><strong>พิมพ์ใจ ศรีสุข</strong></td>
-                                <td><code>CT-33445</code></td>
-                                <td>เอกมัย</td>
-                                <td>25 ม.ค. 2026, 17:45</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
-                            </tr>
-                            <tr>
-                                <td><span class="team-badge team-b">B</span></td>
-                                <td><strong>กิตติพงษ์ วัฒนา</strong></td>
-                                <td><code>CT-44667</code></td>
-                                <td>สุขุมวิท</td>
-                                <td>25 ม.ค. 2026, 16:30</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                                <td><i class="fas fa-image" style="color: var(--success);"></i></td>
+                                <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                    <i class="fas fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                     </div>
                     <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
-                        <span style="color: var(--text-secondary); font-size: 0.9rem;">แสดง 1-10 จาก 127 รายการ</span>
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;" id="checkinsTableInfo">แสดง 0 รายการ</span>
                         <div style="display: flex; gap: 8px;">
                             <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-left"></i></button>
                             <button class="btn btn-primary" style="padding: 8px 12px;">1</button>
@@ -2448,21 +2499,21 @@
                     <div class="stat-card">
                         <div class="stat-icon blue"><i class="fas fa-users"></i></div>
                         <div class="stat-info">
-                            <h3>2,456</h3>
+                            <h3 id="customerTotal">0</h3>
                             <p>ลูกค้าทั้งหมด</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
                         <div class="stat-info">
-                            <h3>1,892</h3>
+                            <h3 id="customerActive">0</h3>
                             <p>ลูกค้า Active</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon orange"><i class="fas fa-user-plus"></i></div>
                         <div class="stat-info">
-                            <h3>45</h3>
+                            <h3 id="customerNewMonth">0</h3>
                             <p>ลูกค้าใหม่เดือนนี้</p>
                         </div>
                     </div>
@@ -2496,98 +2547,21 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="customersTableBody">
                             <tr>
-                                <td><strong>อรุณี วงศ์ประเสริฐ</strong><br><small style="color: var(--text-secondary);">123/45 ซ.สุขุมวิท</small></td>
-                                <td><code>CT-12345</code></td>
-                                <td>สาทร</td>
-                                <td>26 ม.ค. 2026</td>
-                                <td>12</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>สมชาย ใจดี</strong><br><small style="color: var(--text-secondary);">789/12 ถ.พระราม 4</small></td>
-                                <td><code>CT-67890</code></td>
-                                <td>ปทุมวัน</td>
-                                <td>25 ม.ค. 2026</td>
-                                <td>8</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>วรรณา สุขสันต์</strong><br><small style="color: var(--text-secondary);">456 ถ.รัชดาภิเษก</small></td>
-                                <td><code>CT-11223</code></td>
-                                <td>นนทบุรี</td>
-                                <td>24 ม.ค. 2026</td>
-                                <td>15</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>ประเสริฐ รุ่งเรือง</strong><br><small style="color: var(--text-secondary);">88/9 ซ.ลาดพร้าว 71</small></td>
-                                <td><code>CT-44556</code></td>
-                                <td>ลาดพร้าว</td>
-                                <td>23 ม.ค. 2026</td>
-                                <td>6</td>
-                                <td><span class="checkin-status pending">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>นภาพร แสงทอง</strong><br><small style="color: var(--text-secondary);">234/56 ถ.บางนา-ตราด</small></td>
-                                <td><code>CT-55678</code></td>
-                                <td>บางนา</td>
-                                <td>22 ม.ค. 2026</td>
-                                <td>20</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>ธนากร พิทักษ์</strong><br><small style="color: var(--text-secondary);">567/89 ถ.รังสิต-นครนายก</small></td>
-                                <td><code>CT-77889</code></td>
-                                <td>รังสิต</td>
-                                <td>21 ม.ค. 2026</td>
-                                <td>9</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>สุภาพร เจริญสุข</strong><br><small style="color: var(--text-secondary);">111/22 ซ.พระราม 9</small></td>
-                                <td><code>CT-99001</code></td>
-                                <td>พระราม 9</td>
-                                <td>20 ม.ค. 2026</td>
-                                <td>4</td>
-                                <td><span class="checkin-status pending">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>วิชัย มงคลชัย</strong><br><small style="color: var(--text-secondary);">333/44 ซ.อ่อนนุช 17</small></td>
-                                <td><code>CT-22334</code></td>
-                                <td>อ่อนนุช</td>
-                                <td>19 ม.ค. 2026</td>
-                                <td>18</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>พิมพ์ใจ ศรีสุข</strong><br><small style="color: var(--text-secondary);">55/66 ซ.เอกมัย 12</small></td>
-                                <td><code>CT-33445</code></td>
-                                <td>เอกมัย</td>
-                                <td>18 ม.ค. 2026</td>
-                                <td>11</td>
-                                <td><span class="checkin-status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>กิตติพงษ์ วัฒนา</strong><br><small style="color: var(--text-secondary);">77/88 ถ.สุขุมวิท 101</small></td>
-                                <td><code>CT-44667</code></td>
-                                <td>สุขุมวิท</td>
-                                <td>17 ม.ค. 2026</td>
-                                <td>7</td>
-                                <td><span class="checkin-status active">Active</span></td>
+                                <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                    <i class="fas fa-users" style="font-size: 2rem; opacity: 0.3; display: block; margin-bottom: 10px;"></i>
+                                    ยังไม่มีข้อมูลลูกค้า<br>
+                                    <small>ข้อมูลจะแสดงเมื่อมีการ Check-in</small>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                     </div>
                     <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
-                        <span style="color: var(--text-secondary); font-size: 0.9rem;">แสดง 1-10 จาก 2,456 รายการ</span>
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;" id="customersTableInfo">แสดง 0 รายการ</span>
                         <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-left"></i></button>
-                            <button class="btn btn-primary" style="padding: 8px 12px;">1</button>
-                            <button class="btn btn-outline" style="padding: 8px 12px;">2</button>
-                            <button class="btn btn-outline" style="padding: 8px 12px;">3</button>
-                            <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-right"></i></button>
+                            <!-- Pagination จะแสดงเมื่อมีข้อมูล -->
                         </div>
                     </div>
                 </div>
@@ -2602,25 +2576,22 @@
                     <div class="stat-card">
                         <div class="stat-icon blue"><i class="fas fa-calendar-check"></i></div>
                         <div class="stat-info">
-                            <h3>3,456</h3>
+                            <h3 id="reportCheckinsMonth">0</h3>
                             <p>Check-ins เดือนนี้</p>
-                            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +15%</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon green"><i class="fas fa-percentage"></i></div>
                         <div class="stat-info">
-                            <h3>97.2%</h3>
+                            <h3 id="reportSuccessRate">0%</h3>
                             <p>อัตราความสำเร็จ</p>
-                            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +2.1%</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
                         <div class="stat-info">
-                            <h3>45 นาที</h3>
+                            <h3 id="reportAvgTime">- นาที</h3>
                             <p>เวลาเฉลี่ยต่อสาย</p>
-                            <div class="stat-trend down"><i class="fas fa-arrow-down"></i> -5 นาที</div>
                         </div>
                     </div>
                 </div>
@@ -2639,33 +2610,10 @@
                         </div>
                         <div class="chart-wrapper">
                             <div class="bar-chart" id="barChart">
-                                <div class="bar-item">
-                                    <div class="bar" style="height: 120px;"><span class="bar-value">98</span></div>
-                                    <span class="bar-label">จ.</span>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar" style="height: 150px; background: linear-gradient(to top, #10b981, #34d399);"><span class="bar-value">122</span></div>
-                                    <span class="bar-label">อ.</span>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar" style="height: 100px;"><span class="bar-value">82</span></div>
-                                    <span class="bar-label">พ.</span>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar" style="height: 170px; background: linear-gradient(to top, #10b981, #34d399);"><span class="bar-value">139</span></div>
-                                    <span class="bar-label">พฤ.</span>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar" style="height: 130px;"><span class="bar-value">106</span></div>
-                                    <span class="bar-label">ศ.</span>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar" style="height: 80px; background: linear-gradient(to top, #f59e0b, #fbbf24);"><span class="bar-value">65</span></div>
-                                    <span class="bar-label">ส.</span>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar" style="height: 60px; background: linear-gradient(to top, #f59e0b, #fbbf24);"><span class="bar-value">49</span></div>
-                                    <span class="bar-label">อา.</span>
+                                <!-- กราฟจะแสดงข้อมูลจริงเมื่อมีข้อมูลใน Firestore -->
+                                <div style="text-align: center; padding: 60px; color: var(--text-secondary); grid-column: 1/-1;">
+                                    <i class="fas fa-chart-bar fa-2x" style="opacity: 0.5;"></i>
+                                    <p style="margin-top: 16px;">ยังไม่มีข้อมูลสำหรับสร้างกราฟ</p>
                                 </div>
                             </div>
                         </div>
@@ -2677,140 +2625,53 @@
                             <h3><i class="fas fa-chart-pie"></i> สถานะ Check-in</h3>
                         </div>
                         <div class="chart-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <div class="donut-chart" style="background: conic-gradient(#10b981 0deg 277deg, #f59e0b 277deg 324deg, #ef4444 324deg 360deg);">
+                            <div class="donut-chart" id="donutChart" style="background: conic-gradient(#e5e7eb 0deg 360deg);">
                                 <div class="donut-center">
-                                    <span class="value">661</span>
+                                    <span class="value" id="donutValue">0</span>
                                     <span class="label">รายการ</span>
                                 </div>
                             </div>
                             <div class="chart-legend">
                                 <div class="legend-item">
                                     <span class="legend-dot" style="background: #10b981;"></span>
-                                    <span>สำเร็จ (77%)</span>
+                                    <span id="legendSuccess">สำเร็จ (0%)</span>
                                 </div>
                                 <div class="legend-item">
                                     <span class="legend-dot" style="background: #f59e0b;"></span>
-                                    <span>รอดำเนินการ (13%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span class="legend-dot" style="background: #ef4444;"></span>
-                                    <span>ยกเลิก (10%)</span>
+                                    <span id="legendPending">รอดำเนินการ (0%)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Team Performance Chart -->
+                <!-- Team Performance -->
                 <div class="chart-container" style="margin-bottom: 24px;">
                     <div class="chart-header">
                         <h3><i class="fas fa-users"></i> Performance รายทีม</h3>
-                        <div class="export-dropdown">
-                            <button class="btn btn-outline" onclick="toggleExportMenu('team-perf')">
-                                <i class="fas fa-download"></i> Export <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
-                            </button>
-                            <div class="export-menu" id="exportMenuTeam-perf">
-                                <button class="export-menu-item excel" onclick="exportToExcel('team-performance')">
-                                    <i class="fas fa-file-excel"></i> Export Excel
-                                </button>
-                                <button class="export-menu-item csv" onclick="exportToCSV('team-performance')">
-                                    <i class="fas fa-file-csv"></i> Export CSV
-                                </button>
-                            </div>
-                        </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; padding: 20px 0;">
-                        <div style="text-align: center;">
-                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                                <div style="width: 50px; height: 120px; background: linear-gradient(to top, #ef4444, #f87171); border-radius: 8px 8px 0 0; position: relative;">
-                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">245</span>
-                                </div>
-                            </div>
-                            <span class="team-badge team-a" style="margin-top: 10px;">A</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                                <div style="width: 50px; height: 110px; background: linear-gradient(to top, #10b981, #34d399); border-radius: 8px 8px 0 0; position: relative;">
-                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">231</span>
-                                </div>
-                            </div>
-                            <span class="team-badge team-b" style="margin-top: 10px;">B</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                                <div style="width: 50px; height: 100px; background: linear-gradient(to top, #f59e0b, #fbbf24); border-radius: 8px 8px 0 0; position: relative;">
-                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">218</span>
-                                </div>
-                            </div>
-                            <span class="team-badge team-c" style="margin-top: 10px;">C</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                                <div style="width: 50px; height: 90px; background: linear-gradient(to top, #0ea5e9, #38bdf8); border-radius: 8px 8px 0 0; position: relative;">
-                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">205</span>
-                                </div>
-                            </div>
-                            <span class="team-badge team-d" style="margin-top: 10px;">D</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                                <div style="width: 50px; height: 85px; background: linear-gradient(to top, #8b5cf6, #a78bfa); border-radius: 8px 8px 0 0; position: relative;">
-                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">198</span>
-                                </div>
-                            </div>
-                            <span class="team-badge team-e" style="margin-top: 10px;">E</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                                <div style="width: 50px; height: 75px; background: linear-gradient(to top, #ec4899, #f472b6); border-radius: 8px 8px 0 0; position: relative;">
-                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">185</span>
-                                </div>
-                            </div>
-                            <span class="team-badge team-f" style="margin-top: 10px;">F</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                                <div style="width: 50px; height: 65px; background: linear-gradient(to top, #06b6d4, #22d3ee); border-radius: 8px 8px 0 0; position: relative;">
-                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">172</span>
-                                </div>
-                            </div>
-                            <span class="team-badge team-g" style="margin-top: 10px;">G</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-                                <div style="width: 50px; height: 55px; background: linear-gradient(to top, #84cc16, #a3e635); border-radius: 8px 8px 0 0; position: relative;">
-                                    <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 0.85rem;">156</span>
-                                </div>
-                            </div>
-                            <span class="team-badge team-h" style="margin-top: 10px;">H</span>
-                        </div>
+                    <div style="text-align: center; padding: 60px; color: var(--text-secondary);">
+                        <i class="fas fa-users fa-2x" style="opacity: 0.5;"></i>
+                        <p style="margin-top: 16px;">ยังไม่มีข้อมูลสำหรับแสดง Performance</p>
+                        <p style="font-size: 0.85rem;">ข้อมูลจะแสดงเมื่อมีการ Check-in จริง</p>
                     </div>
                 </div>
 
+                <!-- Summary Tables -->
                 <div class="content-grid" style="grid-template-columns: 1fr 1fr;">
                     <div class="table-section">
                         <div class="section-header"><h2><i class="fas fa-trophy"></i> Top Teams</h2></div>
-                        <table class="data-table">
-                            <thead><tr><th>ทีม</th><th>Check-ins</th><th>สำเร็จ</th></tr></thead>
-                            <tbody>
-                                <tr><td><span class="team-badge team-a">A</span></td><td>245</td><td>98.5%</td></tr>
-                                <tr><td><span class="team-badge team-b">B</span></td><td>231</td><td>97.8%</td></tr>
-                                <tr><td><span class="team-badge team-c">C</span></td><td>218</td><td>96.5%</td></tr>
-                                <tr><td><span class="team-badge team-d">D</span></td><td>205</td><td>95.2%</td></tr>
-                            </tbody>
-                        </table>
+                        <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-trophy fa-2x" style="opacity: 0.5;"></i>
+                            <p style="margin-top: 16px;">ยังไม่มีข้อมูล</p>
+                        </div>
                     </div>
                     <div class="table-section">
                         <div class="section-header"><h2><i class="fas fa-building"></i> Top Branches</h2></div>
-                        <table class="data-table">
-                            <thead><tr><th>สาขา</th><th>Check-ins</th><th>ลูกค้า</th></tr></thead>
-                            <tbody>
-                                <tr><td>สาทร</td><td>156</td><td>89</td></tr>
-                                <tr><td>ปทุมวัน</td><td>142</td><td>76</td></tr>
-                                <tr><td>นนทบุรี</td><td>128</td><td>65</td></tr>
-                                <tr><td>ลาดพร้าว</td><td>115</td><td>58</td></tr>
-                            </tbody>
-                        </table>
+                        <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-building fa-2x" style="opacity: 0.5;"></i>
+                            <p style="margin-top: 16px;">ยังไม่มีข้อมูล</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2844,21 +2705,21 @@
                     <div class="stat-card">
                         <div class="stat-icon blue"><i class="fas fa-images"></i></div>
                         <div class="stat-info">
-                            <h3 id="galleryTotalCount">254</h3>
+                            <h3 id="galleryTotalPhotos">0</h3>
                             <p>รูปภาพทั้งหมด</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon green"><i class="fas fa-home"></i></div>
                         <div class="stat-info">
-                            <h3>127</h3>
+                            <h3 id="galleryHouseFront">0</h3>
                             <p>รูปหน้าบ้าน</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon orange"><i class="fas fa-file-contract"></i></div>
                         <div class="stat-info">
-                            <h3>127</h3>
+                            <h3 id="galleryContract">0</h3>
                             <p>รูปสัญญา</p>
                         </div>
                     </div>
@@ -2867,69 +2728,10 @@
                 <!-- Gallery Grid -->
                 <div class="table-section" style="padding: 24px;">
                     <div class="gallery-grid" id="galleryGrid">
-                        <!-- Gallery Item 1 -->
-                        <div class="gallery-item" onclick="openImageViewer(0)">
-                            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop" alt="House Front">
-                            <div class="gallery-info">
-                                <div class="name">อรุณี วงศ์ประเสริฐ</div>
-                                <div class="meta"><span class="team-badge team-badge-sm team-a" style="width: 18px; height: 18px; font-size: 0.6rem;">A</span> หน้าบ้าน • 10:01</div>
-                            </div>
-                        </div>
-                        <!-- Gallery Item 2 -->
-                        <div class="gallery-item" onclick="openImageViewer(1)">
-                            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop" alt="House Front">
-                            <div class="gallery-info">
-                                <div class="name">สมชาย ใจดี</div>
-                                <div class="meta"><span class="team-badge team-badge-sm team-b" style="width: 18px; height: 18px; font-size: 0.6rem;">B</span> หน้าบ้าน • 09:48</div>
-                            </div>
-                        </div>
-                        <!-- Gallery Item 3 -->
-                        <div class="gallery-item" onclick="openImageViewer(2)">
-                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop" alt="House Front">
-                            <div class="gallery-info">
-                                <div class="name">วรรณา สุขสันต์</div>
-                                <div class="meta"><span class="team-badge team-badge-sm team-c" style="width: 18px; height: 18px; font-size: 0.6rem;">C</span> หน้าบ้าน • 09:31</div>
-                            </div>
-                        </div>
-                        <!-- Gallery Item 4 -->
-                        <div class="gallery-item" onclick="openImageViewer(3)">
-                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop" alt="House Front">
-                            <div class="gallery-info">
-                                <div class="name">ประเสริฐ รุ่งเรือง</div>
-                                <div class="meta"><span class="team-badge team-badge-sm team-d" style="width: 18px; height: 18px; font-size: 0.6rem;">D</span> หน้าบ้าน • 09:03</div>
-                            </div>
-                        </div>
-                        <!-- Gallery Item 5 -->
-                        <div class="gallery-item" onclick="openImageViewer(4)">
-                            <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop" alt="House Front">
-                            <div class="gallery-info">
-                                <div class="name">มานี มีศรี</div>
-                                <div class="meta"><span class="team-badge team-badge-sm team-e" style="width: 18px; height: 18px; font-size: 0.6rem;">E</span> หน้าบ้าน • 08:05</div>
-                            </div>
-                        </div>
-                        <!-- Gallery Item 6 -->
-                        <div class="gallery-item" onclick="openImageViewer(5)">
-                            <img src="https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=400&h=300&fit=crop" alt="House Front">
-                            <div class="gallery-info">
-                                <div class="name">สุนทร โชคดี</div>
-                                <div class="meta"><span class="team-badge team-badge-sm team-a" style="width: 18px; height: 18px; font-size: 0.6rem;">A</span> หน้าบ้าน • 07:45</div>
-                            </div>
-                        </div>
-                        <!-- Gallery Item 7 -->
-                        <div class="gallery-item" onclick="openImageViewer(6)">
-                            <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=400&h=300&fit=crop" alt="House Front">
-                            <div class="gallery-info">
-                                <div class="name">พิมพ์ใจ รักดี</div>
-                                <div class="meta"><span class="team-badge team-badge-sm team-b" style="width: 18px; height: 18px; font-size: 0.6rem;">B</span> หน้าบ้าน • 07:30</div>
-                            </div>
-                        </div>
-                        <!-- Gallery Item 8 -->
-                        <div class="gallery-item" onclick="openImageViewer(7)">
-                            <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop" alt="House Front">
-                            <div class="gallery-info">
-                                <div class="name">วิชัย ใจกว้าง</div>
-                                <div class="meta"><span class="team-badge team-badge-sm team-c" style="width: 18px; height: 18px; font-size: 0.6rem;">C</span> หน้าบ้าน • 07:15</div>
-                            </div>
+                        <!-- Gallery จะถูก load จาก Firestore -->
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: var(--text-secondary);">
+                            <i class="fas fa-spinner fa-spin fa-2x"></i>
+                            <p style="margin-top: 16px;">กำลังโหลดรูปภาพ...</p>
                         </div>
                     </div>
 
@@ -2977,10 +2779,25 @@
             return `${dd}-${mm}-${yyyy}`;
         }
         
+        // Format เวลาผ่านไป
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - new Date(date);
+            const diffMinutes = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMinutes < 1) return 'เมื่อสักครู่';
+            if (diffMinutes < 60) return `${diffMinutes} นาทีที่แล้ว`;
+            if (diffHours < 24) return `${diffHours} ชั่วโมงที่แล้ว`;
+            if (diffDays < 7) return `${diffDays} วันที่แล้ว`;
+            return formatThaiDate(date);
+        }
+        
         // ดึงข้อมูล Check-ins จาก Firestore
         async function loadCheckinsFromFirestore() {
             try {
-                console.log('Loading check-ins from Firestore...');
+                // console.log('Loading check-ins from Firestore...');
                 const querySnapshot = await db.collection('checkins')
                     .orderBy('createdAt', 'desc')
                     .limit(100)
@@ -3006,7 +2823,6 @@
                     });
                 });
                 
-                console.log('Loaded', firestoreCheckins.length, 'check-ins');
                 return firestoreCheckins;
             } catch (error) {
                 console.error('Error loading check-ins:', error);
@@ -3014,60 +2830,467 @@
             }
         }
         
-        // อัพเดท Dashboard Stats
+        // อัพเดท Dashboard Stats จากข้อมูลจริง
         function updateDashboardStats() {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
+            // นับ Check-ins วันนี้
             const todayCheckins = firestoreCheckins.filter(c => {
                 const checkinDate = new Date(c.checkinTime);
                 checkinDate.setHours(0, 0, 0, 0);
                 return checkinDate.getTime() === today.getTime();
             });
             
-            // นับจำนวนทีมที่ทำงานวันนี้
-            const teamsToday = new Set(todayCheckins.map(c => c.team));
+            // นับ Locations ที่มีข้อมูล
+            const activeLocations = firestoreCheckins.filter(c => c.lat && c.lng && c.visible).length;
+            
+            // นับจำนวน Customers ทั้งหมด (unique by contractNumber)
+            const uniqueCustomers = new Set(firestoreCheckins.map(c => c.contractNumber).filter(c => c));
+            
+            // คำนวณ Success Rate (ถ้ามีรูปภาพถือว่าสำเร็จ)
+            const withPhotos = firestoreCheckins.filter(c => c.houseFrontUrl).length;
+            const successRate = firestoreCheckins.length > 0 
+                ? Math.round((withPhotos / firestoreCheckins.length) * 100) 
+                : 0;
+            
+            // อัพเดท UI ด้วย ID
+            const statCheckinsToday = document.getElementById('statCheckinsToday');
+            const statActiveLocations = document.getElementById('statActiveLocations');
+            const statTotalCustomers = document.getElementById('statTotalCustomers');
+            const statSuccessRate = document.getElementById('statSuccessRate');
+            
+            if (statCheckinsToday) statCheckinsToday.textContent = todayCheckins.length;
+            if (statActiveLocations) statActiveLocations.textContent = activeLocations;
+            if (statTotalCustomers) statTotalCustomers.textContent = uniqueCustomers.size;
+            if (statSuccessRate) statSuccessRate.textContent = successRate + '%';
+            
+            // อัพเดท Photo Gallery Stats
+            updatePhotoGalleryStats();
+        }
+        
+        // อัพเดท Photo Gallery Stats
+        function updatePhotoGalleryStats() {
+            const houseFrontCount = firestoreCheckins.filter(c => c.houseFrontUrl).length;
+            const contractPhotoCount = firestoreCheckins.filter(c => c.contractPhotoUrl).length;
+            const totalPhotos = houseFrontCount + contractPhotoCount;
+            
+            // อัพเดท Gallery page stats (ถ้ามี)
+            const galleryTotalEl = document.getElementById('galleryTotalPhotos');
+            const galleryHouseEl = document.getElementById('galleryHouseFront');
+            const galleryContractEl = document.getElementById('galleryContract');
+            
+            if (galleryTotalEl) galleryTotalEl.textContent = totalPhotos;
+            if (galleryHouseEl) galleryHouseEl.textContent = houseFrontCount;
+            if (galleryContractEl) galleryContractEl.textContent = contractPhotoCount;
+        }
+        
+        // อัพเดท Reports จากข้อมูล Firestore
+        function updateReportsFromFirestore() {
+            const now = new Date();
+            const thisMonth = now.getMonth();
+            const thisYear = now.getFullYear();
+            
+            // นับ Check-ins เดือนนี้
+            const monthCheckins = firestoreCheckins.filter(c => {
+                const d = new Date(c.checkinTime);
+                return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+            });
+            
+            // คำนวณ Success Rate (มีรูป = สำเร็จ)
+            const withPhotos = firestoreCheckins.filter(c => c.houseFrontUrl).length;
+            const successRate = firestoreCheckins.length > 0 
+                ? Math.round((withPhotos / firestoreCheckins.length) * 100) 
+                : 0;
+            const pendingRate = 100 - successRate;
+            
+            // อัพเดท Stat Cards
+            const reportCheckinsMonth = document.getElementById('reportCheckinsMonth');
+            const reportSuccessRate = document.getElementById('reportSuccessRate');
+            
+            if (reportCheckinsMonth) reportCheckinsMonth.textContent = monthCheckins.length;
+            if (reportSuccessRate) reportSuccessRate.textContent = successRate + '%';
+            
+            // อัพเดท Donut Chart
+            const donutChart = document.getElementById('donutChart');
+            const donutValue = document.getElementById('donutValue');
+            const legendSuccess = document.getElementById('legendSuccess');
+            const legendPending = document.getElementById('legendPending');
+            
+            if (donutChart) {
+                const successDeg = (successRate / 100) * 360;
+                donutChart.style.background = firestoreCheckins.length > 0
+                    ? `conic-gradient(#10b981 0deg ${successDeg}deg, #f59e0b ${successDeg}deg 360deg)`
+                    : 'conic-gradient(#e5e7eb 0deg 360deg)';
+            }
+            if (donutValue) donutValue.textContent = firestoreCheckins.length;
+            if (legendSuccess) legendSuccess.textContent = `สำเร็จ (${successRate}%)`;
+            if (legendPending) legendPending.textContent = `รอดำเนินการ (${pendingRate}%)`;
+            
+            // อัพเดท Bar Chart (7 วันล่าสุด)
+            updateBarChart();
+            
+            // อัพเดท Team Performance
+            updateTeamPerformance();
+        }
+        
+        // อัพเดท Bar Chart รายวัน
+        function updateBarChart() {
+            const barChart = document.getElementById('barChart');
+            if (!barChart || firestoreCheckins.length === 0) return;
+            
+            const last7Days = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                d.setHours(0, 0, 0, 0);
+                last7Days.push(d);
+            }
+            
+            const dailyCounts = last7Days.map(day => {
+                const nextDay = new Date(day);
+                nextDay.setDate(nextDay.getDate() + 1);
+                return firestoreCheckins.filter(c => {
+                    const checkinDate = new Date(c.checkinTime);
+                    return checkinDate >= day && checkinDate < nextDay;
+                }).length;
+            });
+            
+            const maxCount = Math.max(...dailyCounts, 1);
+            const dayNames = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+            
+            barChart.innerHTML = dailyCounts.map((count, i) => {
+                const height = Math.max((count / maxCount) * 100, 5);
+                const dayName = dayNames[last7Days[i].getDay()];
+                const dateStr = last7Days[i].getDate();
+                return `
+                    <div class="bar-item">
+                        <div class="bar" style="height: ${height}%;">
+                            <span class="bar-value">${count}</span>
+                        </div>
+                        <span class="bar-label">${dayName} ${dateStr}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // อัพเดท Team Performance
+        function updateTeamPerformance() {
+            const teams = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'Z'];
+            const teamCounts = {};
+            
+            teams.forEach(team => {
+                teamCounts[team] = firestoreCheckins.filter(c => c.team === team).length;
+            });
+            
+            // Sort by count
+            const sortedTeams = Object.entries(teamCounts)
+                .filter(([_, count]) => count > 0)
+                .sort((a, b) => b[1] - a[1]);
+            
+            // Top Teams table
+            const topTeamsContainer = document.querySelector('#page-reports .table-section:first-of-type');
+            if (topTeamsContainer && sortedTeams.length > 0) {
+                const tableHtml = `
+                    <div class="section-header"><h2><i class="fas fa-trophy"></i> Top Teams</h2></div>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>อันดับ</th><th>ทีม</th><th>Check-ins</th></tr>
+                        </thead>
+                        <tbody>
+                            ${sortedTeams.slice(0, 5).map(([team, count], i) => `
+                                <tr>
+                                    <td>${i + 1}</td>
+                                    <td><span class="team-badge team-badge-sm team-${team.toLowerCase()}">Team ${team}</span></td>
+                                    <td><strong>${count}</strong></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                topTeamsContainer.innerHTML = tableHtml;
+            }
+        }
+        
+        // ==========================================
+        // Notification System
+        // ==========================================
+        let notifications = [];
+        
+        // Toggle Notification Dropdown
+        function toggleNotificationDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('notificationDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+        
+        // ปิด Notification Dropdown เมื่อคลิกที่อื่น
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('notificationDropdown');
+            const btn = document.getElementById('notificationBtn');
+            if (dropdown && !dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        // เพิ่ม Notification
+        function addNotification(type, title, desc) {
+            const notification = {
+                id: Date.now(),
+                type: type, // 'checkin', 'warning', 'info'
+                title: title,
+                desc: desc,
+                time: new Date(),
+                read: false
+            };
+            notifications.unshift(notification);
+            updateNotificationUI();
+        }
+        
+        // อัพเดท Notification UI
+        function updateNotificationUI() {
+            const list = document.getElementById('notificationList');
+            const countBadge = document.getElementById('notificationCount');
+            const unreadCount = notifications.filter(n => !n.read).length;
+            
+            // อัพเดท Badge
+            if (countBadge) {
+                countBadge.textContent = unreadCount;
+                countBadge.classList.toggle('hidden', unreadCount === 0);
+            }
+            
+            // อัพเดท List
+            if (list) {
+                if (notifications.length === 0) {
+                    list.innerHTML = `
+                        <div class="notification-empty">
+                            <i class="fas fa-bell-slash"></i>
+                            <p>ยังไม่มีการแจ้งเตือน</p>
+                        </div>
+                    `;
+                } else {
+                    list.innerHTML = notifications.slice(0, 10).map(n => {
+                        const timeAgo = getTimeAgo(n.time);
+                        return `
+                            <div class="notification-item ${n.read ? '' : 'unread'}" onclick="markNotificationRead(${n.id})">
+                                <div class="icon ${n.type}">
+                                    <i class="fas ${n.type === 'checkin' ? 'fa-location-check' : n.type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+                                </div>
+                                <div class="content">
+                                    <div class="title">${n.title}</div>
+                                    <div class="desc">${n.desc}</div>
+                                    <div class="time">${timeAgo}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+        
+        // Mark Notification as Read
+        function markNotificationRead(id) {
+            const notification = notifications.find(n => n.id === id);
+            if (notification) {
+                notification.read = true;
+                updateNotificationUI();
+            }
+        }
+        
+        // ล้าง Notifications ทั้งหมด
+        function clearAllNotifications() {
+            notifications = [];
+            updateNotificationUI();
+        }
+        
+        // คำนวณ Time Ago
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - new Date(date);
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'เมื่อสักครู่';
+            if (diffMins < 60) return `${diffMins} นาทีที่แล้ว`;
+            if (diffHours < 24) return `${diffHours} ชั่วโมงที่แล้ว`;
+            return `${diffDays} วันที่แล้ว`;
+        }
+        
+        // ==========================================
+        // Customer Stats Update
+        // ==========================================
+        function updateCustomerStats() {
+            // นับลูกค้าจาก Check-ins (unique by contractNumber)
+            const uniqueContracts = new Map();
+            const now = new Date();
+            const thisMonth = now.getMonth();
+            const thisYear = now.getFullYear();
+            
+            firestoreCheckins.forEach(c => {
+                if (c.contractNumber && !uniqueContracts.has(c.contractNumber)) {
+                    uniqueContracts.set(c.contractNumber, {
+                        customerName: c.customerName,
+                        branch: c.branch,
+                        lastCheckin: c.checkinTime,
+                        checkinCount: 1
+                    });
+                } else if (c.contractNumber) {
+                    const existing = uniqueContracts.get(c.contractNumber);
+                    existing.checkinCount++;
+                    if (new Date(c.checkinTime) > new Date(existing.lastCheckin)) {
+                        existing.lastCheckin = c.checkinTime;
+                    }
+                }
+            });
+            
+            const totalCustomers = uniqueContracts.size;
+            
+            // Active = มี Check-in ใน 30 วันที่ผ่านมา
+            const thirtyDaysAgo = new Date(now - 30 * 24 * 60 * 60 * 1000);
+            let activeCount = 0;
+            let newThisMonth = 0;
+            
+            uniqueContracts.forEach((data, contract) => {
+                const lastDate = new Date(data.lastCheckin);
+                if (lastDate >= thirtyDaysAgo) {
+                    activeCount++;
+                }
+                // ลูกค้าใหม่เดือนนี้ (Check-in แรกเป็นเดือนนี้)
+                if (lastDate.getMonth() === thisMonth && lastDate.getFullYear() === thisYear) {
+                    // ถ้า check-in count = 1 และเดือนนี้ = ลูกค้าใหม่
+                    if (data.checkinCount === 1) {
+                        newThisMonth++;
+                    }
+                }
+            });
             
             // อัพเดท UI
-            const statElements = document.querySelectorAll('.stat-number');
-            if (statElements[0]) statElements[0].textContent = todayCheckins.length;
-            if (statElements[1]) statElements[1].textContent = teamsToday.size;
-            if (statElements[2]) statElements[2].textContent = firestoreCheckins.length;
+            const customerTotalEl = document.getElementById('customerTotal');
+            const customerActiveEl = document.getElementById('customerActive');
+            const customerNewEl = document.getElementById('customerNewMonth');
+            
+            if (customerTotalEl) customerTotalEl.textContent = totalCustomers.toLocaleString();
+            if (customerActiveEl) customerActiveEl.textContent = activeCount.toLocaleString();
+            if (customerNewEl) customerNewEl.textContent = newThisMonth.toLocaleString();
+            
+            // อัพเดท Customer Table
+            updateCustomerTable(uniqueContracts);
+        }
+        
+        // อัพเดท Customer Table
+        function updateCustomerTable(customersMap) {
+            const tbody = document.getElementById('customersTableBody');
+            const info = document.getElementById('customersTableInfo');
+            
+            if (!tbody) return;
+            
+            const customers = Array.from(customersMap.entries()).map(([contract, data]) => ({
+                contract,
+                ...data
+            }));
+            
+            if (customers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            <i class="fas fa-users" style="font-size: 2rem; opacity: 0.3; display: block; margin-bottom: 10px;"></i>
+                            ยังไม่มีข้อมูลลูกค้า<br>
+                            <small>ข้อมูลจะแสดงเมื่อมีการ Check-in</small>
+                        </td>
+                    </tr>
+                `;
+                if (info) info.textContent = 'แสดง 0 รายการ';
+                return;
+            }
+            
+            // Sort by lastCheckin desc
+            customers.sort((a, b) => new Date(b.lastCheckin) - new Date(a.lastCheckin));
+            
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+            
+            tbody.innerHTML = customers.map(c => {
+                const lastDate = new Date(c.lastCheckin);
+                const isActive = lastDate >= thirtyDaysAgo;
+                const formattedDate = formatThaiDate(c.lastCheckin);
+                
+                return `
+                    <tr>
+                        <td><strong>${c.customerName || '-'}</strong></td>
+                        <td><code>${c.contract}</code></td>
+                        <td>${c.branch || '-'}</td>
+                        <td>${formattedDate}</td>
+                        <td>${c.checkinCount}</td>
+                        <td><span class="checkin-status ${isActive ? 'active' : 'pending'}">${isActive ? 'Active' : 'Pending'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+            
+            if (info) info.textContent = `แสดง ${customers.length} รายการ`;
+        }
+        
+        // Format Thai Date
+        function formatThaiDate(dateStr) {
+            try {
+                const date = new Date(dateStr);
+                const day = date.getDate();
+                const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                const month = months[date.getMonth()];
+                const year = date.getFullYear() + 543; // Buddhist Era
+                return `${day} ${month} ${year}`;
+            } catch (e) {
+                return '-';
+            }
         }
         
         // อัพเดท Recent Check-ins
         function updateRecentCheckins() {
-            const container = document.querySelector('.checkin-list');
+            const container = document.getElementById('recentCheckinsListContainer');
             if (!container) return;
             
             // แสดง 5 รายการล่าสุด
             const recentItems = firestoreCheckins.slice(0, 5);
             
-            container.innerHTML = recentItems.map((item, index) => `
-                <div class="checkin-item" data-checkin-id="${index}">
-                    <div class="checkin-image">
-                        ${item.houseFrontUrl 
-                            ? `<img src="${item.houseFrontUrl}" alt="house" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">` 
-                            : '<i class="fas fa-home" style="color:#94a3b8;font-size:1.5rem;"></i>'
-                        }
+            if (recentItems.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fas fa-inbox fa-2x"></i>
+                        <p style="margin-top: 16px;">ยังไม่มีข้อมูล Check-in</p>
                     </div>
-                    <div class="checkin-info">
-                        <div class="checkin-title">${item.customerName || '-'}</div>
-                        <div class="checkin-details">
-                            <span><i class="fas fa-file-contract"></i> ${item.contractNumber || '-'}</span>
-                            <span><i class="fas fa-building"></i> ${item.branch || '-'}</span>
+                `;
+                return;
+            }
+            
+            container.innerHTML = recentItems.map((item, index) => {
+                // สร้าง avatar จากชื่อ (2 ตัวอักษรแรก)
+                const avatarText = (item.customerName || '-').substring(0, 2);
+                // คำนวณเวลาที่ผ่านไป
+                const timeAgo = formatTimeAgo(item.checkinTime);
+                const actualTime = item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
+                
+                return `
+                    <div class="checkin-item" data-checkin-id="${index}">
+                        <span class="team-badge team-badge-sm team-${(item.team || 'a').toLowerCase()}">${item.team || '-'}</span>
+                        <div class="checkin-avatar">${avatarText}</div>
+                        <div class="checkin-info">
+                            <div class="name">${item.customerName || '-'}</div>
+                            <div class="location"><i class="fas fa-location-dot"></i> ${item.address || item.branch || 'ไม่มีที่อยู่'}</div>
+                            <div class="time"><i class="far fa-clock"></i> ${timeAgo} <span class="actual-time">(${actualTime})</span></div>
                         </div>
-                        <div class="checkin-meta">
-                            <span class="team-tag">Team ${item.team || '-'}</span>
-                            <span class="time">${formatThaiDate(item.checkinTime)} ${item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}</span>
+                        <div class="checkin-actions">
+                            <label class="toggle-switch" title="แสดงบนแผนที่">
+                                <input type="checkbox" ${item.visible ? 'checked' : ''} onchange="toggleCheckinVisibility('${item.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="checkin-navigate" ondblclick="focusOnMap(${item.lat}, ${item.lng}, '${item.id}')" title="Double-click เพื่อไปที่จุดนี้บนแผนที่">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
                         </div>
                     </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" ${item.visible ? 'checked' : ''} onchange="toggleCheckinVisibility('${item.id}', this.checked)">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
         
         // Toggle visibility ของ Check-in
@@ -3085,8 +3308,6 @@
                 // Refresh maps
                 updateMapMarkersFromFirestore();
                 updateMapViewMarkersFromFirestore();
-                
-                console.log('Updated visibility:', docId, visible);
             } catch (error) {
                 console.error('Error updating visibility:', error);
             }
@@ -3117,6 +3338,13 @@
                             ${item.houseFrontUrl ? `<br><br><img src="${item.houseFrontUrl}" style="width:100%;max-width:180px;border-radius:8px;">` : ''}
                         </div>
                     `)
+                    .on('click', function() {
+                        selectedCheckin = {
+                            ...item,
+                            location: { lat: item.lat, lng: item.lng }
+                        };
+                        document.getElementById('navigateBtn').style.background = '#22c55e';
+                    })
                     .addTo(map);
                 markers.push(marker);
             });
@@ -3135,10 +3363,10 @@
             firestoreCheckins.forEach((item) => {
                 if (!item.visible || !item.lat || !item.lng) return;
                 
-                const teamVisible = teamVisibility[item.team];
+                // Map View แสดงทุก marker ที่ visible (กรองเฉพาะทีมถ้าเลือก)
                 const matchesDropdown = filterTeam === 'all' || item.team === filterTeam;
                 
-                if (matchesDropdown && teamVisible) {
+                if (matchesDropdown) {
                     const marker = L.marker([item.lat, item.lng], { icon: createCustomIcon(item.team) })
                         .bindPopup(`
                             <div style="font-family: 'Prompt', sans-serif; padding: 8px; min-width: 200px;">
@@ -3150,6 +3378,12 @@
                                 <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${item.address || 'ไม่มีที่อยู่'}</span>
                             </div>
                         `)
+                        .on('click', function() {
+                            selectedCheckin = {
+                                ...item,
+                                location: { lat: item.lat, lng: item.lng }
+                            };
+                        })
                         .addTo(mapView);
                     mapViewLayers.push(marker);
                 }
@@ -3159,42 +3393,64 @@
         // อัพเดทตาราง Check-ins List
         function updateCheckinsTable() {
             const tbody = document.getElementById('checkinsTableBody');
-            if (!tbody) return;
+            const mainTbody = document.getElementById('mainCheckinsTableBody');
             
-            tbody.innerHTML = firestoreCheckins.map((item, index) => `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: #f1f5f9; display: flex; align-items: center; justify-content: center;">
-                                ${item.houseFrontUrl 
-                                    ? `<img src="${item.houseFrontUrl}" style="width:100%;height:100%;object-fit:cover;">` 
-                                    : '<i class="fas fa-home" style="color:#94a3b8;"></i>'
-                                }
+            // สร้าง HTML สำหรับตาราง
+            const generateTableRows = (includeIndex = true) => {
+                if (firestoreCheckins.length === 0) {
+                    return `<tr><td colspan="${includeIndex ? 8 : 7}" style="text-align: center; padding: 40px; color: #94a3b8;">
+                        <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                        ไม่มีข้อมูล Check-in
+                    </td></tr>`;
+                }
+                
+                return firestoreCheckins.map((item, index) => `
+                    <tr data-checkin-id="${item.id}">
+                        ${includeIndex ? `<td>${index + 1}</td>` : ''}
+                        ${!includeIndex ? `<td><span class="team-badge team-${item.team?.toLowerCase() || 'a'}">${item.team || '-'}</span></td>` : ''}
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: #f1f5f9; display: flex; align-items: center; justify-content: center;">
+                                    ${item.houseFrontUrl 
+                                        ? `<img src="${item.houseFrontUrl}" style="width:100%;height:100%;object-fit:cover;">` 
+                                        : '<i class="fas fa-home" style="color:#94a3b8;"></i>'
+                                    }
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500;">${item.customerName || '-'}</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">${item.contractNumber || '-'}</div>
+                                </div>
                             </div>
-                            <div>
-                                <div style="font-weight: 500;">${item.customerName || '-'}</div>
-                                <div style="font-size: 0.8rem; color: #64748b;">${item.contractNumber || '-'}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="team-tag">Team ${item.team || '-'}</span></td>
-                    <td>${item.branch || '-'}</td>
-                    <td>${item.zone || '-'}</td>
-                    <td>${formatThaiDate(item.checkinTime)} ${item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}</td>
-                    <td>
-                        <label class="toggle-switch">
-                            <input type="checkbox" ${item.visible ? 'checked' : ''} onchange="toggleCheckinVisibility('${item.id}', this.checked)">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </td>
-                    <td>
-                        <button onclick="viewCheckinDetail('${item.id}')" style="background: none; border: none; color: var(--primary); cursor: pointer; padding: 5px;">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+                        </td>
+                        ${includeIndex ? `<td><span class="team-tag">Team ${item.team || '-'}</span></td>` : ''}
+                        <td>${item.branch || item.address || '-'}</td>
+                        ${includeIndex ? `<td>${item.zone || '-'}</td>` : `<td><code>${item.lat?.toFixed(4) || '-'}, ${item.lng?.toFixed(4) || '-'}</code></td>`}
+                        <td>${formatThaiDate(item.checkinTime)} ${item.checkinTime?.toLocaleTimeString?.('th-TH', {hour:'2-digit', minute:'2-digit'}) || ''}</td>
+                        <td><span class="checkin-status ${item.visible ? 'active' : 'pending'}">${item.visible ? 'Active' : 'Pending'}</span></td>
+                        <td>
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${item.visible ? 'checked' : ''} onchange="toggleCheckinVisibility('${item.id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </td>
+                        ${includeIndex ? `<td>
+                            <button onclick="viewCheckinDetail('${item.id}')" style="background: none; border: none; color: var(--primary); cursor: pointer; padding: 5px;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>` : ''}
+                    </tr>
+                `).join('');
+            };
+            
+            // อัพเดทตาราง Check-ins List (หน้า Check-ins)
+            if (tbody) {
+                tbody.innerHTML = generateTableRows(true);
+            }
+            
+            // อัพเดทตาราง All Check-ins Data (หน้า Dashboard)
+            if (mainTbody) {
+                mainTbody.innerHTML = generateTableRows(false);
+            }
         }
         
         // ดูรายละเอียด Check-in
@@ -3209,39 +3465,41 @@
         // Real-time Listener
         // ===========================
         let realtimeUnsubscribe = null;
+        let isInitialLoad = true; // ป้องกันการแสดง notification ตอนโหลดครั้งแรก
         
         function startRealtimeListener() {
             if (realtimeUnsubscribe) {
                 realtimeUnsubscribe(); // หยุด listener เก่า
             }
             
-            console.log('Starting real-time listener...');
+            isInitialLoad = true; // Reset flag เมื่อเริ่ม listener ใหม่
+            // console.log('Starting real-time listener...');
             
             realtimeUnsubscribe = db.collection('checkins')
                 .orderBy('createdAt', 'desc')
                 .limit(100)
                 .onSnapshot(
                     (snapshot) => {
-                        console.log('Real-time update received:', snapshot.size, 'documents');
-                        
                         // ตรวจสอบว่ามีการเปลี่ยนแปลงจริงหรือไม่
                         let hasChanges = false;
                         snapshot.docChanges().forEach(change => {
                             if (change.type === 'added') {
-                                console.log('New check-in:', change.doc.id);
                                 hasChanges = true;
-                                // แสดง Toast เมื่อมี check-in ใหม่ (ยกเว้นตอนโหลดครั้งแรก)
-                                if (firestoreCheckins.length > 0) {
-                                    showRealtimeToast('เช็คอินใหม่!', change.doc.data().customerName);
+                                // แสดง Toast และ Notification เมื่อมี check-in ใหม่ (ยกเว้นตอนโหลดครั้งแรก)
+                                if (!isInitialLoad) {
+                                    const data = change.doc.data();
+                                    showRealtimeToast('เช็คอินใหม่!', data.customerName);
+                                    addNotification('checkin', 'Check-in ใหม่', `${data.customerName || 'ลูกค้า'} - ทีม ${data.team || '-'}`);
                                 }
                             } else if (change.type === 'modified') {
-                                console.log('Modified check-in:', change.doc.id);
                                 hasChanges = true;
                             } else if (change.type === 'removed') {
-                                console.log('Removed check-in:', change.doc.id);
                                 hasChanges = true;
                             }
                         });
+                        
+                        // หลังจาก snapshot แรก ตั้ง flag เป็น false
+                        isInitialLoad = false;
                         
                         // อัพเดทข้อมูลใน memory
                         firestoreCheckins = [];
@@ -3265,6 +3523,9 @@
                         updateRecentCheckins();
                         updateMapMarkersFromFirestore();
                         updateCheckinsTable();
+                        updatePhotoGallery();
+                        updateCustomerStats();
+                        updateReportsFromFirestore();
                         
                         // อัพเดท Live Badge
                         updateLiveBadge();
@@ -3359,6 +3620,8 @@
             updateRecentCheckins();
             updateMapMarkersFromFirestore();
             updateCheckinsTable();
+            updatePhotoGallery();
+            updateCustomerStats();
             
             // เริ่ม Real-time Listener
             startRealtimeListener();
@@ -3444,6 +3707,52 @@
             if (hqMarker) {
                 hqMarker.openPopup();
             }
+        }
+        
+        // Focus ไปที่จุด Check-in บนแผนที่ (double-click จาก list)
+        function focusOnMap(lat, lng, checkinId) {
+            if (!lat || !lng) {
+                alert('ไม่พบพิกัดของลูกค้านี้');
+                return;
+            }
+            
+            // Zoom ไปที่จุดนั้น
+            map.setView([lat, lng], 18, { animate: true });
+            
+            // หา marker ที่ตรงกับพิกัดและเปิด popup
+            markers.forEach(marker => {
+                const markerLatLng = marker.getLatLng();
+                if (Math.abs(markerLatLng.lat - lat) < 0.0001 && Math.abs(markerLatLng.lng - lng) < 0.0001) {
+                    setTimeout(() => marker.openPopup(), 300);
+                }
+            });
+            
+            // อัพเดท selectedCheckin
+            const item = firestoreCheckins.find(c => c.id === checkinId);
+            if (item) {
+                selectedCheckin = {
+                    ...item,
+                    location: { lat, lng }
+                };
+                const navBtn = document.getElementById('navigateBtn');
+                if (navBtn) navBtn.style.background = '#22c55e';
+            }
+        }
+        
+        // ตัวแปรเก็บ check-in ที่เลือก
+        let selectedCheckin = null;
+        
+        // นำทางไปยังจุดที่เลือก (เปิด Google Maps)
+        function navigateToSelected() {
+            if (!selectedCheckin || !selectedCheckin.location) {
+                alert('กรุณาเลือกจุด Check-in บนแผนที่ก่อน');
+                return;
+            }
+            
+            const lat = selectedCheckin.location.lat;
+            const lng = selectedCheckin.location.lng;
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            window.open(url, '_blank');
         }
         
         // ไปที่ HQ ใน Map View
@@ -3572,74 +3881,29 @@
             });
         }
 
-        // Sample check-in locations
-        const locations = [
-            { lat: 13.7466, lng: 100.5392, name: 'อรุณี วงศ์ประเสริฐ', place: 'Central World', team: 'A' },
-            { lat: 13.7460, lng: 100.5347, name: 'สมชาย ใจดี', place: 'Siam Paragon', team: 'B' },
-            { lat: 13.7311, lng: 100.5696, name: 'วรรณา สุขสันต์', place: 'EmQuartier', team: 'C' },
-            { lat: 13.7378, lng: 100.5603, name: 'ประเสริฐ รุ่งเรือง', place: 'Terminal 21', team: 'D' },
-            { lat: 13.7268, lng: 100.5100, name: 'มานี มีศรี', place: 'ICONSIAM', team: 'E' }
-        ];
-
-        // Store markers
+        // Markers array - จะถูก populate จาก Firestore
         const markers = [];
+        
+        // Note: Markers จะถูกสร้างผ่าน updateMapMarkersFromFirestore() เมื่อโหลดข้อมูล
 
-        // Add markers
-        locations.forEach((loc, index) => {
-            const marker = L.marker([loc.lat, loc.lng], { icon: createCustomIcon(loc.team) })
-                .bindPopup(`
-                    <div style="font-family: 'Prompt', sans-serif; padding: 5px;">
-                        <strong style="font-size: 1rem;">${loc.name}</strong> <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b;">Team ${loc.team}</span><br>
-                        <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${loc.place}</span>
-                    </div>
-                `)
-                .addTo(map);
-            markers.push(marker);
-        });
-
-        // Function to update markers on Map View based on filter
+        // Function to update markers on Map View based on filter - ใช้ Firestore data
         function updateMapViewMarkers() {
-            if (!mapView) return;
-
-            // Clear existing layers
-            mapViewLayers.forEach(layer => mapView.removeLayer(layer));
-            mapViewLayers = [];
-            
-            const filterTeam = document.getElementById('mapViewTeamFilter').value;
-
-            locations.forEach(loc => {
-                // Check both dropdown filter and team visibility checkbox
-                const teamVisible = teamVisibility[loc.team];
-                const matchesDropdown = filterTeam === 'all' || loc.team === filterTeam;
-                
-                if (matchesDropdown && teamVisible) {
-                    const marker = L.marker([loc.lat, loc.lng], { icon: createCustomIcon(loc.team) })
-                        .bindPopup(`
-                            <div style="font-family: 'Prompt', sans-serif; padding: 5px;">
-                                <strong style="font-size: 1rem;">${loc.name}</strong> <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b;">Team ${loc.team}</span><br>
-                                <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${loc.place}</span>
-                            </div>
-                        `)
-                        .addTo(mapView);
-                    mapViewLayers.push(marker);
-                }
-            });
+            updateMapViewMarkersFromFirestore();
         }
         
         // Filter function for Map View
         function filterMapView() {
-             updateMapViewMarkers();
+             updateMapViewMarkersFromFirestore();
         }
 
-        // Initially hide marker at index 3 (matching unchecked toggle)
-        map.removeLayer(markers[3]);
-
-        // Toggle marker visibility
+        // Toggle marker visibility (ใช้กับ Firestore markers)
         function toggleMarker(index, visible) {
-            if (visible) {
-                markers[index].addTo(map);
-            } else {
-                map.removeLayer(markers[index]);
+            if (markers[index]) {
+                if (visible) {
+                    markers[index].addTo(map);
+                } else {
+                    map.removeLayer(markers[index]);
+                }
             }
         }
 
@@ -3720,15 +3984,19 @@
             mapViewLayers.forEach(layer => mapView.removeLayer(layer));
             mapViewLayers = [];
             
-            // Re-add markers based on team visibility (ใช้ icon เหมือน Dashboard)
-            locations.forEach(loc => {
-                if (mapViewTeamVisibility[loc.team]) {
-                    const marker = L.marker([loc.lat, loc.lng], { icon: createCustomIcon(loc.team) })
+            // Re-add markers based on team visibility จาก Firestore data
+            firestoreCheckins.forEach(item => {
+                if (!item.lat || !item.lng || !item.visible) return;
+                if (mapViewTeamVisibility[item.team]) {
+                    const marker = L.marker([item.lat, item.lng], { icon: createCustomIcon(item.team) })
                         .bindPopup(`
-                            <div style="font-family: 'Prompt', sans-serif; padding: 5px;">
-                                <strong style="font-size: 1rem;">${loc.name}</strong> 
-                                <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b;">Team ${loc.team}</span><br>
-                                <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${loc.place}</span>
+                            <div style="font-family: 'Prompt', sans-serif; padding: 8px; min-width: 200px;">
+                                <strong style="font-size: 1rem;">${item.customerName || '-'}</strong>
+                                <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b; margin-left: 8px;">Team ${item.team}</span>
+                                <br><br>
+                                <span style="color: #64748b;"><i class="fas fa-file-contract"></i> ${item.contractNumber || '-'}</span><br>
+                                <span style="color: #64748b;"><i class="fas fa-building"></i> ${item.branch || '-'}</span><br>
+                                <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${item.address || 'ไม่มีที่อยู่'}</span>
                             </div>
                         `)
                         .addTo(mapView);
@@ -3759,14 +4027,11 @@
         }
 
         function updateMarkersVisibility() {
-            // Update markers on main map
-            locations.forEach((loc, index) => {
-                if (teamVisibility[loc.team]) {
-                    // Check if individual toggle is on
-                    const toggles = document.querySelectorAll('.checkins-list .toggle-switch input');
-                    if (toggles[index] && toggles[index].checked) {
-                        markers[index].addTo(map);
-                    }
+            // Update markers on main map จาก Firestore data
+            firestoreCheckins.forEach((item, index) => {
+                if (!markers[index]) return;
+                if (teamVisibility[item.team] && item.visible) {
+                    markers[index].addTo(map);
                 } else {
                     map.removeLayer(markers[index]);
                 }
@@ -3774,7 +4039,7 @@
 
             // Update markers on Map View if it exists
             if (mapView) {
-                updateMapViewMarkers();
+                updateMapViewMarkersFromFirestore();
             }
         }
 
@@ -3966,6 +4231,37 @@
         let selectedCircleIndex = null;
         let isResizing = false;
         let resizingCircleIndex = null;
+        let isMapFullScreen = false;
+
+        // Toggle Full Screen สำหรับแผนที่
+        function toggleMapFullScreen() {
+            const mapSection = document.querySelector('.map-section');
+            const btn = document.getElementById('fullScreenBtn');
+            
+            isMapFullScreen = !isMapFullScreen;
+            
+            if (isMapFullScreen) {
+                mapSection.classList.add('fullscreen');
+                btn.innerHTML = '<i class="fas fa-compress"></i> Exit';
+                document.body.style.overflow = 'hidden';
+            } else {
+                mapSection.classList.remove('fullscreen');
+                btn.innerHTML = '<i class="fas fa-expand"></i> Full Screen';
+                document.body.style.overflow = '';
+            }
+            
+            // Resize map หลังจาก DOM update
+            setTimeout(() => {
+                if (map) map.invalidateSize();
+            }, 100);
+        }
+        
+        // ESC key เพื่อออกจาก fullscreen
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isMapFullScreen) {
+                toggleMapFullScreen();
+            }
+        });
 
         function toggleRadius() {
             radiusMode = !radiusMode;
@@ -4887,16 +5183,110 @@
         // ===========================
         // Photo Gallery Functions
         // ===========================
-        const galleryImages = [
-            { src: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800', name: 'อรุณี วงศ์ประเสริฐ', team: 'A', type: 'หน้าบ้าน', time: '10:01', contract: 'CT-12345' },
-            { src: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800', name: 'สมชาย ใจดี', team: 'B', type: 'หน้าบ้าน', time: '09:48', contract: 'CT-67890' },
-            { src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800', name: 'วรรณา สุขสันต์', team: 'C', type: 'หน้าบ้าน', time: '09:31', contract: 'CT-11223' },
-            { src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800', name: 'ประเสริฐ รุ่งเรือง', team: 'D', type: 'หน้าบ้าน', time: '09:03', contract: 'CT-44556' },
-            { src: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800', name: 'มานี มีศรี', team: 'E', type: 'หน้าบ้าน', time: '08:05', contract: 'CT-77889' },
-            { src: 'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800', name: 'สุนทร โชคดี', team: 'A', type: 'หน้าบ้าน', time: '07:45', contract: 'CT-99001' },
-            { src: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800', name: 'พิมพ์ใจ รักดี', team: 'B', type: 'หน้าบ้าน', time: '07:30', contract: 'CT-22334' },
-            { src: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800', name: 'วิชัย ใจกว้าง', team: 'C', type: 'หน้าบ้าน', time: '07:15', contract: 'CT-55667' }
-        ];
+        // galleryImages จะถูก populate จาก firestoreCheckins
+        let galleryImages = [];
+        let galleryAlbums = []; // อัลบั้มแยกตาม check-in
+        
+        // อัพเดท Gallery จาก Firestore - แบบอัลบั้ม
+        function updatePhotoGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            if (!galleryGrid) return;
+            
+            // สร้าง gallery images และ albums จาก Firestore data
+            galleryImages = [];
+            galleryAlbums = [];
+            
+            firestoreCheckins.forEach((item, index) => {
+                const albumPhotos = [];
+                
+                if (item.houseFrontUrl) {
+                    const photo = {
+                        src: item.houseFrontUrl,
+                        name: item.customerName || '-',
+                        team: item.team || 'A',
+                        type: 'หน้าบ้าน',
+                        time: item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}),
+                        date: item.checkinTime.toLocaleDateString('th-TH'),
+                        contract: item.contractNumber || '-',
+                        branch: item.branch || '-',
+                        checkinId: item.id
+                    };
+                    galleryImages.push(photo);
+                    albumPhotos.push(photo);
+                }
+                if (item.contractPhotoUrl) {
+                    const photo = {
+                        src: item.contractPhotoUrl,
+                        name: item.customerName || '-',
+                        team: item.team || 'A',
+                        type: 'สัญญา',
+                        time: item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}),
+                        date: item.checkinTime.toLocaleDateString('th-TH'),
+                        contract: item.contractNumber || '-',
+                        branch: item.branch || '-',
+                        checkinId: item.id
+                    };
+                    galleryImages.push(photo);
+                    albumPhotos.push(photo);
+                }
+                
+                if (albumPhotos.length > 0) {
+                    galleryAlbums.push({
+                        id: item.id,
+                        customerName: item.customerName || '-',
+                        team: item.team || 'A',
+                        branch: item.branch || '-',
+                        contract: item.contractNumber || '-',
+                        time: item.checkinTime.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}),
+                        date: item.checkinTime.toLocaleDateString('th-TH'),
+                        photos: albumPhotos,
+                        coverPhoto: albumPhotos[0].src,
+                        photoCount: albumPhotos.length
+                    });
+                }
+            });
+            
+            if (galleryAlbums.length === 0) {
+                galleryGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: var(--text-secondary);">
+                        <i class="fas fa-images fa-3x" style="margin-bottom: 16px; opacity: 0.3;"></i>
+                        <p>ยังไม่มีรูปภาพใน Gallery</p>
+                        <small>รูปภาพจะแสดงเมื่อมีการ Check-in</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            // แสดงแบบอัลบั้ม (group by check-in)
+            galleryGrid.innerHTML = galleryAlbums.map((album, albumIndex) => `
+                <div class="gallery-album" onclick="openAlbumViewer(${albumIndex})">
+                    <div class="album-cover">
+                        <img src="${album.coverPhoto}" alt="${album.customerName}">
+                        ${album.photoCount > 1 ? `<div class="photo-count"><i class="fas fa-images"></i> ${album.photoCount}</div>` : ''}
+                    </div>
+                    <div class="album-info">
+                        <div class="album-name">${album.customerName}</div>
+                        <div class="album-meta">
+                            <span class="team-badge team-badge-sm team-${album.team.toLowerCase()}" style="width: 18px; height: 18px; font-size: 0.6rem;">${album.team}</span>
+                            ${album.branch} • ${album.time}
+                        </div>
+                        <div class="album-contract">${album.contract}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // เปิดอัลบั้ม
+        function openAlbumViewer(albumIndex) {
+            const album = galleryAlbums[albumIndex];
+            if (!album) return;
+            
+            // หา index แรกของรูปในอัลบั้มนี้
+            const firstPhotoIndex = galleryImages.findIndex(img => img.checkinId === album.id);
+            if (firstPhotoIndex >= 0) {
+                openImageViewer(firstPhotoIndex);
+            }
+        }
 
         let currentImageIndex = 0;
 
@@ -4912,27 +5302,37 @@
                 viewer.className = 'image-viewer';
                 viewer.innerHTML = `
                     <button class="viewer-close" onclick="closeImageViewer()"><i class="fas fa-times"></i></button>
+                    <div class="viewer-counter" id="viewerCounter">1 / 1</div>
+                    <button class="viewer-nav prev" onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
                     <img id="viewerImage" src="" alt="">
+                    <button class="viewer-nav next" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
                     <div class="viewer-info">
-                        <h3 id="viewerName" style="margin-bottom: 8px;"></h3>
-                        <p id="viewerMeta" style="opacity: 0.8;"></p>
-                    </div>
-                    <div style="position: absolute; bottom: 20px; display: flex; gap: 16px;">
-                        <button onclick="prevImage()" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;">
-                            <i class="fas fa-chevron-left"></i> ก่อนหน้า
-                        </button>
-                        <button onclick="nextImage()" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;">
-                            ถัดไป <i class="fas fa-chevron-right"></i>
-                        </button>
+                        <h3 id="viewerName" style="margin: 0 0 8px 0; font-size: 1.1rem;"></h3>
+                        <p id="viewerMeta" style="margin: 0; opacity: 0.9; font-size: 0.9rem;"></p>
                     </div>
                 `;
                 document.body.appendChild(viewer);
+                
+                // Close on click outside
+                viewer.addEventListener('click', (e) => {
+                    if (e.target === viewer) closeImageViewer();
+                });
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    const v = document.getElementById('imageViewer');
+                    if (!v || !v.classList.contains('active')) return;
+                    if (e.key === 'Escape') closeImageViewer();
+                    if (e.key === 'ArrowRight') nextImage();
+                    if (e.key === 'ArrowLeft') prevImage();
+                });
             }
             
             document.getElementById('viewerImage').src = img.src;
             document.getElementById('viewerName').textContent = img.name;
+            document.getElementById('viewerCounter').textContent = `${index + 1} / ${galleryImages.length}`;
             document.getElementById('viewerMeta').innerHTML = `
-                <span class="team-badge team-badge-sm team-${img.team.toLowerCase()}" style="width: 20px; height: 20px; font-size: 0.7rem;">${img.team}</span>
+                <span class="team-badge team-badge-sm team-${img.team.toLowerCase()}" style="width: 20px; height: 20px; font-size: 0.7rem; display: inline-flex;">${img.team}</span>
                 ${img.type} • ${img.time} • สัญญา: ${img.contract}
             `;
             viewer.classList.add('active');
@@ -4961,7 +5361,6 @@
             const team = document.getElementById('galleryTeamFilter').value;
             const type = document.getElementById('galleryTypeFilter').value;
             // In real implementation, this would filter and reload the gallery
-            console.log('Filtering gallery:', { team, type });
         }
 
         // Keyboard navigation for image viewer
@@ -4983,12 +5382,11 @@
         function startRealtime() {
             if (realtimeInterval) return;
             
+            // Real-time updates มาจาก Firestore listener แล้ว
+            // ไม่ต้อง simulate อีก
             realtimeInterval = setInterval(() => {
-                simulateNewCheckin();
                 updateRealtimeBadge();
             }, 30000); // Check every 30 seconds
-            
-            console.log('Real-time updates started');
         }
 
         function stopRealtime() {
@@ -5011,78 +5409,13 @@
             }
         }
 
-        function simulateNewCheckin() {
-            // Simulate receiving new check-in data
-            const teams = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-            const names = ['สมศักดิ์ รักงาน', 'อารยา ดีใจ', 'ประภาส สุขใส', 'วิไล งามเด่น'];
-            const places = ['สยาม', 'อโศก', 'สีลม', 'พระราม 9', 'รัชดา'];
-            
-            const randomTeam = teams[Math.floor(Math.random() * teams.length)];
-            const randomName = names[Math.floor(Math.random() * names.length)];
-            const randomPlace = places[Math.floor(Math.random() * places.length)];
-            
-            // Update notification count
-            const notifCount = document.getElementById('notificationCount');
-            if (notifCount) {
-                const current = parseInt(notifCount.textContent) || 0;
-                notifCount.textContent = current + 1;
-            }
-            
-            // Update stat card
-            const statCards = document.querySelectorAll('.stat-card .stat-info h3');
-            if (statCards[0]) {
-                const current = parseInt(statCards[0].textContent) || 0;
-                statCards[0].textContent = current + 1;
-            }
-            
-            lastUpdateTime = new Date();
-            
-            // Show notification toast
-            showNewCheckinNotification(randomTeam, randomName, randomPlace);
-        }
-
-        function showNewCheckinNotification(team, name, place) {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 24px;
-                background: white;
-                padding: 16px 20px;
-                border-radius: 12px;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-                z-index: 10000;
-                font-family: 'Prompt', sans-serif;
-                display: flex;
-                align-items: center;
-                gap: 14px;
-                border-left: 4px solid #0ea5e9;
-                animation: slideInRight 0.3s ease;
-                max-width: 350px;
-            `;
-            toast.innerHTML = `
-                <span class="team-badge team-${team.toLowerCase()}" style="width: 36px; height: 36px;">${team}</span>
-                <div>
-                    <strong style="display: block; margin-bottom: 2px;">Check-in ใหม่!</strong>
-                    <span style="color: #64748b; font-size: 0.9rem;">${name} - ${place}</span>
-                </div>
-            `;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOutRight 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-
         // Global Search Handler
         function handleGlobalSearch(query) {
             if (query.length < 2) return;
-            console.log('Searching for:', query);
             // In real implementation, this would filter data across all tables
         }
 
-        // Start real-time on page load
+        // Start real-time badge on page load
         startRealtime();
 
         // Add CSS animations

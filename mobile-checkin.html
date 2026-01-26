@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bait Check-In | Mobile</title>
+    <link rel="icon" type="image/svg+xml" href="image/favicon.svg">
+    <link rel="apple-touch-icon" href="image/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -1227,42 +1229,14 @@
         <!-- History View -->
         <div class="main-content history-view" id="historyView">
             <h2 class="page-title"><i class="fas fa-history"></i> ประวัติ Check-in</h2>
-            <div id="historyList"></div>
+            <div id="historyList">
+                <!-- ข้อมูลจะโหลดจาก localStorage/Firestore -->
+            </div>
             
-            <div class="history-item">
-                <div class="photo-thumb">
-                    <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=120&h=120&fit=crop" alt="house">
-                </div>
-                <div class="info">
-                    <div class="time"><i class="far fa-clock"></i> วันนี้ 09:30 | Team A</div>
-                    <div class="customer-name">คุณสมชาย ใจดี</div>
-                    <div class="contract">CT-12345</div>
-                    <div class="branch"><i class="fas fa-building"></i> กรุงเทพฯ กลาง</div>
-                </div>
-            </div>
-
-            <div class="history-item">
-                <div class="photo-thumb">
-                    <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=120&h=120&fit=crop" alt="house">
-                </div>
-                <div class="info">
-                    <div class="time"><i class="far fa-clock"></i> เมื่อวาน 14:15 | Team B</div>
-                    <div class="customer-name">คุณวรรณา สุขสันต์</div>
-                    <div class="contract">CT-67890</div>
-                    <div class="branch"><i class="fas fa-building"></i> นนทบุรี</div>
-                </div>
-            </div>
-
-            <div class="history-item">
-                <div class="photo-thumb">
-                    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=120&h=120&fit=crop" alt="house">
-                </div>
-                <div class="info">
-                    <div class="time"><i class="far fa-clock"></i> 20 ม.ค. 2026, 11:00 | Team M</div>
-                    <div class="customer-name">คุณประเสริฐ รุ่งเรือง</div>
-                    <div class="contract">CT-11223</div>
-                    <div class="branch"><i class="fas fa-building"></i> สมุทรปราการ</div>
-                </div>
+            <div id="historyEmpty" style="text-align: center; padding: 40px 20px; color: #94a3b8;">
+                <i class="fas fa-inbox" style="font-size: 3rem; opacity: 0.3; display: block; margin-bottom: 12px;"></i>
+                <p>ยังไม่มีประวัติ Check-in</p>
+                <small>ข้อมูลจะแสดงเมื่อมีการ Check-in</small>
             </div>
         </div>
 
@@ -1275,10 +1249,6 @@
             <div class="nav-item" onclick="showView('history')">
                 <i class="fas fa-clock-rotate-left"></i>
                 <span>ประวัติ</span>
-            </div>
-            <div class="nav-item">
-                <i class="fas fa-user"></i>
-                <span>โปรไฟล์</span>
             </div>
         </div>
         </div> <!-- End App Page -->
@@ -1406,7 +1376,6 @@
                 const snapshot = await storageRef.put(blob);
                 const downloadURL = await snapshot.ref.getDownloadURL();
                 
-                console.log('Photo uploaded:', storagePath);
                 return downloadURL;
             } catch (error) {
                 console.error('Upload error:', error);
@@ -1422,7 +1391,6 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                console.log('Checkin saved with ID:', docRef.id);
                 return docRef.id;
             } catch (error) {
                 console.error('Firestore save error:', error);
@@ -1600,7 +1568,6 @@
                         (error) => {
                             showLoading(false);
                             showToast('error', 'ไม่สามารถดึงพิกัด GPS ได้ กรุณาเปิด Location');
-                            console.log('Location error:', error);
                         },
                         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                     );
@@ -1636,16 +1603,20 @@
                 // 1. สร้าง Document ID ก่อน
                 const tempId = Date.now().toString(36) + Math.random().toString(36).substr(2);
                 
-                // 2. Upload รูปภาพไป Firebase Storage
-                let houseFrontURL = null;
-                let contractPhotoURL = null;
-                
+                // 2. Upload รูปภาพแบบ parallel (เร็วกว่า)
+                const uploadPromises = [];
                 if (photos[1]) {
-                    houseFrontURL = await uploadPhotoToStorage(photos[1], tempId, 1);
+                    uploadPromises.push(uploadPhotoToStorage(photos[1], tempId, 1));
+                } else {
+                    uploadPromises.push(Promise.resolve(null));
                 }
                 if (photos[2]) {
-                    contractPhotoURL = await uploadPhotoToStorage(photos[2], tempId, 2);
+                    uploadPromises.push(uploadPhotoToStorage(photos[2], tempId, 2));
+                } else {
+                    uploadPromises.push(Promise.resolve(null));
                 }
+                
+                const [houseFrontURL, contractPhotoURL] = await Promise.all(uploadPromises);
                 
                 // 3. สร้างข้อมูล Check-in
                 const checkinData = {
@@ -1672,7 +1643,7 @@
                 // 4. บันทึกลง Firestore
                 const docId = await saveCheckinToFirestore(checkinData);
                 
-                // 5. Update UI
+                // 5. Update UI ทันที (ไม่รอ reload)
                 isCheckedIn = true;
                 btn.classList.add('checked');
                 btnText.textContent = 'CHECKED!';
@@ -1680,11 +1651,11 @@
                 statusBadge.className = 'status-badge success';
                 statusBadge.innerHTML = '<i class="fas fa-check-circle"></i><span>Check-in สำเร็จ! ' + formatThaiDate(now) + ' ' + now.toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'}) + '</span>';
                 
-                // 6. Reload history from Firestore
-                await renderHistoryFromFirestore();
-                
                 showLoading(false);
-                showToast('success', 'บันทึก Check-in ไป Firebase สำเร็จ!');
+                showToast('success', 'บันทึก Check-in สำเร็จ!');
+                
+                // 6. Reload history แบบ background (ไม่บล็อค UI)
+                renderHistoryFromFirestore().catch(console.error);
                 
                 // Reset form for next check-in
                 setTimeout(() => {
@@ -1817,7 +1788,7 @@
                         showToast('success', 'จับพิกัด GPS สำเร็จ');
                     },
                     (error) => {
-                        console.log('Photo GPS error:', error);
+                        // Silent fail for photo GPS
                     },
                     { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
                 );
@@ -1986,7 +1957,7 @@
                     updateLocationDisplay();
                 },
                 (error) => {
-                    console.log('Location error:', error);
+                    // Silent fail for location update
                 }
             );
         }
@@ -2031,6 +2002,10 @@
             const listEl = document.getElementById('historyList');
             if (!listEl) return;
             
+            // ซ่อน empty state
+            const emptyEl = document.getElementById('historyEmpty');
+            if (emptyEl) emptyEl.style.display = 'none';
+            
             listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;"><i class="fas fa-spinner fa-spin"></i> กำลังโหลด...</div>';
             
             try {
@@ -2038,7 +2013,7 @@
                 listEl.innerHTML = '';
                 
                 if (history.length === 0) {
-                    listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-inbox" style="font-size:2rem;margin-bottom:10px;display:block;"></i>ยังไม่มีประวัติ Check-in</div>';
+                    if (emptyEl) emptyEl.style.display = 'block';
                     return;
                 }
                 
@@ -2068,14 +2043,17 @@
 
         function renderHistory() {
             const listEl = document.getElementById('historyList');
+            const emptyEl = document.getElementById('historyEmpty');
             if (!listEl) return;
             const history = JSON.parse(localStorage.getItem('bait_history') || '[]');
             listEl.innerHTML = '';
             
             if (history.length === 0) {
-                listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;"><i class="fas fa-inbox" style="font-size:2rem;margin-bottom:10px;display:block;"></i>ยังไม่มีประวัติ Check-in (Offline)</div>';
+                if (emptyEl) emptyEl.style.display = 'block';
                 return;
             }
+            
+            if (emptyEl) emptyEl.style.display = 'none';
             
             history.forEach(item => {
                 const div = document.createElement('div');

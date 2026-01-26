@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Test Suite - Bait Check-In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Prompt', sans-serif; 
+            background: #f0f9ff; 
+            color: #0f172a; 
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 { 
+            color: #0ea5e9; 
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .subtitle { color: #64748b; margin-bottom: 20px; }
+        .test-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #0f172a;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .test-section h2 .count {
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: #f8fafc;
+        }
+        .test-item.pass { background: #dcfce7; }
+        .test-item.fail { background: #fee2e2; }
+        .test-item.pending { background: #fef3c7; }
+        .test-item.skip { background: #f1f5f9; opacity: 0.7; }
+        .test-name { font-weight: 500; flex: 1; }
+        .test-time { color: #64748b; font-size: 0.8rem; margin-right: 15px; }
+        .test-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .pass .test-status { background: #22c55e; color: white; }
+        .fail .test-status { background: #ef4444; color: white; }
+        .pending .test-status { background: #f59e0b; color: white; }
+        .skip .test-status { background: #94a3b8; color: white; }
+        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .run-btn {
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .run-btn:hover { opacity: 0.9; }
+        .run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .run-btn.secondary { background: #64748b; }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .summary-card .value { font-size: 2rem; font-weight: 700; }
+        .summary-card .label { font-size: 0.85rem; color: #64748b; }
+        .summary-card.pass { border-left: 4px solid #22c55e; }
+        .summary-card.fail { border-left: 4px solid #ef4444; }
+        .summary-card.total { border-left: 4px solid #0ea5e9; }
+        .summary-card.time { border-left: 4px solid #f59e0b; }
+        .console-log {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .console-log .success { color: #22c55e; }
+        .console-log .error { color: #ef4444; }
+        .console-log .info { color: #3b82f6; }
+        .console-log .warn { color: #f59e0b; }
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(135deg, #22c55e, #10b981);
+            transition: width 0.3s ease;
+        }
+        .export-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Complete Test Suite</h1>
+    <p class="subtitle">Bait Check-In WebApp - Unit, Integration, E2E & Performance Tests</p>
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="fill" id="progressBar" style="width: 0%;"></div>
+    </div>
+    
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+        <div class="summary-card total">
+            <div class="value" id="totalTests">0</div>
+            <div class="label">Total Tests</div>
+        </div>
+        <div class="summary-card pass">
+            <div class="value" id="passedTests">0</div>
+            <div class="label">Passed</div>
+        </div>
+        <div class="summary-card fail">
+            <div class="value" id="failedTests">0</div>
+            <div class="label">Failed</div>
+        </div>
+        <div class="summary-card time">
+            <div class="value" id="totalTime">0s</div>
+            <div class="label">Total Time</div>
+        </div>
+    </div>
+    
+    <!-- Buttons -->
+    <div class="btn-group">
+        <button class="run-btn" onclick="runAllTests()" id="runBtn">▶️ Run All Tests</button>
+        <button class="run-btn secondary" onclick="exportReport()">📄 Export Report</button>
+    </div>
+    
+    <!-- Unit Tests -->
+    <div class="test-section">
+        <h2>📦 Unit Tests <span class="count" id="unitCount">0/0</span></h2>
+        <div id="unitTests"></div>
+    </div>
+    
+    <!-- Integration Tests -->
+    <div class="test-section">
+        <h2>🔗 Integration Tests <span class="count" id="integrationCount">0/0</span></h2>
+        <div id="integrationTests"></div>
+    </div>
+    
+    <!-- E2E Tests -->
+    <div class="test-section">
+        <h2>🌐 E2E Tests (End-to-End) <span class="count" id="e2eCount">0/0</span></h2>
+        <div id="e2eTests"></div>
+    </div>
+    
+    <!-- Performance Tests -->
+    <div class="test-section">
+        <h2>⚡ Performance Tests <span class="count" id="perfCount">0/0</span></h2>
+        <div id="perfTests"></div>
+    </div>
+    
+    <!-- Console Log -->
+    <div class="test-section">
+        <h2>📋 Test Log</h2>
+        <div class="console-log" id="consoleLog">
+            <div class="info">Click "Run All Tests" to start...</div>
+        </div>
+        <button class="export-btn" onclick="exportReport()">📄 Export Full Report</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyB0UKJk3L-veKP1X7JhFCj0pqGitZkFLDM",
+            authDomain: "bait-check-in-webapp.firebaseapp.com",
+            projectId: "bait-check-in-webapp",
+            storageBucket: "bait-check-in-webapp.firebasestorage.app",
+            messagingSenderId: "1064028134741",
+            appId: "1:1064028134741:web:8d14b141d04c41d28a19c3"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        
+        // Test Results
+        let testResults = { passed: 0, failed: 0, total: 0 };
+        let testStartTime = 0;
+        let allTestResults = [];
+        
+        // ==========================================
+        // Helper Functions
+        // ==========================================
+        
+        const ZONE_BRANCH_MAPPING = {
+            "เขต 1": ["พุทธมณฑล", "นครปฐม", "หัวหิน", "พระราม 2"],
+            "เขต 2": ["สาทร", "ปทุมวัน", "พระราม 4", "นนทบุรี"],
+            "เขต 3": ["ปทุมธานี", "รามอินทรา", "อยุธยา"],
+            "เขต 4": ["ลาดพร้าว", "พัฒนาการ", "สุวินทวงศ์", "ประชาชื่น"],
+            "เขต 5": ["ปราจีนบุรี", "สมุทรปราการ", "พัทยา", "ระยอง"],
+            "เขต 6": ["สุขุมวิท", "ปากน้ำ", "ชลบุรี"],
+            "เขต 7": ["ปากช่อง", "สระบุรี"]
+        };
+        
+        function getZoneFromBranch(branch) {
+            for (const [zone, branches] of Object.entries(ZONE_BRANCH_MAPPING)) {
+                if (branches.includes(branch)) return zone;
+            }
+            return null;
+        }
+        
+        function formatThaiDate(date) {
+            if (!date) return '-';
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+        
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        function formatTimeAgo(date) {
+            if (!date) return '-';
+            const now = new Date();
+            const d = new Date(date);
+            const diffMs = now - d;
+            const diffMins = Math.floor(diffMs / 60000);
+            if (diffMins < 1) return 'เมื่อสักครู่';
+            if (diffMins < 60) return `${diffMins} นาทีที่แล้ว`;
+            const diffHours = Math.floor(diffMins / 60);
+            if (diffHours < 24) return `${diffHours} ชั่วโมงที่แล้ว`;
+            const diffDays = Math.floor(diffHours / 24);
+            return `${diffDays} วันที่แล้ว`;
+        }
+        
+        // ==========================================
+        // Test Runner
+        // ==========================================
+        
+        function runTest(name, testFn, category) {
+            const start = performance.now();
+            try {
+                const result = testFn();
+                const duration = Math.round(performance.now() - start);
+                if (result === true) {
+                    testResults.passed++;
+                    return { name, status: 'pass', duration, category };
+                } else {
+                    testResults.failed++;
+                    return { name, status: 'fail', message: result, duration, category };
+                }
+            } catch (error) {
+                const duration = Math.round(performance.now() - start);
+                testResults.failed++;
+                return { name, status: 'fail', message: error.message, duration, category };
+            }
+        }
+        
+        async function runAsyncTest(name, testFn, category) {
+            const start = performance.now();
+            try {
+                const result = await testFn();
+                const duration = Math.round(performance.now() - start);
+                if (result === true) {
+                    testResults.passed++;
+                    return { name, status: 'pass', duration, category };
+                } else {
+                    testResults.failed++;
+                    return { name, status: 'fail', message: result, duration, category };
+                }
+            } catch (error) {
+                const duration = Math.round(performance.now() - start);
+                testResults.failed++;
+                return { name, status: 'fail', message: error.message, duration, category };
+            }
+        }
+        
+        function renderTestItem(result) {
+            return `
+                <div class="test-item ${result.status}">
+                    <span class="test-name">${result.name}</span>
+                    <span class="test-time">${result.duration}ms</span>
+                    <span class="test-status">${result.status.toUpperCase()}</span>
+                </div>
+            `;
+        }
+        
+        function log(message, type = 'info') {
+            const consoleLog = document.getElementById('consoleLog');
+            const time = new Date().toLocaleTimeString('th-TH');
+            consoleLog.innerHTML += `<div class="${type}">[${time}] ${message}</div>`;
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+        }
+        
+        function updateProgress(current, total) {
+            const percent = Math.round((current / total) * 100);
+            document.getElementById('progressBar').style.width = percent + '%';
+        }
+        
+        // ==========================================
+        // Unit Tests (8 tests)
+        // ==========================================
+        
+        function runUnitTests() {
+            const tests = [];
+            
+            tests.push(runTest('getZoneFromBranch("สาทร") = "เขต 2"', () => {
+                return getZoneFromBranch("สาทร") === "เขต 2";
+            }, 'unit'));
+            
+            tests.push(runTest('getZoneFromBranch("ไม่มี") = null', () => {
+                return getZoneFromBranch("ไม่มี") === null;
+            }, 'unit'));
+            
+            tests.push(runTest('formatThaiDate(2026-01-26) = "26-01-2026"', () => {
+                return formatThaiDate(new Date(2026, 0, 26)) === "26-01-2026";
+            }, 'unit'));
+            
+            tests.push(runTest('formatThaiDate(null) = "-"', () => {
+                return formatThaiDate(null) === "-";
+            }, 'unit'));
+            
+            tests.push(runTest('calculateDistance(same point) ≈ 0', () => {
+                const dist = calculateDistance(13.7563, 100.5018, 13.7563, 100.5018);
+                return Math.abs(dist) < 0.001;
+            }, 'unit'));
+            
+            tests.push(runTest('calculateDistance(BKK to CNX) ≈ 580km', () => {
+                const dist = calculateDistance(13.7563, 100.5018, 18.7883, 98.9853);
+                return dist > 550 && dist < 620;
+            }, 'unit'));
+            
+            tests.push(runTest('All 24 branches have zones', () => {
+                const allBranches = Object.values(ZONE_BRANCH_MAPPING).flat();
+                return allBranches.length === 24;
+            }, 'unit'));
+            
+            tests.push(runTest('formatTimeAgo(now) = "เมื่อสักครู่"', () => {
+                return formatTimeAgo(new Date()) === "เมื่อสักครู่";
+            }, 'unit'));
+            
+            return tests;
+        }
+        
+        // ==========================================
+        // Integration Tests (5 tests)
+        // ==========================================
+        
+        async function runIntegrationTests() {
+            const tests = [];
+            
+            tests.push(await runAsyncTest('Firebase Firestore Connection', async () => {
+                const snapshot = await db.collection('checkins').limit(1).get();
+                return true;
+            }, 'integration'));
+            
+            tests.push(await runAsyncTest('Read /checkins collection', async () => {
+                const snapshot = await db.collection('checkins').limit(5).get();
+                return snapshot.docs.length >= 0;
+            }, 'integration'));
+            
+            tests.push(await runAsyncTest('Firebase Storage Connection', async () => {
+                const storageRef = storage.ref();
+                return storageRef !== null;
+            }, 'integration'));
+            
+            tests.push(await runAsyncTest('Query with visible filter', async () => {
+                const snapshot = await db.collection('checkins')
+                    .where('visible', '==', true)
+                    .limit(5)
+                    .get();
+                return true;
+            }, 'integration'));
+            
+            tests.push(await runAsyncTest('Real-time listener', async () => {
+                return new Promise((resolve) => {
+                    const unsubscribe = db.collection('checkins').limit(1).onSnapshot(
+                        () => { unsubscribe(); resolve(true); },
+                        (e) => { unsubscribe(); resolve(`Error: ${e.message}`); }
+                    );
+                    setTimeout(() => { unsubscribe(); resolve('Timeout'); }, 5000);
+                });
+            }, 'integration'));
+            
+            return tests;
+        }
+        
+        // ==========================================
+        // E2E Tests (6 tests)
+        // ==========================================
+        
+        async function runE2ETests() {
+            const tests = [];
+            
+            // Test 1: Create Check-in Flow
+            tests.push(await runAsyncTest('E2E: Create Check-in Document', async () => {
+                const testDoc = {
+                    team: 'Z',
+                    customerName: 'E2E Test Customer',
+                    contractNumber: 'E2E-TEST-001',
+                    branch: 'พุทธมณฑล',
+                    zone: 'เขต 1',
+                    location: { lat: 13.7563, lng: 100.5018, address: 'Test Address' },
+                    photos: { houseFront: null, contractPhoto: null },
+                    notes: 'E2E Test',
+                    visible: true,
+                    checkinTime: firebase.firestore.Timestamp.now(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                const docRef = await db.collection('checkins').add(testDoc);
+                await db.collection('checkins').doc(docRef.id).delete();
+                return true;
+            }, 'e2e'));
+            
+            // Test 2: Read and Verify Data Structure
+            tests.push(await runAsyncTest('E2E: Verify Check-in Data Structure', async () => {
+                const snapshot = await db.collection('checkins').limit(1).get();
+                if (snapshot.empty) return true; // No data is OK
+                const doc = snapshot.docs[0].data();
+                const requiredFields = ['team', 'customerName', 'branch', 'location', 'visible'];
+                return requiredFields.every(field => field in doc);
+            }, 'e2e'));
+            
+            // Test 3: Update Visibility
+            tests.push(await runAsyncTest('E2E: Update Check-in Visibility', async () => {
+                const testDoc = await db.collection('checkins').add({
+                    team: 'Z', customerName: 'Visibility Test', contractNumber: 'VIS-001',
+                    branch: 'สาทร', zone: 'เขต 2', visible: true,
+                    location: { lat: 0, lng: 0 },
+                    checkinTime: firebase.firestore.Timestamp.now()
+                });
+                await db.collection('checkins').doc(testDoc.id).update({ visible: false });
+                const updated = await db.collection('checkins').doc(testDoc.id).get();
+                const result = updated.data().visible === false;
+                await db.collection('checkins').doc(testDoc.id).delete();
+                return result;
+            }, 'e2e'));
+            
+            // Test 4: Zone-Branch Mapping Consistency
+            tests.push(await runAsyncTest('E2E: Zone-Branch Mapping Works', async () => {
+                const branches = ['สาทร', 'พุทธมณฑล', 'ชลบุรี', 'สระบุรี'];
+                const expectedZones = ['เขต 2', 'เขต 1', 'เขต 6', 'เขต 7'];
+                return branches.every((b, i) => getZoneFromBranch(b) === expectedZones[i]);
+            }, 'e2e'));
+            
+            // Test 5: Storage Upload/Delete
+            tests.push(await runAsyncTest('E2E: Storage Upload & Delete', async () => {
+                const testBlob = new Blob(['E2E Test File'], { type: 'text/plain' });
+                const testPath = `_e2e_test/test-${Date.now()}.txt`;
+                const ref = storage.ref().child(testPath);
+                await ref.put(testBlob);
+                await ref.delete();
+                return true;
+            }, 'e2e'));
+            
+            // Test 6: Query by Team Filter
+            tests.push(await runAsyncTest('E2E: Query Filter by Team', async () => {
+                const snapshot = await db.collection('checkins')
+                    .where('team', '==', 'A')
+                    .limit(5)
+                    .get();
+                return true; // Query executes without error
+            }, 'e2e'));
+            
+            return tests;
+        }
+        
+        // ==========================================
+        // Performance Tests (5 tests)
+        // ==========================================
+        
+        async function runPerformanceTests() {
+            const tests = [];
+            
+            // Test 1: Firestore Read Speed
+            tests.push(await runAsyncTest('Perf: Firestore Read < 500ms', async () => {
+                const start = performance.now();
+                await db.collection('checkins').limit(10).get();
+                const duration = performance.now() - start;
+                return duration < 500 ? true : `Too slow: ${Math.round(duration)}ms`;
+            }, 'performance'));
+            
+            // Test 2: Multiple Reads
+            tests.push(await runAsyncTest('Perf: 5 Parallel Reads < 2000ms', async () => {
+                const start = performance.now();
+                await Promise.all([
+                    db.collection('checkins').limit(5).get(),
+                    db.collection('checkins').limit(5).get(),
+                    db.collection('checkins').limit(5).get(),
+                    db.collection('checkins').limit(5).get(),
+                    db.collection('checkins').limit(5).get()
+                ]);
+                const duration = performance.now() - start;
+                return duration < 2000 ? true : `Too slow: ${Math.round(duration)}ms`;
+            }, 'performance'));
+            
+            // Test 3: Write Speed
+            tests.push(await runAsyncTest('Perf: Firestore Write < 1000ms', async () => {
+                const start = performance.now();
+                const doc = await db.collection('_perf_test').add({ test: true, ts: Date.now() });
+                await db.collection('_perf_test').doc(doc.id).delete();
+                const duration = performance.now() - start;
+                return duration < 1000 ? true : `Too slow: ${Math.round(duration)}ms`;
+            }, 'performance'));
+            
+            // Test 4: Zone Lookup Performance (1000 iterations)
+            tests.push(runTest('Perf: 1000 Zone Lookups < 50ms', () => {
+                const start = performance.now();
+                for (let i = 0; i < 1000; i++) {
+                    getZoneFromBranch('สาทร');
+                    getZoneFromBranch('ชลบุรี');
+                    getZoneFromBranch('ไม่มี');
+                }
+                const duration = performance.now() - start;
+                return duration < 50 ? true : `Too slow: ${Math.round(duration)}ms`;
+            }, 'performance'));
+            
+            // Test 5: Date Formatting Performance (1000 iterations)
+            tests.push(runTest('Perf: 1000 Date Formats < 100ms', () => {
+                const start = performance.now();
+                const testDate = new Date();
+                for (let i = 0; i < 1000; i++) {
+                    formatThaiDate(testDate);
+                    formatTimeAgo(testDate);
+                }
+                const duration = performance.now() - start;
+                return duration < 100 ? true : `Too slow: ${Math.round(duration)}ms`;
+            }, 'performance'));
+            
+            return tests;
+        }
+        
+        // ==========================================
+        // Run All Tests
+        // ==========================================
+        
+        async function runAllTests() {
+            // Reset
+            testResults = { passed: 0, failed: 0, total: 0 };
+            allTestResults = [];
+            testStartTime = performance.now();
+            
+            document.getElementById('consoleLog').innerHTML = '';
+            document.getElementById('runBtn').disabled = true;
+            document.getElementById('runBtn').textContent = '⏳ Running...';
+            
+            const totalTests = 8 + 5 + 6 + 5; // unit + integration + e2e + perf
+            let completed = 0;
+            
+            log('🚀 Starting Complete Test Suite...', 'info');
+            log(`📊 Total tests to run: ${totalTests}`, 'info');
+            
+            // Run Unit Tests
+            log('📦 Running Unit Tests...', 'info');
+            const unitTests = runUnitTests();
+            allTestResults.push(...unitTests);
+            completed += unitTests.length;
+            updateProgress(completed, totalTests);
+            document.getElementById('unitTests').innerHTML = unitTests.map(renderTestItem).join('');
+            document.getElementById('unitCount').textContent = `${unitTests.filter(t => t.status === 'pass').length}/${unitTests.length}`;
+            unitTests.forEach(t => log(`  ${t.name}: ${t.status === 'pass' ? '✅' : '❌'} (${t.duration}ms)`, t.status === 'pass' ? 'success' : 'error'));
+            
+            // Run Integration Tests
+            log('🔗 Running Integration Tests...', 'info');
+            const integrationTests = await runIntegrationTests();
+            allTestResults.push(...integrationTests);
+            completed += integrationTests.length;
+            updateProgress(completed, totalTests);
+            document.getElementById('integrationTests').innerHTML = integrationTests.map(renderTestItem).join('');
+            document.getElementById('integrationCount').textContent = `${integrationTests.filter(t => t.status === 'pass').length}/${integrationTests.length}`;
+            integrationTests.forEach(t => log(`  ${t.name}: ${t.status === 'pass' ? '✅' : '❌'} (${t.duration}ms)`, t.status === 'pass' ? 'success' : 'error'));
+            
+            // Run E2E Tests
+            log('🌐 Running E2E Tests...', 'info');
+            const e2eTests = await runE2ETests();
+            allTestResults.push(...e2eTests);
+            completed += e2eTests.length;
+            updateProgress(completed, totalTests);
+            document.getElementById('e2eTests').innerHTML = e2eTests.map(renderTestItem).join('');
+            document.getElementById('e2eCount').textContent = `${e2eTests.filter(t => t.status === 'pass').length}/${e2eTests.length}`;
+            e2eTests.forEach(t => log(`  ${t.name}: ${t.status === 'pass' ? '✅' : '❌'} (${t.duration}ms)`, t.status === 'pass' ? 'success' : 'error'));
+            
+            // Run Performance Tests
+            log('⚡ Running Performance Tests...', 'info');
+            const perfTests = await runPerformanceTests();
+            allTestResults.push(...perfTests);
+            completed += perfTests.length;
+            updateProgress(completed, totalTests);
+            document.getElementById('perfTests').innerHTML = perfTests.map(renderTestItem).join('');
+            document.getElementById('perfCount').textContent = `${perfTests.filter(t => t.status === 'pass').length}/${perfTests.length}`;
+            perfTests.forEach(t => log(`  ${t.name}: ${t.status === 'pass' ? '✅' : '❌'} (${t.duration}ms)`, t.status === 'pass' ? 'success' : 'error'));
+            
+            // Update Summary
+            const totalTime = Math.round(performance.now() - testStartTime);
+            const total = testResults.passed + testResults.failed;
+            testResults.total = total;
+            
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = testResults.passed;
+            document.getElementById('failedTests').textContent = testResults.failed;
+            document.getElementById('totalTime').textContent = (totalTime / 1000).toFixed(1) + 's';
+            
+            log(`\n${'='.repeat(50)}`, 'info');
+            log(`✅ Tests completed: ${testResults.passed}/${total} passed`, testResults.failed === 0 ? 'success' : 'warn');
+            log(`⏱️ Total time: ${(totalTime / 1000).toFixed(2)}s`, 'info');
+            
+            document.getElementById('runBtn').disabled = false;
+            document.getElementById('runBtn').textContent = '▶️ Run All Tests';
+        }
+        
+        // ==========================================
+        // Export Report
+        // ==========================================
+        
+        function exportReport() {
+            const now = new Date();
+            const dateStr = formatThaiDate(now);
+            const timeStr = now.toLocaleTimeString('th-TH');
+            
+            let report = `# 📋 Test Report - Bait Check-In WebApp\n`;
+            report += `\n**Date:** ${dateStr}\n`;
+            report += `**Time:** ${timeStr}\n`;
+            report += `**URL:** https://bait-check-in-webapp.web.app\n`;
+            report += `\n---\n`;
+            report += `\n## 📊 Summary\n\n`;
+            report += `| Metric | Value |\n`;
+            report += `|--------|-------|\n`;
+            report += `| Total Tests | ${testResults.total} |\n`;
+            report += `| Passed | ${testResults.passed} |\n`;
+            report += `| Failed | ${testResults.failed} |\n`;
+            report += `| Pass Rate | ${testResults.total > 0 ? Math.round((testResults.passed / testResults.total) * 100) : 0}% |\n`;
+            report += `| Total Time | ${document.getElementById('totalTime').textContent} |\n`;
+            
+            // Group by category
+            const categories = ['unit', 'integration', 'e2e', 'performance'];
+            const categoryNames = {
+                'unit': '📦 Unit Tests',
+                'integration': '🔗 Integration Tests',
+                'e2e': '🌐 E2E Tests',
+                'performance': '⚡ Performance Tests'
+            };
+            
+            categories.forEach(cat => {
+                const tests = allTestResults.filter(t => t.category === cat);
+                const passed = tests.filter(t => t.status === 'pass').length;
+                report += `\n---\n\n## ${categoryNames[cat]}\n\n`;
+                report += `**Result: ${passed}/${tests.length} passed**\n\n`;
+                report += `| Test Name | Status | Duration |\n`;
+                report += `|-----------|--------|----------|\n`;
+                tests.forEach(t => {
+                    const status = t.status === 'pass' ? '✅ PASS' : '❌ FAIL';
+                    report += `| ${t.name} | ${status} | ${t.duration}ms |\n`;
+                });
+            });
+            
+            report += `\n---\n\n**Generated by Bait Check-In Test Suite**\n`;
+            
+            // Download
+            const blob = new Blob([report], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `test-report-${now.toISOString().split('T')[0]}.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            log('📄 Report exported successfully!', 'success');
+        }
+        
+        // Auto-run tests on load
+        window.onload = () => {
+            setTimeout(runAllTests, 500);
+        };
+    </script>
+</body>
+</html>

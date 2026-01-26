@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "bait-check-in-webapp",
     "public": ".",
     "ignore": [
       "firebase.json",

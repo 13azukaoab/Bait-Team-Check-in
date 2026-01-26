@@ -1,0 +1,221 @@
+<mxfile host="app.diagrams.net" modified="2026-01-26T09:00:00.000Z" agent="Mozilla/5.0" version="22.0.0">
+  <diagram name="Bait Check-In Flowchart" id="webapp-flow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Title -->
+        <mxCell id="title" value="🚀 Bait Check-In WebApp - System Flowchart" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#0ea5e9;" parent="1" vertex="1">
+          <mxGeometry x="300" y="20" width="600" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- User Types Section -->
+        <mxCell id="user-section" value="👥 Users" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="80" width="200" height="180" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="mobile-user" value="📱 ทีมภาคสนาม&#xa;(Mobile)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" parent="user-section" vertex="1">
+          <mxGeometry x="40" y="20" width="140" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="admin-user" value="🖥️ Admin&#xa;(Desktop)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" parent="user-section" vertex="1">
+          <mxGeometry x="40" y="100" width="140" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- Mobile Flow -->
+        <mxCell id="mobile-section" value="📱 Mobile Check-in Flow" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="280" y="80" width="400" height="300" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m1" value="1️⃣ เลือกทีม&#xa;(A-O, Z)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" parent="mobile-section" vertex="1">
+          <mxGeometry x="40" y="20" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m2" value="2️⃣ กรอกข้อมูล&#xa;• ชื่อลูกค้า&#xa;• เลขสัญญา&#xa;• เลือกสาขา" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=10;" parent="mobile-section" vertex="1">
+          <mxGeometry x="160" y="15" width="100" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m3" value="3️⃣ ถ่ายรูป&#xa;• หน้าบ้าน&#xa;• เลขสัญญา" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=10;" parent="mobile-section" vertex="1">
+          <mxGeometry x="280" y="20" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m4" value="📍 จับพิกัด GPS&#xa;อัตโนมัติ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="mobile-section" vertex="1">
+          <mxGeometry x="40" y="90" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m5" value="🗺️ แปลงพิกัด&#xa;เป็นที่อยู่&#xa;(Longdo API)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="mobile-section" vertex="1">
+          <mxGeometry x="160" y="85" width="100" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m6" value="📸 บีบอัดรูป&#xa;120-450 KB" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="mobile-section" vertex="1">
+          <mxGeometry x="280" y="90" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m7" value="✅ กดบันทึก&#xa;Check-in" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" parent="mobile-section" vertex="1">
+          <mxGeometry x="160" y="170" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m8" value="📜 ดูประวัติ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" parent="mobile-section" vertex="1">
+          <mxGeometry x="40" y="240" width="100" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- Arrows Mobile -->
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;" parent="mobile-section" source="m1" target="m2" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;" parent="mobile-section" source="m2" target="m3" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;" parent="mobile-section" source="m4" target="m5" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;" parent="mobile-section" source="m3" target="m6" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;" parent="mobile-section" source="m6" target="m7" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Firebase Section -->
+        <mxCell id="firebase-section" value="☁️ Firebase (Cloud)" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;rounded=1;fontSize=14;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="720" y="80" width="220" height="300" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="f1" value="🔥 Firestore&#xa;Database" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" parent="firebase-section" vertex="1">
+          <mxGeometry x="60" y="30" width="100" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="f2" value="📦 Cloud&#xa;Storage" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" parent="firebase-section" vertex="1">
+          <mxGeometry x="60" y="110" width="100" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="f3" value="🌐 Hosting&#xa;(Web Server)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" parent="firebase-section" vertex="1">
+          <mxGeometry x="60" y="190" width="100" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- Admin Flow -->
+        <mxCell id="admin-section" value="🖥️ Admin Dashboard Flow" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=1;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="280" y="400" width="660" height="220" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="d1" value="📊 Dashboard&#xa;• สถิติ&#xa;• การ์ดสรุป" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=10;" parent="admin-section" vertex="1">
+          <mxGeometry x="40" y="30" width="100" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="d2" value="🗺️ Map View&#xa;• หมุดตำแหน่ง&#xa;• วัดระยะทาง&#xa;• Full Screen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=10;" parent="admin-section" vertex="1">
+          <mxGeometry x="160" y="25" width="100" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="d3" value="📋 Check-ins&#xa;• ตารางข้อมูล&#xa;• Sort/Filter&#xa;• ซ่อน/แสดง" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=10;" parent="admin-section" vertex="1">
+          <mxGeometry x="280" y="25" width="100" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="d4" value="📸 Photos&#xa;Gallery" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=10;" parent="admin-section" vertex="1">
+          <mxGeometry x="400" y="35" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="d5" value="📈 Reports&#xa;• กราฟสถิติ&#xa;• Performance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=10;" parent="admin-section" vertex="1">
+          <mxGeometry x="520" y="30" width="100" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="d6" value="🔍 Filters&#xa;ทีม | เขต | สาขา | วันที่" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" parent="admin-section" vertex="1">
+          <mxGeometry x="160" y="120" width="140" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="d7" value="📤 Export&#xa;Excel / CSV" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="admin-section" vertex="1">
+          <mxGeometry x="340" y="120" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="d8" value="🔄 Real-time&#xa;Auto Update" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" parent="admin-section" vertex="1">
+          <mxGeometry x="480" y="120" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Connection Arrows -->
+        <mxCell id="c1" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#0ea5e9;strokeWidth=2;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="m7" target="f1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="280" as="sourcePoint"/>
+            <mxPoint x="720" y="140" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="700" y="275"/>
+              <mxPoint x="700" y="140"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="c2" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#0ea5e9;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="f1" target="d1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="250" as="sourcePoint"/>
+            <mxPoint x="420" y="460" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="830" y="390"/>
+              <mxPoint x="430" y="390"/>
+              <mxPoint x="430" y="460"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- User to Sections Arrows -->
+        <mxCell id="u1" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#d6b656;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.15;entryDx=0;entryDy=0;" parent="1" source="mobile-user" target="mobile-section" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="140" as="sourcePoint"/>
+            <mxPoint x="280" y="120" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="u2" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#9673a6;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="admin-user" target="admin-section" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="210" as="sourcePoint"/>
+            <mxPoint x="280" y="450" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="260" y="210"/>
+              <mxPoint x="260" y="455"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Legend -->
+        <mxCell id="legend" value="📌 Legend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;rounded=1;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="400" width="200" height="220" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="l1" value="หน้าเริ่มต้น" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=10;" parent="legend" vertex="1">
+          <mxGeometry x="20" y="35" width="70" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="l1t" value="= Step/Page" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" parent="legend" vertex="1">
+          <mxGeometry x="100" y="35" width="80" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="l2" value="ประมวลผล" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="legend" vertex="1">
+          <mxGeometry x="20" y="75" width="70" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="l2t" value="= Process" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" parent="legend" vertex="1">
+          <mxGeometry x="100" y="75" width="80" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="l3" value="ฐานข้อมูล" style="shape=cylinder3;whiteSpace=wrap;html=1;size=10;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" parent="legend" vertex="1">
+          <mxGeometry x="20" y="115" width="70" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="l3t" value="= Database" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" parent="legend" vertex="1">
+          <mxGeometry x="100" y="120" width="80" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="l4" value="" style="endArrow=classic;html=1;strokeColor=#0ea5e9;strokeWidth=2;" parent="legend" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="20" y="175" as="sourcePoint"/>
+            <mxPoint x="90" y="175" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l4t" value="= Data Flow" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" parent="legend" vertex="1">
+          <mxGeometry x="100" y="160" width="80" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- Version -->
+        <mxCell id="version" value="Version 2.0.0 | 26-01-2026 | Bait Check-In WebApp" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="400" y="650" width="400" height="20" as="geometry"/>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

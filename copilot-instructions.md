@@ -378,22 +378,70 @@ map.on("click", (e) => {
 
 ```
 Bait Check-In Webapp/
-├── index.html              # หน้าหลัก (redirects)
-├── mockup-mobile.html      # หน้าจอมือถือ (Mobile mockup)
-├── mockup-desktop.html     # หน้าจอแอดมิน (Desktop mockup)
-├── copilot-instructions.md # ไฟล์คำสั่งนี้
+├── index.html                  # หน้าหลัก (redirect to mobile/desktop)
+├── mobile-checkin.html         # หน้ามือถือ (Mobile Check-in)
+├── admin-dashboard.html        # หน้าแอดมิน (Desktop Dashboard)
+├── copilot-instructions.md     # กฎสำหรับ AI
+├── task.md                     # สถานะโปรเจกต์
+├── README.md                   # คำอธิบายโปรเจกต์
 │
-├── src/
-│   ├── mobile/             # โค้ดส่วนมือถือ
-│   ├── admin/              # โค้ดส่วนแอดมิน
-│   └── shared/             # โค้ดที่ใช้ร่วมกัน
+├── pages/                      # หน้าเสริมอื่นๆ
+│   ├── logo-showcase.html      # หน้าโหวตโลโก้
+│   └── test/                   # หน้าทดสอบ
+│       ├── test-firebase.html
+│       ├── test-compress.html
+│       ├── compress-demo.html
+│       └── compress-quality-test.html
 │
-├── assets/
-│   └── icons/
+├── src/                        # โค้ด JavaScript
+│   └── firebase-config.js      # Firebase Configuration
 │
-└── docs/
-    └── guides/
+├── firebase/                   # Firebase Rules
+│   ├── firestore.rules
+│   └── storage.rules
+│
+├── docs/                       # เอกสาร
+│   └── project-workflow.drawio
+│
+├── image/                      # รูปภาพ
+│   └── deploy-history/
+│
+├── secrets/                    # ไฟล์ลับ (ห้าม commit)
+│   ├── Firebase SDK.txt
+│   ├── HERE Map API KEY.txt
+│   └── Longdo API KEY.txt
+│
+└── (config files)
+    ├── .firebaserc
+    ├── firebase.json
+    ├── .gitignore
+    ├── deploy.ps1
+    └── deploy-history.log
 ```
+
+---
+
+## 📁 กฎข้อที่ 14: การจัดการไฟล์ (File Organization)
+
+**หลักการจัดเก็บไฟล์:**
+
+| ประเภท | ที่เก็บ | หมายเหตุ |
+|--------|---------|----------|
+| หน้าหลัก (Main Pages) | `/` (root) | index, mobile, desktop |
+| หน้าเสริม | `/pages/` | logo-showcase, etc. |
+| หน้าทดสอบ | `/pages/test/` | test-*, compress-* |
+| โค้ด JavaScript | `/src/` | firebase-config, shared code |
+| Firebase Rules | `/firebase/` | firestore.rules, storage.rules |
+| เอกสาร | `/docs/` | diagrams, guides |
+| รูปภาพ | `/image/` | screenshots, assets |
+| ไฟล์ลับ | `/secrets/` | API keys (ห้าม commit) |
+
+**กฎการตั้งชื่อไฟล์:**
+
+- ✅ ใช้ lowercase และ hyphen: `test-firebase.html`
+- ❌ ห้ามใช้ space หรือ underscore
+- ✅ ไฟล์ทดสอบขึ้นต้นด้วย `test-`
+- ✅ ไฟล์ config ใส่ใน folder เฉพาะ
 
 ---
 
@@ -429,5 +477,5 @@ formatThaiDate(timestamp); // Returns "22-01-2026"
 
 ---
 
-**อัปเดตล่าสุด:** 26-01-2026, 14:00 น.
-**เวอร์ชัน:** V.1.2.0 (26-01-2026)
+**อัปเดตล่าสุด:** 26-01-2026, 15:20 น.
+**เวอร์ชัน:** V.1.3.0 (26-01-2026)

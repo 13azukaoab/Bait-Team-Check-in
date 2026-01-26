@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Bait Check-In</title>
+	<link rel="icon" type="image/svg+xml" href="image/favicon.svg">
+	<link rel="apple-touch-icon" href="image/favicon.svg">
 	<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<style>
@@ -25,7 +27,7 @@
 		document.addEventListener('DOMContentLoaded', () => {
 			const isMobile = Math.min(window.innerWidth, window.innerHeight) <= 480 || /Mobi|Android/i.test(navigator.userAgent);
 			if (isMobile) {
-				window.location.href = 'mockup-mobile.html';
+				window.location.href = 'mobile-checkin.html';
 			}
 		});
 	</script>
@@ -38,8 +40,8 @@
 		</div>
 		<p>เลือกหน้าที่ต้องการเข้าใช้งาน</p>
 		<div class="actions">
-			<a class="btn primary" href="mockup-mobile.html">เข้าสู่ระบบทีมภาคสนาม (มือถือ)</a>
-			<a class="btn secondary" href="mockup-desktop.html">แดชบอร์ดผู้ดูแลระบบ (ไม่มีโหมดมืด)</a>
+			<a class="btn primary" href="mobile-checkin.html">เข้าสู่ระบบทีมภาคสนาม (มือถือ)</a>
+			<a class="btn secondary" href="admin-dashboard.html">แดชบอร์ดผู้ดูแลระบบ</a>
 		</div>
 		<div class="hint">อุปกรณ์มือถือจะถูกพาไปหน้ามือถืออัตโนมัติ</div>
 	</div>
