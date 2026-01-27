@@ -81,7 +81,15 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host ""
     
     # Log to history
-    $logEntry = "$timestamp | $branch | $commitHash | SUCCESS | $commitMsg"
+    # Determine deploy type for logging
+    if ($HostingOnly) { $deployType = "Hosting" }
+    elseif ($RulesOnly) { $deployType = "Rules" }
+    elseif ($IndexesOnly) { $deployType = "Indexes" }
+    elseif ($FunctionsOnly) { $deployType = "Functions" }
+    elseif ($All) { $deployType = "All" }
+    else { $deployType = "Hosting" }
+    
+    $logEntry = "$timestamp | $branch | $commitHash | SUCCESS | $commitMsg | BY: Weerachon | TYPE: $deployType | DETAILS: Deployed to Firebase"
     $logPath = Join-Path $projectRoot "deploy-history.log"
     Add-Content -Path $logPath -Value $logEntry -ErrorAction SilentlyContinue
 }
@@ -96,7 +104,15 @@ else {
     Write-Host ""
     
     # Log failure
-    $logEntry = "$timestamp | $branch | $commitHash | FAILED | $commitMsg"
+    # Determine deploy type for logging
+    if ($HostingOnly) { $deployType = "Hosting" }
+    elseif ($RulesOnly) { $deployType = "Rules" }
+    elseif ($IndexesOnly) { $deployType = "Indexes" }
+    elseif ($FunctionsOnly) { $deployType = "Functions" }
+    elseif ($All) { $deployType = "All" }
+    else { $deployType = "Hosting" }
+    
+    $logEntry = "$timestamp | $branch | $commitHash | FAILED | $commitMsg | BY: Weerachon | TYPE: $deployType | DETAILS: Deploy failed - check error above"
     $logPath = Join-Path $projectRoot "deploy-history.log"
     Add-Content -Path $logPath -Value $logEntry -ErrorAction SilentlyContinue
     
