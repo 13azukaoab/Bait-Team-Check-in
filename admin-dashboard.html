@@ -2162,12 +2162,21 @@
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label><i class="fas fa-calendar"></i> วันที่</label>
-                            <input type="date" id="filterDate" data-test="filter-date" value="2026-01-22">
+                            <label><i class="fas fa-calendar"></i> วันที่เริ่มต้น</label>
+                            <input type="date" id="filterDateStart" data-test="filter-date-start">
+                        </div>
+                        <div class="filter-group">
+                            <label><i class="fas fa-calendar-check"></i> วันที่สิ้นสุด</label>
+                            <input type="date" id="filterDateEnd" data-test="filter-date-end">
                         </div>
                         <div class="filter-group">
                             <button class="btn btn-primary" data-test="apply-filter-btn" onclick="applyFilters()" style="width: 100%;">
                                 <i class="fas fa-search"></i> ค้นหา
+                            </button>
+                        </div>
+                        <div class="filter-group">
+                            <button class="btn btn-outline" onclick="clearFilters()" style="width: 100%;">
+                                <i class="fas fa-times"></i> ล้างตัวกรอง
                             </button>
                         </div>
                     </div>
@@ -4320,14 +4329,156 @@
             });
         }
 
-        // Apply Filters (mockup - just shows alert)
+        // Apply Filters - กรองข้อมูลจริงจาก Firestore
         function applyFilters() {
             const team = document.getElementById('filterTeam').value;
             const zone = document.getElementById('filterZone').value;
             const branch = document.getElementById('filterBranch').value;
-            const date = document.getElementById('filterDate').value;
+            const startDate = document.getElementById('filterDateStart').value;
+            const endDate = document.getElementById('filterDateEnd').value;
             
-            alert(`กำลังกรองข้อมูล:\n- ทีม: ${team}\n- เขต: ${zone}\n- สาขา: ${branch}\n- วันที่: ${date}`);
+            // กรองข้อมูล
+            let filtered = [...firestoreCheckins];
+            
+            // กรองตามทีม
+            if (team !== 'ทุกทีม') {
+                const teamLetter = team.replace('Team ', '');
+                filtered = filtered.filter(item => item.team === teamLetter);
+            }
+            
+            // กรองตามเขต
+            if (zone !== 'ทุกเขต') {
+                filtered = filtered.filter(item => item.zone === zone);
+            }
+            
+            // กรองตามสาขา
+            if (branch !== 'ทุกสาขา') {
+                filtered = filtered.filter(item => item.branch === branch);
+            }
+            
+            // กรองตามช่วงวันที่
+            if (startDate) {
+                const start = new Date(startDate);
+                start.setHours(0, 0, 0, 0);
+                filtered = filtered.filter(item => {
+                    const itemDate = new Date(item.checkinTime);
+                    return itemDate >= start;
+                });
+            }
+            
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                filtered = filtered.filter(item => {
+                    const itemDate = new Date(item.checkinTime);
+                    return itemDate <= end;
+                });
+            }
+            
+            // อัพเดท UI
+            updateFilteredUI(filtered);
+            
+            // แสดงสรุป
+            const dateRange = startDate || endDate 
+                ? `${startDate || 'ตั้งแต่ต้น'} ถึง ${endDate || 'ปัจจุบัน'}` 
+                : 'ทั้งหมด';
+            
+            showRealtimeToast('กรองข้อมูลสำเร็จ', `พบ ${filtered.length} รายการ`);
+        }
+        
+        // อัพเดท UI ด้วยข้อมูลที่กรองแล้ว
+        function updateFilteredUI(filteredData) {
+            const mainTbody = document.getElementById('mainCheckinsTableBody');
+            
+            if (mainTbody) {
+                if (filteredData.length === 0) {
+                    mainTbody.innerHTML = `
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                                ไม่พบข้อมูลที่ตรงกับเงื่อนไข
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    mainTbody.innerHTML = filteredData.map((item) => `
+                        <tr data-checkin-id="${item.id}">
+                            <td><span class="team-badge team-${item.team?.toLowerCase() || 'a'}">${item.team || '-'}</span></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: #f1f5f9; display: flex; align-items: center; justify-content: center;">
+                                        ${item.houseFrontUrl 
+                                            ? `<img src="${item.houseFrontUrl}" style="width:100%;height:100%;object-fit:cover;">` 
+                                            : '<i class="fas fa-home" style="color:#94a3b8;"></i>'
+                                        }
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 500;">${item.customerName || '-'}</div>
+                                        <div style="font-size: 0.8rem; color: #64748b;">${item.contractNumber || '-'}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${item.branch || item.address || '-'}</td>
+                            <td><code>${item.lat?.toFixed(4) || '-'}, ${item.lng?.toFixed(4) || '-'}</code></td>
+                            <td>${formatThaiDate(item.checkinTime)} ${item.checkinTime?.toLocaleTimeString?.('th-TH', {hour:'2-digit', minute:'2-digit'}) || ''}</td>
+                            <td><span class="checkin-status ${item.visible ? 'active' : 'pending'}">${item.visible ? 'Active' : 'Pending'}</span></td>
+                            <td>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" ${item.visible ? 'checked' : ''} onchange="toggleCheckinVisibility('${item.id}', this.checked)">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </td>
+                            <td>
+                                <button onclick="deleteCheckin('${item.id}', '${item.customerName?.replace(/'/g, "\\'") || ''}')" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 5px;" title="ลบข้อมูล">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+            
+            // อัพเดท markers บนแผนที่
+            updateFilteredMarkers(filteredData);
+        }
+        
+        // อัพเดท markers บนแผนที่ตามข้อมูลที่กรอง
+        function updateFilteredMarkers(filteredData) {
+            // Clear existing markers
+            markersLayer.clearLayers();
+            
+            // Add filtered markers
+            filteredData.forEach(item => {
+                if (!item.visible || !item.lat || !item.lng) return;
+                
+                const marker = L.marker([item.lat, item.lng], { icon: createCustomIcon(item.team) })
+                    .bindPopup(`
+                        <div style="font-family: 'Prompt', sans-serif; padding: 8px; min-width: 200px;">
+                            <strong style="font-size: 1rem;">${item.customerName || '-'}</strong>
+                            <span style="font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b; margin-left: 8px;">Team ${item.team}</span>
+                            <br><br>
+                            <span style="color: #64748b;"><i class="fas fa-file-contract"></i> ${item.contractNumber || '-'}</span><br>
+                            <span style="color: #64748b;"><i class="fas fa-building"></i> ${item.branch || '-'}</span><br>
+                            <span style="color: #64748b;"><i class="fas fa-location-dot"></i> ${item.address || 'ไม่มีที่อยู่'}</span>
+                        </div>
+                    `);
+                markersLayer.addLayer(marker);
+            });
+        }
+        
+        // ล้างตัวกรอง
+        function clearFilters() {
+            document.getElementById('filterTeam').value = 'ทุกทีม';
+            document.getElementById('filterZone').value = 'ทุกเขต';
+            document.getElementById('filterBranch').value = 'ทุกสาขา';
+            document.getElementById('filterDateStart').value = '';
+            document.getElementById('filterDateEnd').value = '';
+            
+            // รีเซ็ตข้อมูลเป็นของเดิม
+            updateCheckinsTable();
+            updateMarkersFromFirestore();
+            
+            showRealtimeToast('ล้างตัวกรองแล้ว', 'แสดงข้อมูลทั้งหมด');
         }
 
         // Distance Measurement - Multi-point like Google Maps
