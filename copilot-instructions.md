@@ -701,6 +701,175 @@ defaultCommandTimeout: 10000,
 
 ---
 
-**อัปเดตล่าสุด:** 01-02-2026, 12:00 น.
-**เวอร์ชัน:** V.1.4.0 (01-02-2026) - เพิ่ม Markdown & Cypress Standards
+## 🤖 กฎข้อที่ 17: การสร้าง WebApp ต้องมี Cypress Tests
+
+**เมื่อ AI สร้างหรือแก้ไข WebApp ต้องทำ Cypress ให้ด้วยเสมอ:**
+
+### ✅ สิ่งที่ต้องสร้างอัตโนมัติ
+
+**1. โครงสร้าง Cypress:**
+
+```text
+cypress/
+├── jsconfig.json              # ป้องกัน TypeScript errors
+├── cypress.config.js          # Configuration
+├── e2e/
+│   └── {feature-name}.cy.js   # Test files
+└── support/
+    └── commands.js            # Custom commands
+```
+
+**2. ไฟล์ที่ต้องสร้าง:**
+
+| ไฟล์ | เมื่อไหร่ | หมายเหตุ |
+| --- | --- | --- |
+| `cypress/jsconfig.json` | ทุกครั้ง | ป้องกัน type errors |
+| `cypress.config.js` | ถ้ายังไม่มี | ตั้งค่า Cypress |
+| `package.json` | ถ้ายังไม่มี | เพิ่ม scripts & deps |
+| `cypress/e2e/*.cy.js` | ทุกครั้ง | Tests สำหรับ feature |
+| `cypress/support/commands.js` | ถ้ายังไม่มี | Custom commands |
+
+**3. jsconfig.json สำหรับ Cypress:**
+
+```json
+{
+  "compilerOptions": {
+    "types": ["cypress"],
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "noEmit": true
+  },
+  "include": ["**/*.js", "../node_modules/cypress"],
+  "exclude": ["node_modules"]
+}
+```
+
+### ✅ เมื่อสร้างหน้า HTML ใหม่
+
+**ต้องเพิ่ม `data-test` attributes ใน HTML เสมอ:**
+
+```html
+<!-- ทุก element ที่ต้องการ test ต้องมี data-test -->
+<button data-test="submit-btn">Submit</button>
+<input data-test="email-input" type="email">
+<div data-test="result-container">...</div>
+```
+
+**Naming Convention สำหรับ data-test:**
+
+| ประเภท | รูปแบบ | ตัวอย่าง |
+| --- | --- | --- |
+| Button | `{action}-btn` | `submit-btn`, `cancel-btn` |
+| Input | `{field}-input` | `email-input`, `name-input` |
+| Select | `{field}-select` | `team-select`, `branch-select` |
+| Container | `{name}-container` | `map-container`, `form-container` |
+| Table | `{name}-table` | `checkin-table`, `data-table` |
+| Modal | `{name}-modal` | `confirm-modal`, `team-modal` |
+| Message | `{type}-msg` | `success-msg`, `error-msg` |
+
+### ✅ เมื่อสร้าง Test File ใหม่
+
+**ต้องมีโครงสร้างนี้:**
+
+```javascript
+/// <reference types="cypress" />
+
+describe('Feature Name', () => {
+  beforeEach(() => {
+    cy.visit('/page.html');
+  });
+
+  it('1️⃣ Should load page correctly', () => {
+    cy.get('[data-test="main-container"]').should('be.visible');
+  });
+
+  it('2️⃣ Should perform action X', () => {
+    cy.get('[data-test="btn"]').click();
+    cy.get('[data-test="result"]').should('contain', 'Success');
+  });
+});
+```
+
+### ✅ Checklist ก่อน Commit WebApp
+
+- [ ] สร้าง `cypress/jsconfig.json` (ป้องกัน type errors)
+- [ ] เพิ่ม `data-test` ใน HTML elements ทั้งหมด
+- [ ] เขียน tests ครอบคลุม user flows หลัก
+- [ ] รัน `npm run test` ตรวจสอบ tests ผ่าน
+- [ ] ไม่มี errors ใน VS Code Problems tab
+
+### 🚫 สิ่งที่ต้องหลีกเลี่ยง
+
+| ❌ ห้ามทำ | ✅ ทำแทน |
+| --- | --- |
+| สร้าง HTML โดยไม่มี data-test | เพิ่ม data-test ทุก interactive element |
+| สร้าง .cy.js โดยไม่มี jsconfig.json | สร้าง jsconfig.json ใน cypress/ folder |
+| ใช้ class/id เป็น selectors | ใช้ data-test attributes |
+| สร้าง feature โดยไม่มี tests | เขียน tests ควบคู่กับ feature |
+
+---
+
+## 🛡️ กฎข้อที่ 18: ป้องกันปัญหาซ้ำ (Error Prevention)
+
+**กฎนี้รวบรวมปัญหาที่เคยเกิดขึ้น และวิธีป้องกัน:**
+
+### 1. Cypress Type Definition Error
+
+**ปัญหา:** `Cannot find type definition file for 'cypress'`
+
+**สาเหตุ:** ไม่มี jsconfig.json ใน cypress folder
+
+**ป้องกัน:** สร้าง `cypress/jsconfig.json` ทุกครั้งที่สร้าง Cypress tests
+
+### 2. Markdown Linting Errors
+
+**ปัญหา:** MD034, MD040, MD060, MD024, MD031, MD032
+
+**สาเหตุ:** ไม่ได้ตรวจสอบก่อน commit
+
+**ป้องกัน:**
+
+```powershell
+# ตรวจสอบก่อน commit
+npm run lint:md
+
+# หรือดู Problems tab ใน VS Code
+```
+
+### 3. Missing data-test Attributes
+
+**ปัญหา:** Cypress tests fail เพราะหา element ไม่เจอ
+
+**สาเหตุ:** HTML ไม่มี data-test attributes
+
+**ป้องกัน:** เพิ่ม data-test ทุก element ที่ต้องการ test
+
+### 4. Incomplete Test Coverage
+
+**ปัญหา:** Bug หลุดไปใน production
+
+**สาเหตุ:** ไม่ได้เขียน tests ครอบคลุม
+
+**ป้องกัน:** เขียน tests สำหรับ:
+
+- ✅ Happy path (การใช้งานปกติ)
+- ✅ Error cases (เมื่อเกิดข้อผิดพลาด)
+- ✅ Edge cases (กรณีพิเศษ)
+- ✅ Validation (ตรวจสอบ form)
+
+### Summary Table
+
+| ปัญหา | วิธีป้องกัน | ไฟล์ที่เกี่ยวข้อง |
+| --- | --- | --- |
+| Type definition error | สร้าง jsconfig.json | cypress/jsconfig.json |
+| Markdown errors | ตรวจสอบก่อน commit | *.md files |
+| Missing selectors | เพิ่ม data-test | *.html files |
+| Test failures | เขียน tests ครบ | cypress/e2e/*.cy.js |
+
+---
+
+**อัปเดตล่าสุด:** 01-02-2026, 13:00 น.
+**เวอร์ชัน:** V.1.5.0 (01-02-2026) - เพิ่มกฎ WebApp + Cypress อัตโนมัติ & Error Prevention
 

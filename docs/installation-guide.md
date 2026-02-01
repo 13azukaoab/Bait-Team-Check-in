@@ -5,7 +5,7 @@
 ## 📋 สิ่งที่ต้องมีก่อนติดตั้ง
 
 | รายการ | เวอร์ชันขั้นต่ำ | ดาวน์โหลด |
-|--------|----------------|-----------|
+| --- | --- | --- |
 | **Node.js** | 18.x ขึ้นไป | [https://nodejs.org](https://nodejs.org) |
 | **npm** | 9.x ขึ้นไป | มาพร้อม Node.js |
 | **Git** | 2.x ขึ้นไป | [https://git-scm.com](https://git-scm.com) |
@@ -32,6 +32,7 @@ cd Bait-Team-Check-in
 ```bash
 firebase login
 ```
+
 - เปิด Browser → ล็อกอินด้วย Google Account
 - เลือก Account ที่มีสิทธิ์ Firebase
 
@@ -111,7 +112,7 @@ firebase deploy
 
 หลัง Deploy สำเร็จ จะเห็น:
 
-```
+```text
 ✔ Deploy complete!
 
 Project Console: https://console.firebase.google.com/project/bait-check-in-webapp
