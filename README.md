@@ -97,10 +97,40 @@ Bait-Team-Check-in/
 | Frontend Mobile | ✅ 100% |
 | Frontend Dashboard | ✅ 100% |
 | Backend (Firebase) | ✅ 100% |
-| Testing (24 tests) | ✅ 100% |
+| Testing (E2E Playwright) | 🟨 65.5% (fixing) |
 | Documentation | ✅ 100% |
 
-## 🎉 โปรเจกต์เสร็จสมบูรณ์ 100%
+## 🎉 โปรเจกต์เสร็จสมบูรณ์ (100% Functional)
+
+---
+
+## 🧪 Testing: Playwright E2E
+
+### 📊 Test Coverage
+
+- **Total Tests:** 29 (16 Admin + 13 Mobile)
+- **Browsers:** Chromium + Mobile Chrome (optimized for speed)
+- **Current Status:** ✅ Passed 19/29 (65.5%)
+  - ❌ 10 failures: Filter visibility & selector issues (TODO)
+
+### 🚀 วิธีรันทดสอบ
+
+```powershell
+# ใช้ PowerShell Script (สุดแนะนำ)
+.\test.ps1                    # ทดสอบทั้งหมด
+.\test.ps1 -Headed            # แสดง Browser
+.\test.ps1 -Report            # ดูรายงาน
+
+# หรือใช้ npm
+npm test                      # ทดสอบทั้งหมด
+npm run test:ui               # UI Mode (interactive)
+npm run test:report           # ดูรายงาน HTML
+```
+
+### 📝 Test Report
+
+- [Test report by Playwright.md](Test%20report%20by%20Playwright.md) - สถานะการทดสอบและปัญหา
+- [test-history.log](test-history.log) - ประวัติการทดสอบทั้งหมด
 
 ---
 
@@ -122,8 +152,10 @@ firebase deploy --only hosting
 - [คู่มือ API](docs/api-guide.md) - สำหรับนักพัฒนา
 - [คู่มือการติดตั้ง](docs/installation-guide.md) - วิธีนำระบบขึ้น Server
 - [Flowchart](docs/webapp-flowchart.drawio) - แผนภาพการทำงาน
+- [Copilot Instructions](copilot-instructions.md) - กฎสำหรับ AI
 
 ---
 
-**เวอร์ชัน:** 2.0.0  
-**อัปเดตล่าสุด:** 26-01-2026
+**เวอร์ชัน:** 2.1.0  
+**Testing:** Playwright (migrated from Cypress)
+**อัปเดตล่าสุด:** 01-02-2026

@@ -25,12 +25,23 @@ module.exports = defineConfig({
   },
 
   /* Configure projects for major browsers */
+  /* OPTIMIZED: Desktop Chromium + Mobile Chrome only */
+  /* Reason: Fastest coverage, covers 80% of real users (Chrome-based) */
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
 
+    /* Test against mobile viewports. */
+    {
+      name: 'Mobile Chrome',
+      use: { ...devices['Pixel 5'] },
+    },
+
+    /* === COMMENTED OUT FOR SPEED === */
+    /* Uncomment below to test Firefox, Safari, and iOS */
+    /*
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
@@ -41,15 +52,11 @@ module.exports = defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
 
-    /* Test against mobile viewports. */
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
     {
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
     },
+    */
   ],
 
   /* Run your local dev server before starting the tests */

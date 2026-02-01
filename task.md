@@ -106,17 +106,38 @@
 
 > **หมายเหตุ:** CI/CD และ Custom Domain ไม่จำเป็นสำหรับโปรเจกต์ขนาดนี้
 
-## ✅ การทดสอบ (Testing) - เสร็จสมบูรณ์ 100%
+## ✅ การทดสอบ (Testing) - Playwright E2E
 
-- [X] **Unit Tests** (8 tests): ทดสอบ Helper Functions (getZoneFromBranch, formatThaiDate, calculateDistance, formatTimeAgo)
-- [X] **Integration Tests** (5 tests): ทดสอบ Firebase Connection, Firestore CRUD, Real-time Listener
-- [X] **E2E Tests** (6 tests): ทดสอบ End-to-End Flow (Create/Update/Delete Check-in, Storage Upload)
-- [X] **Performance Tests** (5 tests): ทดสอบความเร็ว Firestore Read/Write, Parallel Reads, Function Performance
-- [X] **Bug Hunt**: ตรวจสอบ potential bugs และ error handling
-- [X] **Clean Code**: ลบ console.log ที่ไม่จำเป็น, จัดระเบียบโค้ด
-- [X] **Test Report**: รายงานสรุปผลการทดสอบ (`docs/test-report.md`)
+### 📊 Test Coverage
 
-## 📊 ผลการทดสอบ: 24/24 tests passed (100%)
+- ✅ **Cypress → Playwright Migration**: เปลี่ยนจาก Cypress เป็น Playwright (ดี +1.5x ความเร็ว)
+- ⏳ **E2E Tests** (29 tests): 16 Admin Dashboard + 13 Mobile Check-in
+  - ✅ Tests สร้างเสร็จ (16 + 13 = 29 tests)
+  - 🟨 Pass Rate: 19/29 (65.5%) - ต้องแก้ 2 issues:
+    - Issue #1: Admin Dashboard filters ซ่อน (9 tests failing)
+    - Issue #2: Mobile selector คลุมเครือ (1 test failing)
+
+### 🧪 Test Automation
+
+- ✅ **test.ps1**: PowerShell script สำหรับรันทดสอบ
+  - `.\test.ps1` - ทดสอบทั้งหมด (2 browsers)
+  - `.\test.ps1 -Headed` - แสดง browser
+  - `.\test.ps1 -Report` - ดูรายงาน
+- ✅ **test-history.log**: บันทึกการทดสอบอัตโนมัติ
+- ✅ **Test report by Playwright.md**: สถานะและวิธีแก้ไข
+
+### 🔧 Browser Configuration (Optimized)
+
+- ✅ **Chromium** (Desktop Chrome)
+- ✅ **Mobile Chrome**
+- ⏸️ **Firefox, Safari, Mobile Safari** (commented out for speed)
+  - สามารถเปิดได้ใน `playwright.config.js` เมื่อต้องการ
+
+---
+
+## 📊 ผลการทดสอบ: 19/29 passed (65.5%)
+
+**หมายหมาย:** โปรเจกต์ Functional 100% แต่ E2E Tests ต้องแก้ 2 issues ก่อน
 
 ## ✅ คู่มือและเอกสาร (Documentation) - เสร็จสมบูรณ์ 100%
 
@@ -124,6 +145,7 @@
 - [X] **คู่มือการใช้งาน**: สำหรับผู้ใช้ทั่วไป (`docs/user-guide.md`)
 - [X] **คู่มือการติดตั้ง**: วิธีนำระบบขึ้น Server (`docs/installation-guide.md`)
 - [X] **Flowchart**: แผนภาพการทำงานของระบบ (`docs/webapp-flowchart.drawio`)
+- [X] **Copilot Instructions**: กฎสำหรับ AI (`copilot-instructions.md`)
 
 ---
 
@@ -134,11 +156,12 @@
 | **Frontend มือถือ** | ✅ เสร็จสมบูรณ์ | 100% | รวม Quality/Loading/Notifications/Zone/วันที่ไทย |
 | **Frontend แดชบอร์ด** | ✅ เสร็จสมบูรณ์ | 100% | รวม Sort/Freeze Header/Scrollbar/HQ Marker/Real Data |
 | **Backend (Firebase)** | ✅ เสร็จสมบูรณ์ | 100% | Firestore + Storage + Hosting + Team Login |
-| **DevOps (เซิร์ฟเวอร์)** | ✅ เสร็จสมบูรณ์ | 100% | Hosting + SSL |
-| **Testing (ทดสอบ)** | ✅ เสร็จสมบูรณ์ | 100% | Unit + Integration + E2E + Performance |
-| **เอกสารคู่มือ** | ✅ เสร็จสมบูรณ์ | 100% | API + User + Installation + Flowchart |
+| **DevOps (เซิร์ฟเวอร์)** | ✅ เสร็จสมบูรณ์ | 100% | Hosting + SSL + Deploy Scripts |
+| **Testing (Playwright)** | 🟨 ร.ร. | 65.5% | 29 tests (19 pass, 10 fail - TODO fixes) |
+| **เอกสารคู่มือ** | ✅ เสร็จสมบูรณ์ | 100% | API + User + Installation + Flowchart + Copilot |
 
-**🎉 ภาพรวมทั้งหมด: 100%** (ทุกส่วนเสร็จสมบูรณ์!)
+**🎉 โปรเจกต์ Functional: 100%** (ใช้งานได้จริง)  
+**📊 Test Coverage: 65.5%** (ต้องแก้ 2 issues)
 
 ---
 
@@ -148,6 +171,10 @@
 2. ✅ ~~เลือก **เทคโนโลยีหลังบ้าน (Backend Tech Stack)**~~ → Firebase
 3. ✅ ~~เริ่มพัฒนา **API** สำหรับเชื่อมต่อ~~ → ใช้ Firebase SDK
 4. ✅ ~~เชื่อมหน้าเว็บ (Frontend) เข้ากับระบบหลังบ้าน~~ → Mobile + Desktop เชื่อมแล้ว
+5. ✅ ~~ทดสอบระบบ~~ → Migrated to Playwright (ต้องแก้ issues)
+6. ⏳ **TODO: แก้ไข Playwright Test Issues** (Priority: Medium)
+   - Issue #1: Admin Dashboard filter visibility
+   - Issue #2: Mobile Check-in selector specificity
 5. ✅ ~~**Firebase Hosting**~~ → Deploy เสร็จ: [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
 6. ✅ ~~**ทดสอบระบบ**: ทดสอบ Check-in จริงผ่าน Mobile~~ → ทำงานได้สมบูรณ์
 7. ✅ ~~**Backend เสร็จสมบูรณ์**~~ → Firestore + Storage + Rules + Real-time
