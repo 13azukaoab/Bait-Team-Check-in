@@ -108,14 +108,124 @@
 
 ---
 
-## 🔧 การดำเนินการต่อไป (Next Steps)
+## 🔧 วิธีแก้ไข (Fix Implementation)
 
-1. ✅ แก้ Issue #2 (mobile-checkin selector) - ง่ายกว่า ทำก่อน
-2. ✅ แก้ Issue #1 (admin dashboard filters visibility)
-3. ✅ รันทดสอบซ้ำเพื่อยืนยัน
-4. ✅ อัพเดทรายงานนี้เมื่อแก้ไขเสร็จ
+### ✅ Fix Issue #2: Mobile Check-in Selector (อาจารย์ทำต่อได้)
+
+**เปลี่ยนจาก:**
+```javascript
+await expect(page.getByText('Bait Check-In')).toBeVisible();
+```
+
+**เปลี่ยนเป็น:**
+```javascript
+// Option 1: ใช้ heading level
+await expect(page.getByRole('heading', { name: 'Bait Check-In', level: 2 })).toBeVisible();
+
+// Option 2: ใช้ class selector
+await expect(page.locator('.login-title')).toBeVisible();
+
+// Option 3: เพิ่ม data-test attribute
+// <h2 class="login-title" data-test="login-title">Bait Check-In</h2>
+await expect(page.locator('[data-test="login-title"]')).toBeVisible();
+```
+
+### ✅ Fix Issue #1: Admin Dashboard Filters Visibility (ต้องตรวจสอบ HTML)
+
+**ปัญหา:** Filter elements ถูกซ่อนเสมอ
+
+**โครงการทดสอบ:**
+```bash
+# ตรวจสอบ CSS ใน admin-dashboard.html
+# ค้นหา: display: none หรือ visibility: hidden
+
+# วิธี 1: Remove hidden class
+# <div class="filters hidden"> → <div class="filters">
+
+# วิธี 2: เพิ่มการ show filters ในทดสอบ
+await page.locator('.filters').evaluate(el => {
+  el.classList.remove('hidden');
+  el.style.display = 'block';
+});
+
+# วิธี 3: เพิ่มการคลิก toggle button (ถ้ามี)
+await page.locator('[data-test="toggle-filters"]').click();
+```
 
 ---
 
-**อัปเดตล่าสุด:** 01-02-2026, 15:50 น.
-**เวอร์ชัน:** V.1.7.0 (01-02-2026) - Migration จาก Cypress เป็น Playwright
+## 🧪 การรันทดสอบ (How to Run Tests)
+
+### ใช้ PowerShell Script (ง่ายที่สุด):
+
+```powershell
+# ทั้งหมด
+.\test.ps1
+
+# เฉพาะ Chromium
+.\test.ps1 -Chromium
+
+# เฉพาะ Mobile
+.\test.ps1 -Mobile
+
+# แสดง Browser
+.\test.ps1 -Headed
+
+# Playwright UI Mode (interactive)
+.\test.ps1 -UI
+
+# ดูรายงาน
+.\test.ps1 -Report
+```
+
+### ใช้ npm scripts:
+
+```bash
+npm test                # ทดสอบทั้งหมด
+npm run test:chromium   # Chromium เท่านั้น
+npm run test:firefox    # Firefox เท่านั้น
+npm run test:webkit     # Webkit เท่านั้น
+npm run test:mobile     # Mobile browsers
+npm run test:ui         # UI Mode (interactive)
+npm run test:report     # ดูรายงาน HTML
+```
+
+---
+
+## 📊 การติดตาม Progress (Tracking)
+
+**ไฟล์ที่ใช้ติดตาม:**
+- `test-history.log` - บันทึกทุกครั้งที่รัน test
+- `playwright-report/` - รายงาน HTML จากการรันทดสอบ
+- `test-results/` - ละเอียด error และ screenshots
+
+**ตัวอย่าง test-history.log:**
+```
+01-02-2026 15:45:00 | main | f74462b | FAILED | migrate: Replace Cypress... | BY: Weerachon | TYPE: All Browsers | PASSED: 95/145 | DURATION: 312.45s
+```
+
+---
+
+## 📋 Checklist สำหรับแก้ไข Issues
+
+### Issue #2 (Mobile Check-in):
+- [ ] เปลี่ยน selector ที่ถูกต้อง
+- [ ] รัน `npm test` เพื่อยืนยัน
+- [ ] 1 test แต่ละ browser ควรผ่าน
+
+### Issue #1 (Admin Dashboard):
+- [ ] ตรวจสอบ CSS ใน admin-dashboard.html
+- [ ] หาว่า filters ถูกซ่อนด้วยอะไร
+- [ ] เพิ่มการ show filters ใน tests หรือแก้ HTML
+- [ ] รัน `npm test` เพื่อยืนยัน
+- [ ] 9 tests แต่ละ browser ควรผ่าน
+
+### ตอนแก้สำเร็จ:
+- [ ] รัน `.\test.ps1 -Report` เพื่อดูรายงาน
+- [ ] อัพเดท Test report ด้วยผลลัพธ์ใหม่
+- [ ] Commit และ push changes
+
+---
+
+**อัปเดตล่าสุด:** 01-02-2026, 16:00 น.
+**เวอร์ชัน:** V.1.7.0 (01-02-2026) - Migration จาก Cypress เป็น Playwright + Test automation script

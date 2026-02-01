@@ -113,7 +113,7 @@
                   - text: พุทธมณฑล
                 - generic [ref=e106]:
                   - generic [ref=e107]: 
-                  - text: 41 นาทีที่แล้ว (18:32)
+                  - text: 1 ชั่วโมงที่แล้ว (18:32)
               - generic [ref=e108]:
                 - generic "แสดงบนแผนที่" [ref=e109]:
                   - checkbox [checked]

@@ -83,7 +83,7 @@
               - generic [ref=e114]:
                 - generic [ref=e115]: Test 2
                 - generic [ref=e116]: พุทธมณฑล
-                - generic [ref=e117]: 38 นาทีที่แล้ว (18:32)
+                - generic [ref=e117]: 1 ชั่วโมงที่แล้ว (18:32)
               - generic [ref=e118]:
                 - generic "แสดงบนแผนที่" [ref=e119]:
                   - checkbox [checked]
