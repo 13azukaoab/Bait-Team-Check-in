@@ -1,16 +1,14 @@
 # 🚀 คู่มือการติดตั้ง - Bait Check-In WebApp
 
-**วิธีนำระบบขึ้น Server**
-
 ---
 
 ## 📋 สิ่งที่ต้องมีก่อนติดตั้ง
 
 | รายการ | เวอร์ชันขั้นต่ำ | ดาวน์โหลด |
 |--------|----------------|-----------|
-| **Node.js** | 18.x ขึ้นไป | https://nodejs.org |
+| **Node.js** | 18.x ขึ้นไป | [https://nodejs.org](https://nodejs.org) |
 | **npm** | 9.x ขึ้นไป | มาพร้อม Node.js |
-| **Git** | 2.x ขึ้นไป | https://git-scm.com |
+| **Git** | 2.x ขึ้นไป | [https://git-scm.com](https://git-scm.com) |
 | **Firebase CLI** | 13.x ขึ้นไป | `npm install -g firebase-tools` |
 
 ---
@@ -51,7 +49,7 @@ firebase use bait-check-in-webapp
 
 ## 📁 ขั้นตอนที่ 3: ตรวจสอบโครงสร้างไฟล์
 
-```
+```text
 Bait-Team-Check-in/
 ├── index.html              # หน้าเริ่มต้น
 ├── mobile-checkin.html     # หน้า Mobile
@@ -124,9 +122,9 @@ Hosting URL: https://bait-check-in-webapp.web.app
 
 | หน้า | URL |
 |------|-----|
-| **หน้าหลัก** | https://bait-check-in-webapp.web.app |
-| **Mobile** | https://bait-check-in-webapp.web.app/mobile-checkin.html |
-| **Admin** | https://bait-check-in-webapp.web.app/admin-dashboard.html |
+| **หน้าหลัก** | [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app) |
+| **Mobile** | [https://bait-check-in-webapp.web.app/mobile-checkin.html](https://bait-check-in-webapp.web.app/mobile-checkin.html) |
+| **Admin** | [https://bait-check-in-webapp.web.app/admin-dashboard.html](https://bait-check-in-webapp.web.app/admin-dashboard.html) |
 
 ---
 
@@ -148,7 +146,7 @@ Hosting URL: https://bait-check-in-webapp.web.app
 
 แก้ไขใน `mobile-checkin.html` และ `admin-dashboard.html`:
 
-```javascript
+```js
 const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -203,7 +201,7 @@ firebase use --add
 
 ### Firebase Console
 
-1. เปิด https://console.firebase.google.com
+1. เปิด [https://console.firebase.google.com](https://console.firebase.google.com)
 2. เลือก Project: `bait-check-in-webapp`
 3. ไปที่ **Firestore Database** → ดูข้อมูล
 4. ไปที่ **Storage** → ดูรูปภาพ
@@ -240,7 +238,7 @@ firebase serve
 python -m http.server 8080
 ```
 
-เปิด Browser: `http://localhost:8080`
+เปิด Browser: [http://localhost:8080](http://localhost:8080)
 
 ---
 
