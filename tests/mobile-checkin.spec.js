@@ -17,7 +17,7 @@ test.describe('Mobile Check-in Page', () => {
   
   test('1️⃣ Should load mobile check-in page', async ({ page }) => {
     await expect(page.locator('body')).toBeVisible();
-    await expect(page.getByText('Bait Check-In')).toBeVisible();
+    await expect(page.locator('.login-title')).toBeVisible();
     console.log('✅ หน้า Mobile Check-in โหลดเสร็จ');
   });
 

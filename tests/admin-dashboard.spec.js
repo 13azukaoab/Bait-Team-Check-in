@@ -37,6 +37,8 @@ test.describe('Admin Dashboard Page', () => {
   // =====================
 
   test('4️⃣ Should have team filter', async ({ page }) => {
+    // เปิด filter panel ก่อน (ปกติซ่อนอยู่)
+    await page.locator('button:has-text("Filter")').first().click();
     await expect(page.locator('[data-test="filter-team"]')).toBeVisible();
     const options = await page.locator('[data-test="filter-team"] option').count();
     expect(options).toBeGreaterThan(1);
@@ -44,6 +46,7 @@ test.describe('Admin Dashboard Page', () => {
   });
 
   test('5️⃣ Should have zone filter', async ({ page }) => {
+    await page.locator('button:has-text("Filter")').first().click();
     await expect(page.locator('[data-test="filter-zone"]')).toBeVisible();
     const options = await page.locator('[data-test="filter-zone"] option').count();
     expect(options).toBeGreaterThan(1);
@@ -51,6 +54,7 @@ test.describe('Admin Dashboard Page', () => {
   });
 
   test('6️⃣ Should have branch filter', async ({ page }) => {
+    await page.locator('button:has-text("Filter")').first().click();
     await expect(page.locator('[data-test="filter-branch"]')).toBeVisible();
     const options = await page.locator('[data-test="filter-branch"] option').count();
     expect(options).toBeGreaterThan(1);
@@ -58,12 +62,14 @@ test.describe('Admin Dashboard Page', () => {
   });
 
   test('7️⃣ Should have date filter', async ({ page }) => {
+    await page.locator('button:has-text("Filter")').first().click();
     await expect(page.locator('[data-test="filter-date-start"]')).toBeVisible();
     await expect(page.locator('[data-test="filter-date-end"]')).toBeVisible();
     console.log('✅ Date filters มีอยู่');
   });
 
   test('8️⃣ Should have apply filter button', async ({ page }) => {
+    await page.locator('button:has-text("Filter")').first().click();
     await expect(page.locator('[data-test="apply-filter-btn"]')).toBeVisible();
     console.log('✅ Apply filter button มีอยู่');
   });
@@ -73,6 +79,7 @@ test.describe('Admin Dashboard Page', () => {
   // =====================
 
   test('9️⃣ Should select team filter', async ({ page }) => {
+    await page.locator('button:has-text("Filter")').first().click();
     await page.locator('[data-test="filter-team"]').selectOption('A');
     const value = await page.locator('[data-test="filter-team"]').inputValue();
     expect(value).toBe('A');
@@ -80,6 +87,7 @@ test.describe('Admin Dashboard Page', () => {
   });
 
   test('🔟 Should select zone filter', async ({ page }) => {
+    await page.locator('button:has-text("Filter")').first().click();
     await page.locator('[data-test="filter-zone"]').selectOption('เขต 1');
     const value = await page.locator('[data-test="filter-zone"]').inputValue();
     expect(value).toBe('เขต 1');
@@ -87,6 +95,7 @@ test.describe('Admin Dashboard Page', () => {
   });
 
   test('1️⃣1️⃣ Should change date filter', async ({ page }) => {
+    await page.locator('button:has-text("Filter")').first().click();
     await page.locator('[data-test="filter-date-start"]').fill('2026-01-01');
     await page.locator('[data-test="filter-date-end"]').fill('2026-01-31');
     const startValue = await page.locator('[data-test="filter-date-start"]').inputValue();
@@ -97,6 +106,7 @@ test.describe('Admin Dashboard Page', () => {
   });
 
   test('1️⃣2️⃣ Should click apply filter button', async ({ page }) => {
+    await page.locator('button:has-text("Filter")').first().click();
     await page.locator('[data-test="apply-filter-btn"]').click();
     console.log('✅ คลิก Apply filter ได้');
   });
