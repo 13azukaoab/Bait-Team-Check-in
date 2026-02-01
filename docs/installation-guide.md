@@ -121,7 +121,7 @@ Hosting URL: https://bait-check-in-webapp.web.app
 ### ทดสอบเว็บ
 
 | หน้า | URL |
-|------|-----|
+| --- | --- |
 | **หน้าหลัก** | [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app) |
 | **Mobile** | [https://bait-check-in-webapp.web.app/mobile-checkin.html](https://bait-check-in-webapp.web.app/mobile-checkin.html) |
 | **Admin** | [https://bait-check-in-webapp.web.app/admin-dashboard.html](https://bait-check-in-webapp.web.app/admin-dashboard.html) |
@@ -256,7 +256,8 @@ python -m http.server 8080
 ## 📞 ติดต่อช่วยเหลือ
 
 หากติดปัญหา:
-- 📖 Firebase Docs: https://firebase.google.com/docs
+
+- 📖 Firebase Docs: [https://firebase.google.com/docs](https://firebase.google.com/docs)
 - 💬 Stack Overflow: ค้นหา "firebase hosting"
 - 🐛 GitHub Issues: เปิด Issue ใน Repository
 
