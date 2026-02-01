@@ -2,7 +2,7 @@
 
 เว็บแอปพลิเคชันสำหรับเช็คอิน ติดตามตำแหน่ง และบริหารจัดการทีมงานภาคสนาม
 
-**🌐 Live URL:** https://bait-check-in-webapp.web.app
+**🌐 Live URL:** [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
 
 ---
 
@@ -10,13 +10,17 @@
 
 ### 📱 สำหรับทีมภาคสนาม (Mobile)
 
+
+
 - **เช็คอินง่าย**: ระบุพิกัด GPS แม่นยำ พร้อมแปลงเป็นที่อยู่อัตโนมัติ
 - **ถ่ายรูปหน้างาน**: กล้องถ่ายรูปพร้อมบีบอัดไฟล์ 120-450 KB
 - **เลือกทีม**: รองรับ 16 ทีม (A-O, Z)
 - **ดูประวัติ**: ดูรายการเช็คอินย้อนหลัง
 - **ซ่อน/แสดง**: ควบคุมการแสดงหมุดบนแผนที่
 
-### 🖥️ สำหรับ Admin (Dashboard)
+## 🖥️ สำหรับ Admin (Dashboard)
+
+
 
 - **Dashboard**: ดูสถิติและภาพรวมแบบ Real-time
 - **แผนที่**: แสดงตำแหน่งทีมงานทั้งหมด พร้อมหมุดสีตามทีม
@@ -26,11 +30,10 @@
 - **Photo Gallery**: ดูรูปภาพทั้งหมด
 - **Reports**: กราฟสถิติและ Performance
 
----
-
 ## 🛠 เทคโนโลยีที่ใช้ (Tech Stack)
 
 ### Frontend
+
 - HTML5, CSS3, JavaScript (Vanilla)
 - Leaflet.js + OpenStreetMap (แผนที่)
 - Longdo Map API (Reverse Geocoding)
@@ -38,6 +41,7 @@
 - Google Fonts - Prompt (ฟอนต์)
 
 ### Backend (Firebase)
+
 - **Firestore**: ฐานข้อมูล NoSQL, Real-time sync
 - **Cloud Storage**: เก็บรูปภาพ
 - **Hosting**: โฮสต์เว็บไซต์ (SSL อัตโนมัติ)
@@ -46,7 +50,7 @@
 
 ## 📁 โครงสร้างโปรเจกต์
 
-```
+```bash
 Bait-Team-Check-in/
 ├── index.html              # หน้าเริ่มต้น (Auto-redirect)
 ├── mobile-checkin.html     # หน้า Mobile Check-in
@@ -82,25 +86,25 @@ Bait-Team-Check-in/
 ## 🔗 URL ใช้งาน
 
 | หน้า | URL |
-|------|-----|
-| **หน้าหลัก** | https://bait-check-in-webapp.web.app |
-| **Mobile** | https://bait-check-in-webapp.web.app/mobile-checkin.html |
-| **Admin** | https://bait-check-in-webapp.web.app/admin-dashboard.html |
-| **Test Suite** | https://bait-check-in-webapp.web.app/pages/test/test-complete.html |
+| --- | --- |
+| **หน้าหลัก** | [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app) |
+| **Mobile** | [https://bait-check-in-webapp.web.app/mobile-checkin.html](https://bait-check-in-webapp.web.app/mobile-checkin.html) |
+| **Admin** | [https://bait-check-in-webapp.web.app/admin-dashboard.html](https://bait-check-in-webapp.web.app/admin-dashboard.html) |
+| **Test Suite** | [https://bait-check-in-webapp.web.app/pages/test/test-complete.html](https://bait-check-in-webapp.web.app/pages/test/test-complete.html) |
 
 ---
 
 ## 📊 สถานะโปรเจกต์
 
 | หมวด | สถานะ |
-|------|-------|
+| --- | --- |
 | Frontend Mobile | ✅ 100% |
 | Frontend Dashboard | ✅ 100% |
 | Backend (Firebase) | ✅ 100% |
 | Testing (24 tests) | ✅ 100% |
 | Documentation | ✅ 100% |
 
-**🎉 โปรเจกต์เสร็จสมบูรณ์ 100%**
+## 🎉 โปรเจกต์เสร็จสมบูรณ์ 100%
 
 ---
 
