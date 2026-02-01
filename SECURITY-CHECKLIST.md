@@ -9,13 +9,14 @@
 | Phase | Status | Completion | Details |
 | --- | --- | --- | --- |
 | **1. Code Cleanup** | ✅ DONE | 100% | API keys moved to config.js, .gitignore updated |
-| **2. Git History** | ❌ PENDING | 0% | Need to run cleanup-history.ps1 |
+| **2. Git History** | ✅ DONE | 100% | Removed docs/api-guide.md, deploy-history.log, URL files |
+| **2.1. Force Push** | ⏳ PENDING | 0% | Need to force push (Tomorrow) |
 | **3. Rotate Keys** | ❌ PENDING | 0% | Firebase + Longdo keys need rotation |
 | **4. Firebase Security** | ❌ PENDING | 0% | App Check + API restrictions needed |
 | **5. Testing** | ❌ PENDING | 0% | Need to verify app after changes |
 | **6. Go Public** | ❌ PENDING | 0% | Final step - waiting for all phases |
 
-**Overall:** 1/6 phases complete (16.7%) 🔴 NOT READY YET
+**Overall:** 2/7 phases complete (28.6%) 🟡 IN PROGRESS
 
 ---
 
@@ -30,29 +31,66 @@
 
 ---
 
-## ⏳ Phase 2: Git History Cleanup (ผู้ใช้ต้องทำเอง)
+## ✅ Phase 2: Git History Cleanup (เสร็จแล้ว)
 
-### Step 1: ติดตั้ง git-filter-repo
+### ✅ Step 1: ติดตั้ง git-filter-repo
 
 ```powershell
 pip install git-filter-repo
 ```
+**Status:** ✅ Done
 
-### Step 2: รัน cleanup script
+### ✅ Step 2: Remove sensitive files from history
 
 ```powershell
-# Preview ก่อน
-.\cleanup-history.ps1 -DryRun
+# Removed files:
+# - docs/api-guide.md (contained API keys)
+# - deploy-history.log (sensitive deployment info)
+# - URL-ใช้งานจริง.md (production URLs)
 
-# ทำจริง
-.\cleanup-history.ps1 -Confirm
+python -m git_filter_repo --path "docs/api-guide.md" --invert-paths --force
+python -m git_filter_repo --path "deploy-history.log" --invert-paths --force
+python -m git_filter_repo --path-glob "*URL*.md" --invert-paths --force
+```
+**Status:** ✅ Done - All commits rewritten
+
+### ✅ Step 3: Create backup branch
+
+```powershell
+git branch backup-before-cleanup-20260201-203545
+```
+**Status:** ✅ Done
+
+---
+
+## ⏳ Phase 2.1: Force Push (ทำพรุ่งนี้)
+
+**สถานะปัจจุบัน:**
+- ✅ Local Git history ถูก rewrite แล้ว
+- ⏸️ ยังไม่ได้ push ขึ้น GitHub
+- 🔒 Backup branch สำรองไว้แล้ว
+
+### ⚠️ Step 1: ตรวจสอบก่อน Force Push
+
+```powershell
+# ดู history ที่เปลี่ยนแล้ว
+git log --oneline -10
+
+# ค้นหา API keys (ควรยังเจอใน HTML files ของ old commits)
+git log -p --all -S "AIzaSy" | head -20
 ```
 
-### Step 3: Force push
+### 🚀 Step 2: Force Push
 
 ```powershell
 git push origin main --force
 ```
+
+**⚠️ Important Notes:**
+- Git history บน GitHub จะถูก rewrite
+- Commit hashes เปลี่ยนหมด
+- ต้อง re-clone repository
+- **API keys ยังอยู่ใน old HTML commits** → ต้องทำ Phase 3 ทันที!
 
 ---
 
