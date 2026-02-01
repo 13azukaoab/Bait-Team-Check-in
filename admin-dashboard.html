@@ -1917,20 +1917,22 @@
         .team-filter-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            padding: 16px;
+            gap: 6px;
+            padding: 12px;
+            max-width: 280px;
         }
 
         .team-filter-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 8px;
-            border-radius: 8px;
+            gap: 4px;
+            padding: 6px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s ease;
             background: var(--bg-main);
+            font-size: 0.8rem;
         }
 
         .team-filter-item:hover {
@@ -2307,22 +2309,23 @@
                         </div>
                     </div>
                 </div>
-                <table class="data-table">
+                <table class="data-table" id="main-checkins-table">
                     <thead>
                         <tr>
-                            <th>ทีม</th>
-                            <th>ลูกค้า</th>
-                            <th>สถานที่</th>
-                            <th>พิกัด</th>
-                            <th>เวลา</th>
-                            <th>สถานะ</th>
+                            <th class="sortable" data-column="0" onclick="sortTable('main-checkins-table', 0)">ทีม <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" data-column="1" onclick="sortTable('main-checkins-table', 1)">ลูกค้า <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" data-column="2" onclick="sortTable('main-checkins-table', 2)">สถานที่ <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" data-column="3" onclick="sortTable('main-checkins-table', 3)">พิกัด <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" data-column="4" onclick="sortTable('main-checkins-table', 4)">เวลา <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" data-column="5" onclick="sortTable('main-checkins-table', 5)">สถานะ <i class="fas fa-sort sort-icon"></i></th>
                             <th>แสดงบนแผนที่</th>
+                            <th>ลบ</th>
                         </tr>
                     </thead>
                     <tbody id="mainCheckinsTableBody">
                         <!-- Data loaded from Firestore -->
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #94a3b8;">
                                 <i class="fas fa-spinner fa-spin"></i> กำลังโหลดข้อมูลจาก Firebase...
                             </td>
                         </tr>
@@ -2437,8 +2440,8 @@
                             </select>
                         </div>
                         <div class="header-actions-group">
-                            <button class="btn btn-outline"><i class="fas fa-filter"></i> Filter</button>
-                            <button class="btn btn-primary"><i class="fas fa-file-export"></i> Export</button>
+                            <button class="btn btn-outline" onclick="toggleCheckinsFilter()"><i class="fas fa-filter"></i> Filter</button>
+                            <button class="btn btn-primary" onclick="exportCheckinsData()"><i class="fas fa-file-export"></i> Export</button>
                         </div>
                     </div>
                     <div class="table-scroll-container">
@@ -4164,10 +4167,66 @@
             }
         });
 
-        // Filter Panel Toggle
+        // Filter Panel Toggle (Dashboard)
         function toggleFilter() {
             const panel = document.getElementById('filterPanel');
             panel.classList.toggle('active');
+        }
+        
+        // Filter Panel Toggle (Check-ins List)
+        function toggleCheckinsFilter() {
+            // ใช้ filter controls ที่มีอยู่แล้วในหน้า Check-ins List
+            const inputs = document.querySelectorAll('#page-checkins .section-header input, #page-checkins .section-header select');
+            const searchInput = inputs[0];
+            const teamSelect = inputs[1];
+            const statusSelect = inputs[2];
+            
+            // Apply filter
+            const searchText = searchInput?.value?.toLowerCase() || '';
+            const teamFilter = teamSelect?.value || 'ทุกทีม';
+            const statusFilter = statusSelect?.value || 'ทุกสถานะ';
+            
+            const rows = document.querySelectorAll('#checkinsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const teamCell = row.querySelector('td:first-child')?.textContent || '';
+                const statusCell = row.querySelector('.checkin-status')?.textContent || '';
+                
+                let show = true;
+                
+                // Search filter
+                if (searchText && !text.includes(searchText)) {
+                    show = false;
+                }
+                
+                // Team filter
+                if (teamFilter !== 'ทุกทีม') {
+                    const teamLetter = teamFilter.replace('Team ', '');
+                    if (!teamCell.includes(teamLetter)) {
+                        show = false;
+                    }
+                }
+                
+                // Status filter
+                if (statusFilter !== 'ทุกสถานะ') {
+                    if (!statusCell.includes(statusFilter)) {
+                        show = false;
+                    }
+                }
+                
+                row.style.display = show ? '' : 'none';
+            });
+            
+            // Update count
+            const visibleRows = document.querySelectorAll('#checkinsTableBody tr:not([style*="display: none"])').length;
+            const info = document.getElementById('checkinsTableInfo');
+            if (info) info.textContent = `แสดง ${visibleRows} รายการ`;
+        }
+        
+        // Export Check-ins Data
+        function exportCheckinsData() {
+            exportToExcel('checkins-table');
         }
 
         // Table Sorting
