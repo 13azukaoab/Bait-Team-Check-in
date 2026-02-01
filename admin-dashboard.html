@@ -1022,7 +1022,7 @@
         .filter-panel {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 20px;
+            padding: 16px 20px;
             margin-bottom: 24px;
             box-shadow: var(--shadow);
             display: none;
@@ -1033,30 +1033,38 @@
         }
 
         .filter-row {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
-            align-items: end;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
+            flex: 1;
+            min-width: 120px;
+            max-width: 180px;
+        }
+        
+        .filter-group.filter-btn-group {
+            flex: 0 0 auto;
+            min-width: auto;
         }
 
         .filter-group label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: var(--text-secondary);
         }
 
         .filter-group select,
         .filter-group input {
-            padding: 10px 14px;
+            padding: 8px 12px;
             border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.9rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-family: 'Prompt', sans-serif;
             background: white;
             transition: all 0.3s ease;
@@ -1066,6 +1074,11 @@
         .filter-group input:focus {
             outline: none;
             border-color: var(--primary);
+        }
+        
+        .filter-group .btn {
+            padding: 8px 16px;
+            font-size: 0.85rem;
         }
 
         /* Distance Panel */
@@ -2162,21 +2175,23 @@
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label><i class="fas fa-calendar"></i> วันที่เริ่มต้น</label>
+                            <label><i class="fas fa-calendar"></i> เริ่มต้น</label>
                             <input type="date" id="filterDateStart" data-test="filter-date-start">
                         </div>
                         <div class="filter-group">
-                            <label><i class="fas fa-calendar-check"></i> วันที่สิ้นสุด</label>
+                            <label><i class="fas fa-calendar-check"></i> สิ้นสุด</label>
                             <input type="date" id="filterDateEnd" data-test="filter-date-end">
                         </div>
-                        <div class="filter-group">
-                            <button class="btn btn-primary" data-test="apply-filter-btn" onclick="applyFilters()" style="width: 100%;">
+                        <div class="filter-group filter-btn-group">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary" data-test="apply-filter-btn" onclick="applyFilters()">
                                 <i class="fas fa-search"></i> ค้นหา
                             </button>
                         </div>
-                        <div class="filter-group">
-                            <button class="btn btn-outline" onclick="clearFilters()" style="width: 100%;">
-                                <i class="fas fa-times"></i> ล้างตัวกรอง
+                        <div class="filter-group filter-btn-group">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-outline" onclick="clearFilters()">
+                                <i class="fas fa-times"></i> ล้าง
                             </button>
                         </div>
                     </div>
@@ -3767,6 +3782,9 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
         
+        // Layer Group สำหรับ filtered markers
+        let markersLayer = L.layerGroup().addTo(map);
+        
         // Add HQ Marker
         function addHQMarker() {
             const hqIcon = L.divIcon({
@@ -4341,18 +4359,17 @@
             let filtered = [...firestoreCheckins];
             
             // กรองตามทีม
-            if (team !== 'ทุกทีม') {
-                const teamLetter = team.replace('Team ', '');
-                filtered = filtered.filter(item => item.team === teamLetter);
+            if (team !== 'all') {
+                filtered = filtered.filter(item => item.team === team);
             }
             
             // กรองตามเขต
-            if (zone !== 'ทุกเขต') {
+            if (zone !== 'all') {
                 filtered = filtered.filter(item => item.zone === zone);
             }
             
             // กรองตามสาขา
-            if (branch !== 'ทุกสาขา') {
+            if (branch !== 'all') {
                 filtered = filtered.filter(item => item.branch === branch);
             }
             
@@ -4468,15 +4485,15 @@
         
         // ล้างตัวกรอง
         function clearFilters() {
-            document.getElementById('filterTeam').value = 'ทุกทีม';
-            document.getElementById('filterZone').value = 'ทุกเขต';
-            document.getElementById('filterBranch').value = 'ทุกสาขา';
+            document.getElementById('filterTeam').value = 'all';
+            document.getElementById('filterZone').value = 'all';
+            document.getElementById('filterBranch').value = 'all';
             document.getElementById('filterDateStart').value = '';
             document.getElementById('filterDateEnd').value = '';
             
             // รีเซ็ตข้อมูลเป็นของเดิม
             updateCheckinsTable();
-            updateMarkersFromFirestore();
+            updateMapMarkersFromFirestore();
             
             showRealtimeToast('ล้างตัวกรองแล้ว', 'แสดงข้อมูลทั้งหมด');
         }
