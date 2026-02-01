@@ -2,19 +2,19 @@
 # Bait Check-in Webapp - Git History Cleanup Script
 # ============================================
 # 
-# ⚠️ WARNING: This script rewrites Git history!
+# WARNING: This script rewrites Git history!
 # 
 # Before running:
 # 1. Make sure you have a backup
 # 2. Notify all collaborators
 # 3. They will need to re-clone the repository
 #
-# Usage: .\cleanup-history.ps1
+# Usage: .\cleanup-history-fixed.ps1
 # ============================================
 
 param(
-    [switch]$DryRun,    # แสดงผลอย่างเดียว ไม่ทำจริง
-    [switch]$Confirm    # ยืนยันการทำจริง
+    [switch]$DryRun,    # Preview only
+    [switch]$Confirm    # Actually do it
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,18 +34,15 @@ try {
 }
 
 if (-not $filterRepoInstalled) {
-    Write-Host "❌ git-filter-repo is not installed!" -ForegroundColor Red
+    Write-Host "ERROR: git-filter-repo is not installed!" -ForegroundColor Red
     Write-Host ""
     Write-Host "Please install it first:" -ForegroundColor Yellow
     Write-Host "  pip install git-filter-repo" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "Or using conda:" -ForegroundColor Yellow
-    Write-Host "  conda install -c conda-forge git-filter-repo" -ForegroundColor Cyan
-    Write-Host ""
     exit 1
 }
 
-Write-Host "✅ git-filter-repo is installed" -ForegroundColor Green
+Write-Host "OK: git-filter-repo is installed" -ForegroundColor Green
 Write-Host ""
 
 # Files to remove from history
@@ -58,27 +55,27 @@ $filesToRemove = @(
 
 # Patterns to search for sensitive data
 $sensitivePatterns = @(
-    "AIzaSy",           # Firebase API Key prefix
-    "f9f10eb0f366",     # Longdo API Key
-    "bait-check-in-webapp.web.app"  # Production URL
+    "AIzaSy",
+    "f9f10eb0f366",
+    "bait-check-in-webapp.web.app"
 )
 
-Write-Host "📋 Files to remove from history:" -ForegroundColor Yellow
+Write-Host "Files to remove from history:" -ForegroundColor Yellow
 foreach ($file in $filesToRemove) {
     Write-Host "   - $file" -ForegroundColor White
 }
 Write-Host ""
 
-Write-Host "🔍 Checking for sensitive data in history..." -ForegroundColor Yellow
+Write-Host "Checking for sensitive data in history..." -ForegroundColor Yellow
 Write-Host ""
 
 foreach ($pattern in $sensitivePatterns) {
     Write-Host "Searching for: $pattern" -ForegroundColor Cyan
-    $result = git log -p --all -S $pattern 2>$null | Select-Object -First 5
+    $result = git log -p --all -S $pattern 2>$null | Select-Object -First 1
     if ($result) {
-        Write-Host "  ⚠️ FOUND in history!" -ForegroundColor Red
+        Write-Host "  FOUND in history!" -ForegroundColor Red
     } else {
-        Write-Host "  ✅ Not found" -ForegroundColor Green
+        Write-Host "  Not found" -ForegroundColor Green
     }
 }
 Write-Host ""
@@ -89,14 +86,14 @@ if ($DryRun) {
     Write-Host "============================================================" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "To actually clean history, run:" -ForegroundColor White
-    Write-Host "  .\cleanup-history.ps1 -Confirm" -ForegroundColor Cyan
+    Write-Host "  .\cleanup-history-fixed.ps1 -Confirm" -ForegroundColor Cyan
     Write-Host ""
     exit 0
 }
 
 if (-not $Confirm) {
     Write-Host "============================================================" -ForegroundColor Red
-    Write-Host "  ⚠️ WARNING: This will rewrite Git history!" -ForegroundColor Red
+    Write-Host "  WARNING: This will rewrite Git history!" -ForegroundColor Red
     Write-Host "============================================================" -ForegroundColor Red
     Write-Host ""
     Write-Host "This action:" -ForegroundColor Yellow
@@ -106,10 +103,10 @@ if (-not $Confirm) {
     Write-Host "  - Will break existing clones (others must re-clone)" -ForegroundColor White
     Write-Host ""
     Write-Host "To proceed, run:" -ForegroundColor White
-    Write-Host "  .\cleanup-history.ps1 -Confirm" -ForegroundColor Cyan
+    Write-Host "  .\cleanup-history-fixed.ps1 -Confirm" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "To preview changes first:" -ForegroundColor White
-    Write-Host "  .\cleanup-history.ps1 -DryRun" -ForegroundColor Cyan
+    Write-Host "  .\cleanup-history-fixed.ps1 -DryRun" -ForegroundColor Cyan
     Write-Host ""
     exit 0
 }
@@ -122,11 +119,11 @@ Write-Host ""
 
 # Create backup branch
 $backupBranch = "backup-before-cleanup-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
-Write-Host "📦 Creating backup branch: $backupBranch" -ForegroundColor Yellow
+Write-Host "Creating backup branch: $backupBranch" -ForegroundColor Yellow
 git branch $backupBranch
 
 Write-Host ""
-Write-Host "🧹 Removing sensitive files from history..." -ForegroundColor Yellow
+Write-Host "Removing sensitive files from history..." -ForegroundColor Yellow
 
 foreach ($file in $filesToRemove) {
     Write-Host "  Removing: $file" -ForegroundColor Cyan
@@ -134,7 +131,7 @@ foreach ($file in $filesToRemove) {
 }
 
 Write-Host ""
-Write-Host "✅ Cleanup complete!" -ForegroundColor Green
+Write-Host "Cleanup complete!" -ForegroundColor Green
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "  NEXT STEPS:" -ForegroundColor Cyan
