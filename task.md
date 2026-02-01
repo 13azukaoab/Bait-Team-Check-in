@@ -101,7 +101,7 @@
 
 - [X] **ฐานข้อมูล (Firestore)**: ใช้ Firebase Firestore (NoSQL, Real-time)
 - [X] **ระบบเก็บไฟล์ (Storage)**: ใช้ Firebase Cloud Storage
-- [X] **โฮสติ้ง (Hosting)**: Firebase Hosting ✅ Live: https://bait-check-in-webapp.web.app
+- [X] **โฮสติ้ง (Hosting)**: Firebase Hosting ✅ Live: [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
 - [X] **SSL Certificate**: มาพร้อม Firebase Hosting (HTTPS อัตโนมัติ)
 
 > **หมายเหตุ:** CI/CD และ Custom Domain ไม่จำเป็นสำหรับโปรเจกต์ขนาดนี้
@@ -116,7 +116,7 @@
 - [X] **Clean Code**: ลบ console.log ที่ไม่จำเป็น, จัดระเบียบโค้ด
 - [X] **Test Report**: รายงานสรุปผลการทดสอบ (`docs/test-report.md`)
 
-**📊 ผลการทดสอบ: 24/24 tests passed (100%)**
+## 📊 ผลการทดสอบ: 24/24 tests passed (100%)
 
 ## ✅ คู่มือและเอกสาร (Documentation) - เสร็จสมบูรณ์ 100%
 
