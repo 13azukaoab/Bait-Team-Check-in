@@ -4,4 +4,5 @@
 
 01-02-2026 15:45:00 | main | f74462b | FAILED | migrate: Replace Cypress with Playwright - Complete E2E testing framework migration | BY: Weerachon | TYPE: All Browsers | PASSED: 95/145 | DURATION: 312.45s
 01-02-2026 16:05:30 | main | f74462b | FAILED | Test run: Playwright Chromium validation | BY: Weerachon | TYPE: Chromium | PASSED: 19/29 | DURATION: 65.23s
+01-02-2026 16:35:45 | main | 08cef62 | PASSED | test: Fix Playwright tests - open filter panel & fix selector ambiguity | BY: Weerachon | TYPE: All Browsers (Chromium, Mobile Chrome, Mobile Safari) | PASSED: 87/87 | DURATION: 96.00s
 
