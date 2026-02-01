@@ -984,6 +984,155 @@ npm run lint:md
 
 ---
 
+## � กฎข้อที่ 21: ความปลอดภัยสำหรับ Public Repository
+
+**⚠️ Project นี้เป็น PUBLIC แล้ว - ต้องระวังความปลอดภัยเสมอ!**
+
+### 🚨 สิ่งที่ห้ามทำ (NEVER DO)
+
+| ❌ ห้ามเด็ดขาด | ⚠️ ความเสี่ยง |
+| --- | --- |
+| Hardcode API Keys ใน HTML/JS | Key รั่วไหล ถูกใช้งานโดยผู้ไม่หวังดี |
+| Commit ไฟล์ `src/config.js` | Firebase/Longdo API exposed |
+| แสดง Production URLs ใน code | ถูก scrape หรือโจมตี |
+| Commit ไฟล์ใน `secrets/` | ข้อมูลลับรั่วไหล |
+| เขียน credentials ใน comments | Git history เก็บตลอดไป |
+
+### ✅ สิ่งที่ต้องทำเสมอ
+
+**1. ตรวจสอบก่อน Commit:**
+
+```powershell
+# ค้นหา API keys ใน staged files
+git diff --cached | Select-String -Pattern "AIzaSy|apiKey|API_KEY"
+
+# ถ้าพบ = ❌ ห้าม commit!
+```
+
+**2. ใช้ config.js แยก:**
+
+```javascript
+// ❌ ผิด - hardcode
+const apiKey = "AIzaSyCDvOxdpMIQoadHlod90EtQgpEU4tDcHUY";
+
+// ✅ ถูก - โหลดจาก config
+const apiKey = APP_CONFIG.firebase.apiKey;
+```
+
+**3. ตรวจสอบ .gitignore:**
+
+ไฟล์เหล่านี้ต้องอยู่ใน .gitignore เสมอ:
+
+```gitignore
+src/config.js
+secrets/
+*.key
+*.secret
+.env
+deploy-history.log
+```
+
+### 🔍 Security Checklist ก่อน Push
+
+- [ ] ไม่มี API Keys ใน code
+- [ ] ไม่มี credentials ใน comments
+- [ ] ไม่มีไฟล์ sensitive ถูก stage
+- [ ] .gitignore ครอบคลุมไฟล์สำคัญ
+
+### 📁 ไฟล์ที่ต้อง Protect
+
+| ไฟล์/โฟลเดอร์ | เหตุผล | สถานะ |
+| --- | --- | --- |
+| `src/config.js` | API Keys ทั้งหมด | 🔒 gitignored |
+| `secrets/` | Firebase SDK, API Keys | 🔒 gitignored |
+| `deploy-history.log` | Production info | 🔒 gitignored |
+| `.env` | Environment variables | 🔒 gitignored |
+
+### 🚀 เมื่อต้องเพิ่ม API Key ใหม่
+
+1. เพิ่มใน `src/config.js` (ไม่ commit)
+2. เพิ่ม placeholder ใน `src/config.example.js`
+3. อัพเดท `SECURITY-CHECKLIST.md`
+4. ตรวจสอบ .gitignore
+
+---
+
+## 🧹 กฎข้อที่ 22: การจัดระเบียบไฟล์ (File Organization)
+
+**รักษาความเป็นระเบียบของ Project เสมอ**
+
+### 📂 โครงสร้างที่ถูกต้อง
+
+```text
+Bait Check-In Webapp/
+├── index.html                  # หน้า redirect
+├── mobile-checkin.html         # หน้ามือถือ
+├── admin-dashboard.html        # หน้าแอดมิน
+├── manifest.json               # PWA manifest
+├── README.md                   # คำอธิบายโปรเจกต์
+├── SECURITY-CHECKLIST.md       # Security guide
+├── copilot-instructions.md     # กฎสำหรับ AI
+├── task.md                     # สถานะโปรเจกต์
+│
+├── src/                        # Source code
+│   ├── config.js               # API Keys (gitignored)
+│   └── config.example.js       # Template
+│
+├── firebase/                   # Firebase configs
+│   ├── firestore.rules
+│   ├── firestore.rules.secure
+│   ├── firestore.indexes.json
+│   └── storage.rules
+│
+├── docs/                       # Documentation
+│   ├── api-guide.md
+│   ├── installation-guide.md
+│   └── user-guide.md
+│
+├── tests/                      # Playwright tests
+│   ├── admin-dashboard.spec.js
+│   └── mobile-checkin.spec.js
+│
+├── pages/                      # หน้าเสริม
+│   └── test/                   # Test pages
+│
+├── image/                      # รูปภาพ
+│
+├── secrets/                    # ไฟล์ลับ (gitignored)
+│
+└── scripts/                    # PowerShell scripts
+    ├── deploy.ps1
+    ├── test.ps1
+    └── cleanup-history.ps1
+```
+
+### 🗑️ ไฟล์ที่ต้องลบ/ไม่ควรมี
+
+| ไฟล์ | เหตุผล |
+| --- | --- |
+| `*.log` (ยกเว้น gitignored) | ไม่ควร commit logs |
+| `Test report by Cypress.md` | ใช้ Playwright แล้ว |
+| `docs/cypress-guide.md` | ไม่ใช้ Cypress แล้ว |
+| `docs/CYPRESS-QUICKSTART.md` | ไม่ใช้ Cypress แล้ว |
+| `desktop.ini` | Windows system file |
+| `bughunt-user-review.md` | ไฟล์ชั่วคราว |
+
+### ✅ การจัดระเบียบ
+
+**เมื่อสร้างไฟล์ใหม่:**
+
+1. ใส่ในโฟลเดอร์ที่เหมาะสม
+2. ใช้ชื่อที่สื่อความหมาย (lowercase, hyphen)
+3. เพิ่มใน .gitignore ถ้าเป็น sensitive
+4. อัพเดท README ถ้าสำคัญ
+
+**เมื่อลบไฟล์:**
+
+1. ตรวจสอบว่าไม่มี reference ที่อื่น
+2. Commit การลบพร้อมเหตุผล
+
+---
+
 ## 🚫 กฎข้อที่ 20: ห้าม AI รัน Tests เอง
 
 **ผู้ใช้จะ Run Tests เอง - AI ห้ามรัน**
@@ -1002,6 +1151,6 @@ npm run lint:md
 
 ---
 
-**อัปเดตล่าสุด:** 01-02-2026, 17:00 น.
-**เวอร์ชัน:** V.1.8.0 (01-02-2026) - เพิ่มกฎห้าม AI รัน Tests
+**อัปเดตล่าสุด:** 01-02-2026, 19:00 น.
+**เวอร์ชัน:** V.1.9.0 (01-02-2026) - เพิ่มกฎ Security และ File Organization
 
