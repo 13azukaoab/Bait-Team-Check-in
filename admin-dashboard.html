@@ -2544,11 +2544,12 @@
                                 <th class="sortable" data-column="5" onclick="sortTable('customers-table', 5)">
                                     สถานะ <i class="fas fa-sort sort-icon"></i>
                                 </th>
+                                <th>ลบ</th>
                             </tr>
                         </thead>
                         <tbody id="customersTableBody">
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
                                     <i class="fas fa-users" style="font-size: 2rem; opacity: 0.3; display: block; margin-bottom: 10px;"></i>
                                     ยังไม่มีข้อมูลลูกค้า<br>
                                     <small>ข้อมูลจะแสดงเมื่อมีการ Check-in</small>
@@ -3194,7 +3195,7 @@
             if (customers.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
                             <i class="fas fa-users" style="font-size: 2rem; opacity: 0.3; display: block; margin-bottom: 10px;"></i>
                             ยังไม่มีข้อมูลลูกค้า<br>
                             <small>ข้อมูลจะแสดงเมื่อมีการ Check-in</small>
@@ -3223,6 +3224,13 @@
                         <td>${formattedDate}</td>
                         <td>${c.checkinCount}</td>
                         <td><span class="checkin-status ${isActive ? 'active' : 'pending'}">${isActive ? 'Active' : 'Pending'}</span></td>
+                        <td>
+                            <button onclick="deleteCustomerCheckins('${c.contract.replace(/'/g, "\\'")}', '${c.customerName?.replace(/'/g, "\\'") || ''}')" 
+                                style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 5px;" 
+                                title="ลบข้อมูล Check-in ทั้งหมดของลูกค้านี้">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                 `;
             }).join('');
@@ -3397,7 +3405,7 @@
             // สร้าง HTML สำหรับตาราง
             const generateTableRows = (includeIndex = true) => {
                 if (firestoreCheckins.length === 0) {
-                    return `<tr><td colspan="${includeIndex ? 8 : 7}" style="text-align: center; padding: 40px; color: #94a3b8;">
+                    return `<tr><td colspan="${includeIndex ? 9 : 8}" style="text-align: center; padding: 40px; color: #94a3b8;">
                         <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
                         ไม่มีข้อมูล Check-in
                     </td></tr>`;
@@ -3432,11 +3440,18 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </td>
-                        ${includeIndex ? `<td>
-                            <button onclick="viewCheckinDetail('${item.id}')" style="background: none; border: none; color: var(--primary); cursor: pointer; padding: 5px;">
+                        ${includeIndex ? `<td style="display: flex; gap: 5px;">
+                            <button onclick="viewCheckinDetail('${item.id}')" style="background: none; border: none; color: var(--primary); cursor: pointer; padding: 5px;" title="ดูรายละเอียด">
                                 <i class="fas fa-eye"></i>
                             </button>
-                        </td>` : ''}
+                            <button onclick="deleteCheckin('${item.id}', '${item.customerName?.replace(/'/g, "\\'") || ''}')" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 5px;" title="ลบข้อมูล">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>` : `<td>
+                            <button onclick="deleteCheckin('${item.id}', '${item.customerName?.replace(/'/g, "\\'") || ''}')" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 5px;" title="ลบข้อมูล">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>`}
                     </tr>
                 `).join('');
             };
@@ -3458,6 +3473,77 @@
             if (!item) return;
             
             alert(`รายละเอียด Check-in\n\nลูกค้า: ${item.customerName}\nเลขสัญญา: ${item.contractNumber}\nสาขา: ${item.branch}\nเขต: ${item.zone}\nที่อยู่: ${item.address}\nพิกัด: ${item.lat}, ${item.lng}`);
+        }
+        
+        // ลบข้อมูล Check-in
+        async function deleteCheckin(docId, customerName) {
+            const confirmDelete = confirm(`⚠️ ยืนยันการลบข้อมูล\n\nลูกค้า: ${customerName || 'ไม่ระบุ'}\n\nข้อมูลจะถูกลบถาวร ไม่สามารถกู้คืนได้!`);
+            
+            if (!confirmDelete) return;
+            
+            try {
+                // 1. ลบรูปภาพจาก Storage (ถ้ามี)
+                const item = firestoreCheckins.find(c => c.id === docId);
+                if (item) {
+                    // ลองลบรูปจาก Storage
+                    const pathParts = item.houseFrontUrl?.split('/o/')[1]?.split('?')[0];
+                    if (pathParts) {
+                        try {
+                            const storagePath = decodeURIComponent(pathParts);
+                            await storage.ref(storagePath).delete();
+                        } catch (e) {
+                            console.log('Could not delete house photo:', e.message);
+                        }
+                    }
+                    
+                    const contractPath = item.contractPhotoUrl?.split('/o/')[1]?.split('?')[0];
+                    if (contractPath) {
+                        try {
+                            const storagePath = decodeURIComponent(contractPath);
+                            await storage.ref(storagePath).delete();
+                        } catch (e) {
+                            console.log('Could not delete contract photo:', e.message);
+                        }
+                    }
+                }
+                
+                // 2. ลบข้อมูลจาก Firestore
+                await db.collection('checkins').doc(docId).delete();
+                
+                // 3. แจ้งเตือนสำเร็จ
+                showRealtimeToast('ลบข้อมูลสำเร็จ!', customerName || 'ข้อมูล Check-in');
+                
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('เกิดข้อผิดพลาดในการลบ: ' + error.message);
+            }
+        }
+        
+        // ลบ Check-in ทั้งหมดของลูกค้า (โดย contractNumber)
+        async function deleteCustomerCheckins(contractNumber, customerName) {
+            const checkins = firestoreCheckins.filter(c => c.contractNumber === contractNumber);
+            
+            if (checkins.length === 0) {
+                alert('ไม่พบข้อมูล Check-in ของลูกค้านี้');
+                return;
+            }
+            
+            const confirmDelete = confirm(`⚠️ ยืนยันการลบข้อมูลทั้งหมด\n\nลูกค้า: ${customerName || contractNumber}\nจำนวน Check-in: ${checkins.length} รายการ\n\nข้อมูลจะถูกลบถาวร ไม่สามารถกู้คืนได้!`);
+            
+            if (!confirmDelete) return;
+            
+            try {
+                // ลบทีละรายการ
+                for (const checkin of checkins) {
+                    await deleteCheckin(checkin.id, checkin.customerName);
+                }
+                
+                showRealtimeToast('ลบข้อมูลลูกค้าสำเร็จ!', `${customerName} (${checkins.length} รายการ)`);
+                
+            } catch (error) {
+                console.error('Delete customer checkins error:', error);
+                alert('เกิดข้อผิดพลาดในการลบ: ' + error.message);
+            }
         }
         
         // ===========================
@@ -3655,7 +3741,12 @@
         let hqMarkerMapView = null;
 
         // Initialize Map
-        const map = L.map('map').setView([13.7400, 100.5400], 13);
+        const map = L.map('map', {
+            scrollWheelZoom: true,
+            zoomDelta: 0.5,
+            zoomSnap: 0.5,
+            wheelPxPerZoomLevel: 120
+        }).setView([13.7400, 100.5400], 13);
         
         // Add tile layer (OpenStreetMap)
         L.tileLayer(osmTileUrl, {
@@ -3806,7 +3897,12 @@
 
         function initMapView() {
             if (!mapView) {
-                mapView = L.map('map-view').setView([13.7400, 100.5400], 13);
+                mapView = L.map('map-view', {
+                    scrollWheelZoom: true,
+                    zoomDelta: 0.5,
+                    zoomSnap: 0.5,
+                    wheelPxPerZoomLevel: 120
+                }).setView([13.7400, 100.5400], 13);
                 L.tileLayer(osmTileUrl, {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(mapView);
@@ -5258,19 +5354,28 @@
             
             // แสดงแบบอัลบั้ม (group by check-in)
             galleryGrid.innerHTML = galleryAlbums.map((album, albumIndex) => `
-                <div class="gallery-album" onclick="openAlbumViewer(${albumIndex})">
-                    <div class="album-cover">
-                        <img src="${album.coverPhoto}" alt="${album.customerName}">
-                        ${album.photoCount > 1 ? `<div class="photo-count"><i class="fas fa-images"></i> ${album.photoCount}</div>` : ''}
-                    </div>
-                    <div class="album-info">
-                        <div class="album-name">${album.customerName}</div>
-                        <div class="album-meta">
-                            <span class="team-badge team-badge-sm team-${album.team.toLowerCase()}" style="width: 18px; height: 18px; font-size: 0.6rem;">${album.team}</span>
-                            ${album.branch} • ${album.time}
+                <div class="gallery-album" style="position: relative;">
+                    <div onclick="openAlbumViewer(${albumIndex})" style="cursor: pointer;">
+                        <div class="album-cover">
+                            <img src="${album.coverPhoto}" alt="${album.customerName}">
+                            ${album.photoCount > 1 ? `<div class="photo-count"><i class="fas fa-images"></i> ${album.photoCount}</div>` : ''}
                         </div>
-                        <div class="album-contract">${album.contract}</div>
+                        <div class="album-info">
+                            <div class="album-name">${album.customerName}</div>
+                            <div class="album-meta">
+                                <span class="team-badge team-badge-sm team-${album.team.toLowerCase()}" style="width: 18px; height: 18px; font-size: 0.6rem;">${album.team}</span>
+                                ${album.branch} • ${album.time}
+                            </div>
+                            <div class="album-contract">${album.contract}</div>
+                        </div>
                     </div>
+                    <button onclick="event.stopPropagation(); deleteCheckin('${album.id}', '${album.customerName.replace(/'/g, "\\'")}')" 
+                        style="position: absolute; top: 10px; right: 10px; background: rgba(239,68,68,0.9); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: transform 0.2s, background 0.2s;"
+                        onmouseover="this.style.background='#dc2626'; this.style.transform='scale(1.1)';"
+                        onmouseout="this.style.background='rgba(239,68,68,0.9)'; this.style.transform='scale(1)';"
+                        title="ลบข้อมูล">
+                        <i class="fas fa-trash" style="font-size: 14px;"></i>
+                    </button>
                 </div>
             `).join('');
         }
