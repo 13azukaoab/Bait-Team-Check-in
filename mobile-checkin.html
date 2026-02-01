@@ -1079,13 +1079,13 @@
                         <label style="justify-content: center;"><i class="fas fa-users-viewfinder"></i> เลือกทีมปฏิบัติงาน</label>
                         
                         <!-- Custom Select Trigger -->
-                        <div class="select-trigger" onclick="openTeamPicker()">
-                            <span id="selectedTeamDisplay">-- กรุณาเลือกทีม --</span>
+                        <div class="select-trigger" data-test="team-selector" onclick="openTeamPicker()">
+                            <span id="selectedTeamDisplay" data-test="team-display">-- กรุณาเลือกทีม --</span>
                             <i class="fas fa-chevron-down"></i>
                         </div>
-                        <input type="hidden" id="loginTeamSelect">
+                        <input type="hidden" id="loginTeamSelect" data-test="team-input">
                     </div>
-                    <button class="login-btn" onclick="handleLogin()">
+                    <button class="login-btn" data-test="login-btn" onclick="handleLogin()">
                         เข้าสู่ระบบ <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
@@ -1113,18 +1113,18 @@
                 <!-- Customer Name -->
                 <div class="input-group">
                     <label><i class="fas fa-user"></i> ชื่อลูกค้า <span class="required">*</span></label>
-                    <input type="text" placeholder="กรอกชื่อลูกค้า" id="customerName">
+                    <input type="text" placeholder="กรอกชื่อลูกค้า" id="customerName" data-test="customer-name">
                 </div>
 
                 <!-- Contract Number & Branch in 2 columns -->
                 <div class="two-col">
                     <div class="input-group">
                         <label><i class="fas fa-file-contract"></i> เลขที่สัญญา <span class="required">*</span></label>
-                        <input type="text" placeholder="เช่น CT-12345" id="contractNumber">
+                        <input type="text" placeholder="เช่น CT-12345" id="contractNumber" data-test="contract-number">
                     </div>
                     <div class="input-group">
                         <label><i class="fas fa-building"></i> สาขา <span class="required">*</span></label>
-                        <select id="branchSelect">
+                        <select id="branchSelect" data-test="branch-select">
                             <option value="">เลือกสาขา</option>
                             <optgroup label="เขต 1">
                                 <option value="พุทธมณฑล">พุทธมณฑล</option>
@@ -1165,7 +1165,7 @@
                                 <option value="สระบุรี">สระบุรี</option>
                             </optgroup>
                         </select>
-                        <div class="zone-display"><i class="fas fa-layer-group"></i> เขต: <span id="zoneText">-</span></div>
+                        <div class="zone-display" data-test="zone-display"><i class="fas fa-layer-group"></i> เขต: <span id="zoneText" data-test="zone-text">-</span></div>
                     </div>
                 </div>
 
@@ -1173,33 +1173,33 @@
                 <div class="photo-section">
                     <label><i class="fas fa-camera"></i> ภาพถ่ายหน้าบ้าน <span class="required">*</span></label>
                     <div class="photo-preview">
-                        <div class="photo-item" id="photo1" onclick="openCamera(1)">
+                        <div class="photo-item" id="photo1" data-test="photo-house" onclick="openCamera(1)">
                             <i class="fas fa-house"></i>
                             <span>หน้าบ้าน</span>
                         </div>
-                        <div class="photo-item" id="photo2" onclick="openCamera(2)">
+                        <div class="photo-item" id="photo2" data-test="photo-contract" onclick="openCamera(2)">
                             <i class="fas fa-file-signature"></i>
                             <span>เลขที่สัญญา</span>
                         </div>
                     </div>
                     <!-- Fallback file input -->
-                    <input type="file" accept="image/jpeg,image/png" capture="environment" class="photo-input" id="cameraInput1" onchange="handleFilePhoto(1, this)">
-                    <input type="file" accept="image/jpeg,image/png" capture="environment" class="photo-input" id="cameraInput2" onchange="handleFilePhoto(2, this)">
+                    <input type="file" accept="image/jpeg,image/png" capture="environment" class="photo-input" id="cameraInput1" data-test="photo-input-1" onchange="handleFilePhoto(1, this)">
+                    <input type="file" accept="image/jpeg,image/png" capture="environment" class="photo-input" id="cameraInput2" data-test="photo-input-2" onchange="handleFilePhoto(2, this)">
                 </div>
 
                 <!-- Notes -->
                 <div class="input-group">
                     <label><i class="fas fa-sticky-note"></i> หมายเหตุ (ถ้ามี)</label>
-                    <textarea placeholder="เพิ่มรายละเอียดเพิ่มเติม..." id="notes"></textarea>
+                    <textarea placeholder="เพิ่มรายละเอียดเพิ่มเติม..." id="notes" data-test="notes-input"></textarea>
                 </div>
 
                 <!-- Check-in Button (Moved below inputs) -->
                 <div class="checkin-section">
-                    <button class="checkin-btn" id="checkinBtn" onclick="toggleCheckin()">
+                    <button class="checkin-btn" id="checkinBtn" data-test="checkin-btn" onclick="toggleCheckin()">
                         <i class="fas fa-map-pin"></i>
                         <span id="btnText">CHECK IN</span>
                     </button>
-                    <div class="status-badge pending" id="statusBadge">
+                    <div class="status-badge pending" id="statusBadge" data-test="status-badge">
                         <i class="fas fa-clock"></i>
                         <span>ยังไม่ได้ Check-in</span>
                     </div>

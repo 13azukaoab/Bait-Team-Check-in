@@ -11,7 +11,8 @@
     "test:debug": "cypress run --headed --inspect"
   },
   "devDependencies": {
-    "cypress": "^13.6.0"
+    "cypress": "^13.6.0",
+    "http-server": "^14.1.1"
   },
   "keywords": [
     "check-in",

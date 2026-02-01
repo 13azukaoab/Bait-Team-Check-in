@@ -1990,7 +1990,7 @@
             <div class="top-header">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="ค้นหาลูกค้า, สถานที่..." id="globalSearch" onkeyup="handleGlobalSearch(this.value)">
+                    <input type="text" placeholder="ค้นหาลูกค้า, สถานที่..." id="globalSearch" data-test="global-search" onkeyup="handleGlobalSearch(this.value)">
                 </div>
                 <div class="header-actions">
                     <!-- Real-time Indicator -->
@@ -2020,15 +2020,15 @@
             </div>
 
             <!-- Dashboard Page -->
-            <div class="page-content" id="page-dashboard">
+            <div class="page-content" id="page-dashboard" data-test="dashboard-page">
             <!-- Stat Cards -->
-            <div class="stat-cards">
-                <div class="stat-card">
+            <div class="stat-cards" data-test="stat-cards">
+                <div class="stat-card" data-test="stat-checkins">
                     <div class="stat-icon blue">
                         <i class="fas fa-location-check"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="statCheckinsToday">0</h3>
+                        <h3 id="statCheckinsToday" data-test="stat-checkins-value">0</h3>
                         <p>Check-ins วันนี้</p>
                         <div class="stat-trend" id="statCheckinsTrend" style="display: none;">
                             <i class="fas fa-arrow-up"></i> <span></span>
@@ -2080,7 +2080,7 @@
                     <div class="filter-row">
                         <div class="filter-group">
                             <label><i class="fas fa-users"></i> ทีม</label>
-                            <select id="filterTeam">
+                            <select id="filterTeam" data-test="filter-team">
                                 <option value="all">ทั้งหมด</option>
                                 <option value="A">Team A</option>
                                 <option value="B">Team B</option>
@@ -2102,7 +2102,7 @@
                         </div>
                         <div class="filter-group">
                             <label><i class="fas fa-map-marker-alt"></i> เขต</label>
-                            <select id="filterZone">
+                            <select id="filterZone" data-test="filter-zone">
                                 <option value="all">ทั้งหมด</option>
                                 <option value="เขต 1">เขต 1</option>
                                 <option value="เขต 2">เขต 2</option>
@@ -2115,7 +2115,7 @@
                         </div>
                         <div class="filter-group">
                             <label><i class="fas fa-building"></i> สาขา</label>
-                            <select id="filterBranch">
+                            <select id="filterBranch" data-test="filter-branch">
                                 <option value="all">ทั้งหมด</option>
                                 <optgroup label="เขต 1">
                                     <option>พุทธมณฑล</option>
@@ -2159,10 +2159,10 @@
                         </div>
                         <div class="filter-group">
                             <label><i class="fas fa-calendar"></i> วันที่</label>
-                            <input type="date" id="filterDate" value="2026-01-22">
+                            <input type="date" id="filterDate" data-test="filter-date" value="2026-01-22">
                         </div>
                         <div class="filter-group">
-                            <button class="btn btn-primary" onclick="applyFilters()" style="width: 100%;">
+                            <button class="btn btn-primary" data-test="apply-filter-btn" onclick="applyFilters()" style="width: 100%;">
                                 <i class="fas fa-search"></i> ค้นหา
                             </button>
                         </div>
@@ -2195,7 +2195,7 @@
                         </div>
                     </div>
                     <div class="map-container">
-                        <div id="map"></div>
+                        <div id="map" data-test="map-container"></div>
                         <!-- Distance Panel -->
                         <div class="distance-panel" id="distancePanel">
                             <h4><i class="fas fa-ruler"></i> วัดระยะทาง</h4>

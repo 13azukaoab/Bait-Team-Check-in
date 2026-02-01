@@ -2,10 +2,9 @@ const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
   e2e: {
-    // URL ของ webapp
-    baseUrl: 'http://localhost:8080',
-    // หรือ production
-    // baseUrl: 'https://bait-check-in-webapp.web.app',
+    // URL ของ webapp - ใช้ production URL แทน localhost
+    // baseUrl: 'http://localhost:8080',
+    baseUrl: 'https://bait-check-in-webapp.web.app',
     
     // Timeout สำหรับแต่ละ command
     defaultCommandTimeout: 10000,
