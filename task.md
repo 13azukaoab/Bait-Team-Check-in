@@ -173,11 +173,11 @@
 4. ✅ ~~เชื่อมหน้าเว็บ (Frontend) เข้ากับระบบหลังบ้าน~~ → Mobile + Desktop เชื่อมแล้ว
 5. ✅ ~~ทดสอบระบบ~~ → Migrated to Playwright (ต้องแก้ issues)
 6. ⏳ **TODO: แก้ไข Playwright Test Issues** (Priority: Medium)
-   - Issue #1: Admin Dashboard filter visibility
-   - Issue #2: Mobile Check-in selector specificity
-5. ✅ ~~**Firebase Hosting**~~ → Deploy เสร็จ: [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
-6. ✅ ~~**ทดสอบระบบ**: ทดสอบ Check-in จริงผ่าน Mobile~~ → ทำงานได้สมบูรณ์
-7. ✅ ~~**Backend เสร็จสมบูรณ์**~~ → Firestore + Storage + Rules + Real-time
+    - Issue #1: Admin Dashboard filter visibility
+    - Issue #2: Mobile Check-in selector specificity
+7. ✅ ~~**Firebase Hosting**~~ → Deploy เสร็จ: [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
+8. ✅ ~~**ทดสอบระบบ**: ทดสอบ Check-in จริงผ่าน Mobile~~ → ทำงานได้สมบูรณ์
+9. ✅ ~~**Backend เสร็จสมบูรณ์**~~ → Firestore + Storage + Rules + Real-time
 
 > **หมายเหตุ:** Custom Domain และ CI/CD ไม่จำเป็นสำหรับโปรเจกต์ขนาดนี้
 

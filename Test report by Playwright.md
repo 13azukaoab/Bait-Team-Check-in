@@ -96,7 +96,7 @@
 
 ## ✅ ปัญหาที่แก้ไขแล้ว (Resolved)
 
-*ยังไม่มีปัญหาที่แก้ไขแล้ว*
+> ยังไม่มีปัญหาที่แก้ไขแล้ว
 
 ---
 
@@ -110,14 +110,16 @@
 
 ## 🔧 วิธีแก้ไข (Fix Implementation)
 
-### ✅ Fix Issue #2: Mobile Check-in Selector (อาจารย์ทำต่อได้)
+### ✅ Fix Issue #2 - Mobile Check-in Selector (อาจารย์ทำต่อได้)
 
 **เปลี่ยนจาก:**
+
 ```javascript
 await expect(page.getByText('Bait Check-In')).toBeVisible();
 ```
 
 **เปลี่ยนเป็น:**
+
 ```javascript
 // Option 1: ใช้ heading level
 await expect(page.getByRole('heading', { name: 'Bait Check-In', level: 2 })).toBeVisible();
@@ -130,11 +132,12 @@ await expect(page.locator('.login-title')).toBeVisible();
 await expect(page.locator('[data-test="login-title"]')).toBeVisible();
 ```
 
-### ✅ Fix Issue #1: Admin Dashboard Filters Visibility (ต้องตรวจสอบ HTML)
+### ✅ Fix Issue #1 - Admin Dashboard Filters Visibility (ต้องตรวจสอบ HTML)
 
 **ปัญหา:** Filter elements ถูกซ่อนเสมอ
 
 **โครงการทดสอบ:**
+
 ```bash
 # ตรวจสอบ CSS ใน admin-dashboard.html
 # ค้นหา: display: none หรือ visibility: hidden
@@ -156,7 +159,7 @@ await page.locator('[data-test="toggle-filters"]').click();
 
 ## 🧪 การรันทดสอบ (How to Run Tests)
 
-### ใช้ PowerShell Script (ง่ายที่สุด):
+### ใช้ PowerShell Script
 
 ```powershell
 # ทั้งหมด
@@ -178,7 +181,7 @@ await page.locator('[data-test="toggle-filters"]').click();
 .\test.ps1 -Report
 ```
 
-### ใช้ npm scripts:
+### ใช้ npm scripts
 
 ```bash
 npm test                # ทดสอบทั้งหมด
@@ -195,12 +198,14 @@ npm run test:report     # ดูรายงาน HTML
 ## 📊 การติดตาม Progress (Tracking)
 
 **ไฟล์ที่ใช้ติดตาม:**
+
 - `test-history.log` - บันทึกทุกครั้งที่รัน test
 - `playwright-report/` - รายงาน HTML จากการรันทดสอบ
 - `test-results/` - ละเอียด error และ screenshots
 
 **ตัวอย่าง test-history.log:**
-```
+
+```text
 01-02-2026 15:45:00 | main | f74462b | FAILED | migrate: Replace Cypress... | BY: Weerachon | TYPE: All Browsers | PASSED: 95/145 | DURATION: 312.45s
 ```
 
@@ -208,19 +213,22 @@ npm run test:report     # ดูรายงาน HTML
 
 ## 📋 Checklist สำหรับแก้ไข Issues
 
-### Issue #2 (Mobile Check-in):
+### Issue #2 - Mobile Check-in
+
 - [ ] เปลี่ยน selector ที่ถูกต้อง
 - [ ] รัน `npm test` เพื่อยืนยัน
 - [ ] 1 test แต่ละ browser ควรผ่าน
 
-### Issue #1 (Admin Dashboard):
+### Issue #1 - Admin Dashboard
+
 - [ ] ตรวจสอบ CSS ใน admin-dashboard.html
 - [ ] หาว่า filters ถูกซ่อนด้วยอะไร
 - [ ] เพิ่มการ show filters ใน tests หรือแก้ HTML
 - [ ] รัน `npm test` เพื่อยืนยัน
 - [ ] 9 tests แต่ละ browser ควรผ่าน
 
-### ตอนแก้สำเร็จ:
+### ตอนแก้สำเร็จ
+
 - [ ] รัน `.\test.ps1 -Report` เพื่อดูรายงาน
 - [ ] อัพเดท Test report ด้วยผลลัพธ์ใหม่
 - [ ] Commit และ push changes

@@ -74,7 +74,7 @@ elseif ($Webkit) {
     $command += " --project=webkit"
 }
 elseif ($Mobile) {
-    Write-Host "Testing Mobile browsers..." -ForegroundColor Yellow
+    Write-Host "Testing Mobile browsers (Android + iOS)..." -ForegroundColor Yellow
     $command += " --project='Mobile Chrome' --project='Mobile Safari'"
 }
 elseif ($UI) {
@@ -132,7 +132,6 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host ""
     
     $status = "SUCCESS"
-    $statusColor = "SUCCESS"
 }
 else {
     Write-Host ""
@@ -150,7 +149,6 @@ else {
     Write-Host ""
     
     $status = "FAILED"
-    $statusColor = "FAILED"
 }
 
 # Determine test type for logging
