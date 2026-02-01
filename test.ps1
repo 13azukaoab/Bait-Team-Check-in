@@ -93,33 +93,35 @@ if ($Headed) {
 
 Write-Host ""
 
-# Run tests
+# Run tests and capture output
 $startTime = Get-Date
-Invoke-Expression $command
+$testOutput = Invoke-Expression "$command 2>&1" | Tee-Object -Variable testLines
+$exitCode = $LASTEXITCODE
 $endTime = Get-Date
 $duration = ($endTime - $startTime).TotalSeconds
 
-# Get test results from playwright report
-$reportDataPath = Join-Path $projectRoot "test-results/.last-run.json"
+# Parse test results from output
 $testSummary = @{
     totalTests = 0
     passed = 0
     failed = 0
 }
 
-if (Test-Path $reportDataPath) {
-    try {
-        $lastRun = Get-Content $reportDataPath | ConvertFrom-Json
-        $testSummary.totalTests = $lastRun.stats.expected
-        $testSummary.passed = $lastRun.stats.passed
-        $testSummary.failed = $lastRun.stats.failed
-    } catch {
-        Write-Host "Note: Could not parse test results file" -ForegroundColor Yellow
-    }
+# Look for pattern like "87 passed" or "50 failed" in output
+$outputText = $testOutput -join "`n"
+if ($outputText -match "(\d+)\s+passed") {
+    $testSummary.passed = [int]$matches[1]
 }
+if ($outputText -match "(\d+)\s+failed") {
+    $testSummary.failed = [int]$matches[1]
+}
+$testSummary.totalTests = $testSummary.passed + $testSummary.failed
+
+# Show test output
+Write-Host $outputText
 
 # Check result
-if ($LASTEXITCODE -eq 0) {
+if ($exitCode -eq 0) {
     Write-Host ""
     Write-Host "============================================================" -ForegroundColor Green
     Write-Host "  ✅ All Tests Passed!" -ForegroundColor Green
@@ -131,7 +133,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "  Duration    : $([math]::Round($duration, 2))s" -ForegroundColor Cyan
     Write-Host ""
     
-    $status = "SUCCESS"
+    $status = "PASSED"
 }
 else {
     Write-Host ""
@@ -175,7 +177,46 @@ if (-not (Test-Path $logPath)) {
 
 Add-Content -Path $logPath -Value $logEntry -ErrorAction SilentlyContinue
 
-Write-Host "  Report logged to: test-history.log" -ForegroundColor Cyan
+Write-Host "  ✅ Logged to: test-history.log" -ForegroundColor Cyan
+
+# ============================================
+# Update Test report by Playwright.md
+# ============================================
+$reportPath = Join-Path $projectRoot "Test report by Playwright.md"
+$thaiTime = Get-Date -Format "dd-MM-yyyy, HH:mm"
+$passRate = if ($testSummary.totalTests -gt 0) { [math]::Round(($testSummary.passed / $testSummary.totalTests) * 100, 1) } else { 0 }
+$statusEmoji = if ($status -eq "PASSED") { "✅ PASSED" } else { "❌ FAILED" }
+
+if (Test-Path $reportPath) {
+    try {
+        $content = Get-Content $reportPath -Raw
+        
+        # Update summary table
+        $content = $content -replace '\| \*\*Total Tests\*\* \| \d+ \|', "| **Total Tests** | $($testSummary.totalTests) |"
+        $content = $content -replace '\| \*\*Passed\*\* \| \d+ ✅ \|', "| **Passed** | $($testSummary.passed) ✅ |"
+        $content = $content -replace '\| \*\*Failed\*\* \| \d+ \|', "| **Failed** | $($testSummary.failed) |"
+        $content = $content -replace '\| \*\*Pass Rate\*\* \| [\d.]+% 🎯? \|', "| **Pass Rate** | $passRate% $(if($passRate -eq 100){'🎯'}else{''}) |"
+        $content = $content -replace '\| \*\*Last Run\*\* \| [\d-]+, [\d:]+ น\. \|', "| **Last Run** | $thaiTime น. |"
+        
+        # Add new entry to history table (find last row and append)
+        $newHistoryRow = "| $(Get-Date -Format 'dd-MM-yyyy') | $(Get-Date -Format 'HH:mm') น. | $($testSummary.passed)/$($testSummary.totalTests) ($passRate%) | $($testSummary.failed) | $statusEmoji | Auto-logged by test.ps1 |"
+        
+        # Find history section and add row before the separator line
+        if ($content -match '(\| [\d-]+ \| [\d:]+ น\. \| [\d/]+ \([\d.]+%\) \| \d+ \| [✅❌] [A-Z]+ \| [^|]+\|[\r\n]+)---') {
+            # Already has entries, add after last entry
+            $content = $content -replace '(## 📝 ประวัติการรันทดสอบ.*?\n\n\|[^\n]+\n\|[^\n]+\n)((?:\|[^\n]+\n)+)(---)', "`$1`$2$newHistoryRow`n---"
+        }
+        
+        # Update footer timestamp
+        $content = $content -replace '\*\*อัปเดตล่าสุด:\*\* [\d-]+, [\d:]+ น\.', "**อัปเดตล่าสุด:** $thaiTime น."
+        
+        Set-Content -Path $reportPath -Value $content -NoNewline
+        Write-Host "  ✅ Updated: Test report by Playwright.md" -ForegroundColor Cyan
+    } catch {
+        Write-Host "  ⚠️ Could not update Test report by Playwright.md: $($_.Exception.Message)" -ForegroundColor Yellow
+    }
+}
+
 Write-Host ""
 
 # Show report if requested
@@ -186,4 +227,4 @@ if ($Report) {
 }
 
 # Exit with appropriate code
-exit $LASTEXITCODE
+exit $exitCode
