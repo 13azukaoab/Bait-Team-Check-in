@@ -216,18 +216,17 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     
+    <!-- App Configuration (contains API keys - DO NOT commit!) -->
+    <script src="../../src/config.js"></script>
+    
     <script>
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyB0UKJk3L-veKP1X7JhFCj0pqGitZkFLDM",
-            authDomain: "bait-check-in-webapp.firebaseapp.com",
-            projectId: "bait-check-in-webapp",
-            storageBucket: "bait-check-in-webapp.firebasestorage.app",
-            messagingSenderId: "1064028134741",
-            appId: "1:1064028134741:web:8d14b141d04c41d28a19c3"
-        };
+        // Firebase Config - loaded from config.js
+        if (typeof APP_CONFIG === 'undefined') {
+            console.error('❌ config.js not found! Copy src/config.example.js to src/config.js');
+            alert('Configuration error: Please contact administrator.');
+        }
         
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(APP_CONFIG.firebase);
         const db = firebase.firestore();
         const storage = firebase.storage();
         

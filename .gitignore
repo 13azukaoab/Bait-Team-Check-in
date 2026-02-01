@@ -41,10 +41,18 @@ yarn-error.log*
 
 # API Keys - ห้าม commit!
 secrets/
+src/config.js
 src/firebase-config.js
 Longdo API KEY
 *.key
 *.secret
+
+# Sensitive documentation (contains real configs)
+docs/api-guide.md
+URL-ใช้งานจริง.md
+
+# Deploy scripts with production info
+deploy-history.log
 
 # Large media files (if needed to exclude)
 # *.mp4

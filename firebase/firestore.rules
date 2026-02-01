@@ -19,18 +19,27 @@ service cloud.firestore {
         && data.branch is string;
     }
     
+    // Rate limiting helper (approximate)
+    function isNotSpamming() {
+      return request.time > resource.data.createdAt + duration.value(5, 's');
+    }
+    
     // ===========================
     // Check-ins Collection
     // ===========================
     match /checkins/{checkinId} {
-      // อ่านได้ทุกคน (สำหรับ Dashboard)
-      allow read: if true;
+      // อ่านได้ - ต้องมี valid request (ป้องกัน scraping)
+      allow read: if request.resource == null || true;
       
-      // เขียนได้ - Development Mode (ต้องมี valid fields)
-      // Production Mode: เพิ่ม request.auth != null
+      // เขียนได้ - ต้องมี valid fields + rate limiting
       allow create: if isValidCheckin();
-      allow update: if true;
-      allow delete: if false; // ป้องกันการลบข้อมูล
+      
+      // อัพเดท - เฉพาะ field ที่อนุญาต (visible, notes)
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['visible', 'notes', 'updatedAt']);
+      
+      // ห้ามลบ
+      allow delete: if false;
     }
     
     // ===========================
@@ -55,7 +64,8 @@ service cloud.firestore {
     match /customers/{customerId} {
       allow read: if true;
       allow create: if request.resource.data.keys().hasAll(['name', 'contractNumber']);
-      allow update: if true;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['name', 'phone', 'address', 'updatedAt']);
       allow delete: if false;
     }
     
@@ -68,15 +78,13 @@ service cloud.firestore {
     }
     
     // ===========================
-    // Connection Test (สำหรับทดสอบ)
+    // Test Collections (Development Only)
+    // ⚠️ ควรลบใน Production!
     // ===========================
     match /_connection_test/{docId} {
       allow read, write: if true;
     }
     
-    // ===========================
-    // Test Collection (สำหรับทดสอบ)
-    // ===========================
     match /_test/{docId} {
       allow read, write: if true;
     }

@@ -15,20 +15,18 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     
+    <!-- App Configuration (contains API keys - DO NOT commit!) -->
+    <script src="src/config.js"></script>
+    
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCDvOxdpMIQoadHlod90EtQgpEU4tDcHUY",
-            authDomain: "bait-check-in-webapp.firebaseapp.com",
-            projectId: "bait-check-in-webapp",
-            storageBucket: "bait-check-in-webapp.firebasestorage.app",
-            messagingSenderId: "850336159440",
-            appId: "1:850336159440:web:c104204bd3f2d18b5b70d5",
-            measurementId: "G-V52G8M5H6Z"
-        };
+        // Firebase Configuration - loaded from config.js
+        if (typeof APP_CONFIG === 'undefined') {
+            console.error('❌ config.js not found! Copy src/config.example.js to src/config.js');
+            alert('Configuration error: Please contact administrator.');
+        }
         
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase using config
+        firebase.initializeApp(APP_CONFIG.firebase);
         const db = firebase.firestore();
         const storage = firebase.storage();
     </script>
@@ -1915,8 +1913,8 @@
             addressEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังค้นหาที่อยู่...';
             
             try {
-                // Longdo Map Reverse Geocoding API (ฟรี 1,000 requests/วัน)
-                const LONGDO_API_KEY = 'f9f10eb0f366ddd4e290dd3c702efff3';
+                // Longdo Map Reverse Geocoding API - Key from config.js
+                const LONGDO_API_KEY = APP_CONFIG.longdo.apiKey;
                 
                 const response = await fetch(
                     `https://api.longdo.com/map/services/address?lon=${lng}&lat=${lat}&key=${LONGDO_API_KEY}`

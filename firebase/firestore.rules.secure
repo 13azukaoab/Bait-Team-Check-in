@@ -1,0 +1,111 @@
+// ===========================
+// SECURE FIRESTORE RULES
+// ===========================
+// ใช้เมื่อเพิ่ม Authentication System แล้ว
+// 
+// วิธีใช้:
+// 1. เปิดใช้งาน Firebase Authentication
+// 2. เพิ่ม login ใน mobile-checkin.html และ admin-dashboard.html
+// 3. Copy ไฟล์นี้ไปทับ firestore.rules
+// 4. Deploy: firebase deploy --only firestore:rules
+// ===========================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===========================
+    // Helper Functions
+    // ===========================
+    
+    // ตรวจสอบว่า login แล้ว
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // ตรวจสอบว่าเป็น Admin (ใช้ custom claims)
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+    
+    // ตรวจสอบว่าเป็น Request จาก App ของเรา (มี valid fields)
+    function isValidCheckin() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['team', 'customerName', 'contractNumber', 'branch', 'location', 'createdAt'])
+        && data.team is string
+        && data.team.size() <= 2
+        && data.customerName is string
+        && data.customerName.size() <= 200
+        && data.contractNumber is string
+        && data.contractNumber.size() <= 50
+        && data.branch is string;
+    }
+    
+    // ===========================
+    // Check-ins Collection
+    // ===========================
+    match /checkins/{checkinId} {
+      // อ่านได้ - ต้อง login
+      allow read: if isAuthenticated();
+      
+      // สร้าง - ต้อง login + valid fields
+      allow create: if isAuthenticated() && isValidCheckin();
+      
+      // อัพเดท - Admin เท่านั้น
+      allow update: if isAdmin();
+      
+      // ลบ - Admin เท่านั้น
+      allow delete: if isAdmin();
+    }
+    
+    // ===========================
+    // Teams Collection
+    // ===========================
+    match /teams/{teamId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // ===========================
+    // Branches Collection
+    // ===========================
+    match /branches/{branchId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // ===========================
+    // Customers Collection
+    // ===========================
+    match /customers/{customerId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() 
+        && request.resource.data.keys().hasAll(['name', 'contractNumber']);
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // ===========================
+    // Stats Collection
+    // ===========================
+    match /stats/{statId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Cloud Functions only
+    }
+    
+    // ===========================
+    // Users Collection (สำหรับ user profiles)
+    // ===========================
+    match /users/{userId} {
+      // อ่านได้เฉพาะตัวเอง หรือ admin
+      allow read: if isAuthenticated() 
+        && (request.auth.uid == userId || isAdmin());
+      
+      // แก้ไขได้เฉพาะตัวเอง
+      allow update: if isAuthenticated() && request.auth.uid == userId;
+      
+      // สร้าง/ลบ - Admin เท่านั้น
+      allow create, delete: if isAdmin();
+    }
+  }
+}
