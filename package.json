@@ -1,0 +1,25 @@
+{
+  "name": "bait-check-in-webapp",
+  "version": "2.0.0",
+  "description": "Web Application for Check-in and Location Tracking with Team Management",
+  "scripts": {
+    "test": "cypress run",
+    "test:open": "cypress open",
+    "test:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
+    "test:desktop": "cypress run --config viewportWidth=1280,viewportHeight=720",
+    "test:headless": "cypress run --headless",
+    "test:debug": "cypress run --headed --inspect"
+  },
+  "devDependencies": {
+    "cypress": "^13.6.0"
+  },
+  "keywords": [
+    "check-in",
+    "gps",
+    "location-tracking",
+    "firebase",
+    "leaflet-map"
+  ],
+  "author": "Weerachon",
+  "license": "MIT"
+}

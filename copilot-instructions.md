@@ -466,16 +466,241 @@ formatThaiDate(timestamp); // Returns "22-01-2026"
 
 ---
 
-## 🗣️ กฎข้อที่ 13: ภาษาในการสื่อสาร (Communication Language)
+## 🧪 กฎข้อที่ 15: Markdown Linting Standards (ป้องกัน Errors)
 
-**ภาษาหลัก: ไทย (Thai Language)**
+**เพื่อหลีกเลี่ยงปัญหา Markdown errors ที่เยอะเหมือนครั้งที่แล้ว:**
 
-- ✅ สื่อสารกับผู้ใช้เป็น **ภาษาไทย**
-- ✅ ใช้ภาษาไทยในการอธิบาย, เขียน Commit Message, และ PR Description
-- ✅ Comment ในโค้ดใช้ได้ทั้งอังกฤษและไทย (แต่ถ้าอธิบาย Logic ยากๆ ขอเป็นไทย)
-- ✅ คำศัพท์เทคนิคทับศัพท์ภาษาอังกฤษได้ (เช่น "Function", "Variable", "Deploy")
+### ✅ ตารางต้องมี Standard Format
+
+```markdown
+| Header 1 | Header 2 | Header 3 |
+| --- | --- | --- |
+| Data 1 | Data 2 | Data 3 |
+```
+
+❌ **ห้าม** ใช้รูปแบบ `|------|---------|` (เก่า)
+
+### ✅ URLs ต้องห่อในลิงค์ Markdown
+
+```markdown
+✅ [https://example.com](https://example.com)
+❌ https://example.com
+```
+
+### ✅ Headings ต้องใช้ `##` ไม่ใช่ Bold
+
+```markdown
+✅ ## หัวเรื่อง
+❌ **หัวเรื่อง**
+```
+
+### ✅ Code Blocks ต้องมี Language Specifier
+
+```markdown
+✅ ```javascript
+   const x = 5;
+   ```
+
+❌ ```
+   const x = 5;
+   ```
+```
+
+### ✅ Blank Lines รอบ Items
+
+```markdown
+## Heading
+
+✅ ต้องมีบรรทัดว่าง
+
+- Item 1
+- Item 2
+
+✅ ต้องมีบรรทัดว่างก่อนหลังรายการ
+```
+
+### ✅ ไม่มี Trailing Punctuation ในหัวเรื่อง
+
+```markdown
+✅ ## ชื่อเรื่อง
+❌ ## ชื่อเรื่อง:
+```
+
+### ✅ ไม่มี Duplicate Headings
+
+```markdown
+✅ ## Troubleshooting
+   (เนื้อหา 1)
+
+   ## Error Handling
+   (เนื้อหา 2)
+
+❌ ## Troubleshooting
+   (เนื้อหา 1)
+   
+   ## Troubleshooting
+   (เนื้อหา 2)
+```
+
+### ✅ ไม่มี Multiple Consecutive Blank Lines
+
+```markdown
+❌ Paragraph 1
+
+
+Paragraph 2 (มี 2 บรรทัดว่าง)
+
+✅ Paragraph 1
+
+Paragraph 2 (มี 1 บรรทัดว่าง)
+```
+
+### 🔧 วิธีตรวจสอบ Markdown Errors
+
+1. **ใช้ Markdownlint Extension ใน VS Code**
+   - ติดตั้ง "markdownlint" extension
+   - จะแสดง errors สีแดง ขณะพิมพ์
+
+2. **รัน Check ด้วย Terminal**
+   ```bash
+   npm install -g markdownlint-cli
+   markdownlint "*.md"
+   markdownlint "docs/*.md"
+   ```
+
+3. **ก่อน Commit ต้อง Check**
+   - ดูแถบ "Problems" ใน VS Code
+   - Fix ทั้งหมด ก่อน commit
 
 ---
 
-**อัปเดตล่าสุด:** 26-01-2026, 15:20 น.
-**เวอร์ชัน:** V.1.3.0 (26-01-2026)
+## 🧪 กฎข้อที่ 16: Cypress Testing Standards
+
+**สำหรับการเขียน E2E Tests ด้วย Cypress:**
+
+### ✅ Data-test Attributes จำเป็น
+
+```html
+<!-- ✅ ต้องมี data-test เสมอ -->
+<button data-test="checkin-btn">Check-in</button>
+<input data-test="customer-name">
+
+<!-- ❌ ห้าม ใช้ class/id สำหรับ selectors -->
+<button class="btn-submit">ไม่ดี</button>
+```
+
+### ✅ Test Structure
+
+```javascript
+describe('Feature Name', () => {
+  beforeEach(() => {
+    cy.visit('/path');
+  });
+
+  it('should do X', () => {
+    // Action
+    cy.get('[data-test="btn"]').click();
+    
+    // Assertion
+    cy.get('[data-test="result"]').should('be.visible');
+  });
+});
+```
+
+### ✅ Naming Convention
+
+```javascript
+// ✅ ชื่อ test ขึ้นต้นด้วยเลขลำดับ (สำหรับอ่านง่าย)
+it('1️⃣ Should load page', () => {});
+it('2️⃣ Should display form', () => {});
+
+// ✅ ชื่อ test เป็นประโยคสมบูรณ์
+it('should fill check-in form and submit', () => {});
+
+// ❌ ชื่อลัวๆ
+it('Test 1', () => {});
+it('form test', () => {});
+```
+
+### ✅ Selectors Priority
+
+```javascript
+// 1️⃣ ดีที่สุด: data-test attributes
+cy.get('[data-test="btn"]')
+
+// 2️⃣ ดี: semantic HTML
+cy.get('button[type="submit"]')
+
+// 3️⃣ ลังเล: class names
+cy.get('.submit-btn')
+
+// 4️⃣ ไม่ดี: nth-child, element indexes
+cy.get('div > button:nth-child(2)')
+```
+
+### ✅ Assertions Format
+
+```javascript
+// ✅ ชัดเจน
+cy.get('h1').should('contain', 'Check-in');
+
+// ✅ Multiple assertions
+cy.get('input')
+  .should('be.visible')
+  .should('have.attr', 'required');
+
+// ❌ หลายอย่างรวมกัน
+cy.get('h1').type('test').click().should(...);
+```
+
+### ✅ Custom Commands (commands.js)
+
+```javascript
+// ✅ สร้าง reusable commands
+Cypress.Commands.add('selectTeam', (team) => {
+  cy.get('[data-test="team-selector"]').click();
+  cy.get(`[data-team="${team}"]`).click();
+});
+
+// ✅ ใช้ใน tests
+cy.selectTeam('A');
+```
+
+### ✅ Test Independence
+
+```javascript
+// ❌ Tests ต่อเนื่องกัน (ไม่ดี)
+it('step 1', () => { /* setup */ });
+it('step 2', () => { /* depends on step 1 */ });
+
+// ✅ Tests เป็นอิสระ
+it('should complete full flow', () => {
+  // setup + action + assertion ในแต่ละ test
+});
+```
+
+### ✅ Timeout Settings
+
+```javascript
+// ✅ รอ element ที่อาจช้า
+cy.get('[data-test="result"]', { timeout: 5000 }).should('be.visible');
+
+// ✅ Configure globally ใน cypress.config.js
+defaultCommandTimeout: 10000,
+```
+
+### 🚫 Common Mistakes to Avoid
+
+| ❌ ผิด | ✅ ถูก | เหตุผล |
+| --- | --- | --- |
+| `cy.get('.btn').click()` | `cy.get('[data-test="btn"]').click()` | Class อาจเปลี่ยน |
+| `cy.wait(5000)` | `cy.get('[data-test="result"]').should('be.visible')` | รอ element ไม่ใช่เวลา |
+| `it('test', () => {})` | `it('should do X', () => {})` | ชื่อต้องเป็นประโยค |
+| Tests ต่อเนื่อง | Tests อิสระ | แต่ละ test ต้องรันได้เฉพาะตัว |
+| ไม่มี assertions | มี assertions | ต้องตรวจสอบผลลัพธ์ |
+
+---
+
+**อัปเดตล่าสุด:** 01-02-2026, 12:00 น.
+**เวอร์ชัน:** V.1.4.0 (01-02-2026) - เพิ่ม Markdown & Cypress Standards
+
