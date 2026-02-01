@@ -1321,8 +1321,8 @@
         let selectedTeam = '';
         let photos = { 1: null, 2: null };
         let photoBlobs = { 1: null, 2: null }; // เก็บ Blob สำหรับ upload
-        let photoQuality = 0.65; // 65% เพื่อให้ได้ขนาดไฟล์ 100-200 KB
-        let maxWidth = 1000;     // 1000px เพื่อควบคุมขนาดไฟล์
+        let photoQuality = 0.55; // 55% เพื่อให้ได้ขนาดไฟล์ 80-150 KB (เร็วขึ้น)
+        let maxWidth = 800;      // 800px เพื่อ upload เร็วขึ้น
 
         const ZONE_BRANCH_MAPPING = {
             "เขต 1": ["พุทธมณฑล", "นครปฐม", "หัวหิน", "พระราม 2"],
@@ -1356,7 +1356,7 @@
             return new Blob([u8arr], { type: mime });
         }
 
-        // Upload รูปภาพไป Firebase Storage
+        // Upload รูปภาพไป Firebase Storage (optimized)
         async function uploadPhotoToStorage(photoDataURL, checkinId, photoType) {
             if (!photoDataURL) return null;
             
@@ -1369,7 +1369,14 @@
                 const storagePath = `checkins/${year}/${month}/${checkinId}/${fileName}`;
                 
                 const storageRef = storage.ref(storagePath);
-                const snapshot = await storageRef.put(blob);
+                
+                // ใช้ resumable upload พร้อม metadata
+                const metadata = {
+                    contentType: 'image/jpeg',
+                    cacheControl: 'public, max-age=31536000'
+                };
+                
+                const snapshot = await storageRef.put(blob, metadata);
                 const downloadURL = await snapshot.ref.getDownloadURL();
                 
                 return downloadURL;
@@ -1599,22 +1606,7 @@
                 // 1. สร้าง Document ID ก่อน
                 const tempId = Date.now().toString(36) + Math.random().toString(36).substr(2);
                 
-                // 2. Upload รูปภาพแบบ parallel (เร็วกว่า)
-                const uploadPromises = [];
-                if (photos[1]) {
-                    uploadPromises.push(uploadPhotoToStorage(photos[1], tempId, 1));
-                } else {
-                    uploadPromises.push(Promise.resolve(null));
-                }
-                if (photos[2]) {
-                    uploadPromises.push(uploadPhotoToStorage(photos[2], tempId, 2));
-                } else {
-                    uploadPromises.push(Promise.resolve(null));
-                }
-                
-                const [houseFrontURL, contractPhotoURL] = await Promise.all(uploadPromises);
-                
-                // 3. สร้างข้อมูล Check-in
+                // 2. สร้างข้อมูล Check-in (ไม่รอ upload รูป)
                 const checkinData = {
                     team: selectedTeam,
                     customerName: customerName,
@@ -1628,18 +1620,19 @@
                         accuracy: currentLocation.accuracy
                     },
                     photos: {
-                        houseFront: houseFrontURL,
-                        contractPhoto: contractPhotoURL
+                        houseFront: null,  // จะ update ทีหลัง
+                        contractPhoto: null
                     },
                     notes: notes,
                     visible: true,
-                    checkinTime: firebase.firestore.Timestamp.fromDate(now)
+                    checkinTime: firebase.firestore.Timestamp.fromDate(now),
+                    photoStatus: 'uploading' // สถานะกำลัง upload
                 };
                 
-                // 4. บันทึกลง Firestore
+                // 3. บันทึกลง Firestore ก่อน (เร็ว!)
                 const docId = await saveCheckinToFirestore(checkinData);
                 
-                // 5. Update UI ทันที (ไม่รอ reload)
+                // 4. แสดง UI สำเร็จทันที
                 isCheckedIn = true;
                 btn.classList.add('checked');
                 btnText.textContent = 'CHECKED!';
@@ -1650,7 +1643,42 @@
                 showLoading(false);
                 showToast('success', 'บันทึก Check-in สำเร็จ!');
                 
-                // 6. Reload history แบบ background (ไม่บล็อค UI)
+                // 5. Upload รูปภาพแบบ background (ไม่บล็อค UI)
+                (async () => {
+                    try {
+                        const uploadPromises = [];
+                        if (photos[1]) {
+                            uploadPromises.push(uploadPhotoToStorage(photos[1], tempId, 1));
+                        } else {
+                            uploadPromises.push(Promise.resolve(null));
+                        }
+                        if (photos[2]) {
+                            uploadPromises.push(uploadPhotoToStorage(photos[2], tempId, 2));
+                        } else {
+                            uploadPromises.push(Promise.resolve(null));
+                        }
+                        
+                        const [houseFrontURL, contractPhotoURL] = await Promise.all(uploadPromises);
+                        
+                        // Update document พร้อม URLs
+                        await db.collection('checkins').doc(docId).update({
+                            'photos.houseFront': houseFrontURL,
+                            'photos.contractPhoto': contractPhotoURL,
+                            photoStatus: 'complete',
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        
+                        console.log('Photos uploaded successfully');
+                    } catch (uploadError) {
+                        console.error('Background upload error:', uploadError);
+                        // Mark as failed but don't show error (check-in already saved)
+                        await db.collection('checkins').doc(docId).update({
+                            photoStatus: 'failed'
+                        }).catch(console.error);
+                    }
+                })();
+                
+                // 6. Reload history แบบ background
                 renderHistoryFromFirestore().catch(console.error);
                 
                 // Reset form for next check-in
