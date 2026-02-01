@@ -4,9 +4,20 @@
 
 ก่อนเปลี่ยน repository เป็น Public ต้องทำตาม checklist นี้ให้ครบ!
 
----
+## 📊 Overall Status
 
-## ✅ Phase 1: Code Cleanup (ทำแล้ว)
+| Phase | Status | Completion | Details |
+| --- | --- | --- | --- |
+| **1. Code Cleanup** | ✅ DONE | 100% | API keys moved to config.js, .gitignore updated |
+| **2. Git History** | ❌ PENDING | 0% | Need to run cleanup-history.ps1 |
+| **3. Rotate Keys** | ❌ PENDING | 0% | Firebase + Longdo keys need rotation |
+| **4. Firebase Security** | ❌ PENDING | 0% | App Check + API restrictions needed |
+| **5. Testing** | ❌ PENDING | 0% | Need to verify app after changes |
+| **6. Go Public** | ❌ PENDING | 0% | Final step - waiting for all phases |
+
+**Overall:** 1/6 phases complete (16.7%) 🔴 NOT READY YET
+
+---
 
 - [x] สร้าง `src/config.js` สำหรับเก็บ API Keys
 - [x] สร้าง `src/config.example.js` เป็น template
@@ -140,19 +151,50 @@ git log -p --all -S "AIzaSy" | head -20
 
 ---
 
+---
+
 ## 📋 Quick Summary
 
-| Task | Status | Priority |
-| --- | --- | --- |
-| Move API keys to config.js | ✅ Done | Critical |
-| Update .gitignore | ✅ Done | Critical |
-| Update Firestore Rules | ✅ Done | High |
-| Clean Git history | ⏳ Manual | Critical |
-| Rotate API keys | ⏳ Manual | High |
-| Enable App Check | ⏳ Manual | High |
-| Restrict API keys | ⏳ Manual | Medium |
-| Test app | ⏳ Manual | High |
+| Task | Status | Priority | Estimated Time |
+| --- | --- | --- | --- |
+| Move API keys to config.js | ✅ Done | Critical | Done |
+| Update .gitignore | ✅ Done | Critical | Done |
+| Update Firestore Rules | ✅ Done | High | Done |
+| **Clean Git history** | ❌ Pending | **Critical** | 10 min |
+| **Rotate API keys** | ❌ Pending | **High** | 30 min |
+| **Enable App Check** | ❌ Pending | **High** | 15 min |
+| **Restrict API keys** | ❌ Pending | **Medium** | 15 min |
+| **Test app** | ❌ Pending | **High** | 20 min |
+| **Make public** | ❌ Pending | **Final** | 2 min |
+
+**⏱️ Total Remaining Time:** ~90 minutes
 
 ---
 
-**อัปเดตล่าสุด:** 01-02-2026, 18:00 น.
+## 🔴 Current Status
+
+**Repository is NOT ready for public yet!**
+
+### What's Done ✅
+- Code-level security complete
+- API keys externalized from HTML
+- .gitignore properly configured
+- Firestore rules improved
+
+### Critical Blockers ❌
+1. **API keys exposed in Git history** - Need Phase 2 cleanup
+2. **API keys not rotated** - Keys in history are compromised
+3. **No App Check enabled** - Need Firebase security
+4. **API keys not restricted** - Need domain restrictions
+
+### Next Steps 👇
+1. Run `cleanup-history.ps1 -Confirm` (Phase 2)
+2. Rotate Firebase and Longdo API keys (Phase 3)
+3. Enable App Check in Firebase Console (Phase 4)
+4. Test app thoroughly (Phase 5)
+5. Make repository public (Phase 6)
+
+---
+
+**อัปเดตล่าสุด:** 01-02-2026, 20:45 น.
+**Status:** 🔴 NOT READY FOR PUBLIC - 5 phases pending
