@@ -3,15 +3,17 @@
   "version": "2.0.0",
   "description": "Web Application for Check-in and Location Tracking with Team Management",
   "scripts": {
-    "test": "cypress run",
-    "test:open": "cypress open",
-    "test:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
-    "test:desktop": "cypress run --config viewportWidth=1280,viewportHeight=720",
-    "test:headless": "cypress run --headless",
-    "test:debug": "cypress run --headed --inspect"
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+    "test:report": "playwright show-report"
   },
   "devDependencies": {
-    "cypress": "^13.6.0",
+    "@playwright/test": "^1.57.0",
     "http-server": "^14.1.1"
   },
   "keywords": [

@@ -1,0 +1,381 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - heading "Bait Check-In Bait Check-In" [level=1] [ref=e5]:
+      - img "Bait Check-In" [ref=e7]
+      - generic [ref=e8]: Bait Check-In
+    - navigation [ref=e9]:
+      - generic [ref=e11] [cursor=pointer]: Dashboard
+      - generic [ref=e13] [cursor=pointer]: Map View
+      - generic [ref=e15] [cursor=pointer]: Check-ins List
+      - generic [ref=e17] [cursor=pointer]: Customers
+      - generic [ref=e19] [cursor=pointer]: Reports
+      - generic [ref=e21] [cursor=pointer]: Photo Gallery
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - textbox "ค้นหาลูกค้า, สถานที่..." [ref=e25]
+      - generic [ref=e26]:
+        - generic [ref=e29]: Live
+        - button "6" [ref=e31] [cursor=pointer]:
+          - generic [ref=e32]: "6"
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - generic [ref=e37]:
+          - heading "1" [level=3] [ref=e38]
+          - paragraph [ref=e39]: Check-ins วันนี้
+        - generic [ref=e42]:
+          - heading "12" [level=3] [ref=e43]
+          - paragraph [ref=e44]: Active Locations
+        - generic [ref=e47]:
+          - heading "11" [level=3] [ref=e48]
+          - paragraph [ref=e49]: Total Customers
+        - generic [ref=e52]:
+          - heading "100%" [level=3] [ref=e53]
+          - paragraph [ref=e54]: อัตราความสำเร็จ
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - generic [ref=e57]:
+            - heading "Location Map" [level=2] [ref=e58]: Location Map
+            - generic [ref=e59]:
+              - button "HQ" [ref=e60] [cursor=pointer]: HQ
+              - button "นำทางไปยังจุดที่เลือก" [ref=e61] [cursor=pointer]
+              - button "Filter" [ref=e62] [cursor=pointer]: Filter
+              - button "วัดระยะ" [ref=e63] [cursor=pointer]: วัดระยะ
+              - button "วัดรัศมี" [ref=e64] [cursor=pointer]: วัดรัศมี
+              - button "Full Screen" [ref=e65] [cursor=pointer]: Full Screen
+          - generic [ref=e67]:
+            - generic [ref=e72]:
+              - button [ref=e73]
+              - button [ref=e75]
+              - button [ref=e77]
+              - button [ref=e79]
+              - button [ref=e81]
+              - button [ref=e83]
+              - button [ref=e85]
+              - button [ref=e87]
+              - button [ref=e89]
+              - button [ref=e91]
+              - button [ref=e93]
+              - button [ref=e95]
+              - button [ref=e97]
+            - generic [ref=e99]:
+              - generic [ref=e101]:
+                - button "Zoom in" [ref=e102] [cursor=pointer]: +
+                - button "Zoom out" [ref=e103] [cursor=pointer]: −
+              - generic [ref=e105]:
+                - link "Leaflet" [ref=e106] [cursor=pointer]:
+                  - /url: https://leafletjs.com
+                  - img [ref=e107]
+                  - text: Leaflet
+                - text: "| © OpenStreetMap contributors"
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - heading "Recent Check-ins" [level=2] [ref=e113]: Recent Check-ins
+            - generic [ref=e114]:
+              - button "ทีม" [ref=e116] [cursor=pointer]: ทีม
+              - button "Export" [ref=e118] [cursor=pointer]: Export
+          - generic [ref=e119]:
+            - generic [ref=e120]:
+              - generic [ref=e121]: D
+              - generic [ref=e122]: Te
+              - generic [ref=e123]:
+                - generic [ref=e124]: Test 2
+                - generic [ref=e125]: พุทธมณฑล
+                - generic [ref=e126]: 38 นาทีที่แล้ว (18:32)
+              - generic [ref=e127]:
+                - generic "แสดงบนแผนที่" [ref=e128]:
+                  - checkbox [checked]
+                - generic "Double-click เพื่อไปที่จุดนี้บนแผนที่"
+            - generic [ref=e130]:
+              - generic [ref=e131]: C
+              - generic [ref=e132]: Bo
+              - generic [ref=e133]:
+                - generic [ref=e134]: Boss มื้อเที่ยง
+                - generic [ref=e135]: ซอยคู้บอน 4 แขวงรามอินทรา เขตคันนายาว กรุงเทพมหานคร 10230
+                - generic [ref=e136]: 3 วันที่แล้ว (13:16)
+              - generic [ref=e137]:
+                - generic "แสดงบนแผนที่" [ref=e138]:
+                  - checkbox [checked]
+                - generic "Double-click เพื่อไปที่จุดนี้บนแผนที่"
+            - generic [ref=e140]:
+              - generic [ref=e141]: D
+              - generic [ref=e142]: บ.
+              - generic [ref=e143]:
+                - generic [ref=e144]: บ.อาซาย่าคอร์ป
+                - generic [ref=e145]: ซอยสุขุมวิท 11 แขวงคลองเตยเหนือ เขตวัฒนา กรุงเทพมหานคร 10110
+                - generic [ref=e146]: 4 วันที่แล้ว (13:13)
+              - generic [ref=e147]:
+                - generic "แสดงบนแผนที่" [ref=e148]:
+                  - checkbox [checked]
+                - generic "Double-click เพื่อไปที่จุดนี้บนแผนที่"
+            - generic [ref=e150]:
+              - generic [ref=e151]: D
+              - generic [ref=e152]: รว
+              - generic [ref=e153]:
+                - generic [ref=e154]: รวมสุขคอนโด
+                - generic [ref=e155]: ซอยอรรถกระวี 1 แขวงคลองตัน เขตคลองเตย กรุงเทพมหานคร 10110
+                - generic [ref=e156]: 4 วันที่แล้ว (11:06)
+              - generic [ref=e157]:
+                - generic "แสดงบนแผนที่" [ref=e158]:
+                  - checkbox [checked]
+                - generic "Double-click เพื่อไปที่จุดนี้บนแผนที่"
+            - generic [ref=e160]:
+              - generic [ref=e161]: C
+              - generic [ref=e162]: Te
+              - generic [ref=e163]:
+                - generic [ref=e164]: Test. Boss
+                - generic [ref=e165]: ถนนกรุงธนบุรี แขวงบางลำภูล่าง เขตคลองสาน กรุงเทพมหานคร 10600
+                - generic [ref=e166]: 4 วันที่แล้ว (10:29)
+              - generic [ref=e167]:
+                - generic "แสดงบนแผนที่" [ref=e168]:
+                  - checkbox [checked]
+                - generic "Double-click เพื่อไปที่จุดนี้บนแผนที่"
+      - generic [ref=e170]:
+        - generic [ref=e171]:
+          - heading "All Check-ins Data" [level=2] [ref=e172]: All Check-ins Data
+          - generic [ref=e173]:
+            - button "Filter" [ref=e174] [cursor=pointer]: Filter
+            - button "Export" [ref=e176] [cursor=pointer]: Export
+        - table [ref=e177]:
+          - rowgroup [ref=e178]:
+            - row "ทีม ลูกค้า สถานที่ พิกัด เวลา สถานะ แสดงบนแผนที่ ลบ" [ref=e179]:
+              - columnheader "ทีม" [ref=e180] [cursor=pointer]: ทีม
+              - columnheader "ลูกค้า" [ref=e181] [cursor=pointer]: ลูกค้า
+              - columnheader "สถานที่" [ref=e182] [cursor=pointer]: สถานที่
+              - columnheader "พิกัด" [ref=e183] [cursor=pointer]: พิกัด
+              - columnheader "เวลา" [ref=e184] [cursor=pointer]: เวลา
+              - columnheader "สถานะ" [ref=e185] [cursor=pointer]: สถานะ
+              - columnheader "แสดงบนแผนที่" [ref=e186]
+              - columnheader "ลบ" [ref=e187]
+          - rowgroup [ref=e188]:
+            - row "D Test 2 Wowieei122. พุทธมณฑล 13.7911, 100.6898 1 ก.พ. 2569 18:32 Active" [ref=e189]:
+              - cell "D" [ref=e190]:
+                - generic [ref=e191]: D
+              - cell "Test 2 Wowieei122." [ref=e192]:
+                - generic [ref=e193]:
+                  - img [ref=e195]
+                  - generic [ref=e196]:
+                    - generic [ref=e197]: Test 2
+                    - generic [ref=e198]: Wowieei122.
+              - cell "พุทธมณฑล" [ref=e199]
+              - cell "13.7911, 100.6898" [ref=e200]:
+                - code [ref=e201]: 13.7911, 100.6898
+              - cell "1 ก.พ. 2569 18:32" [ref=e202]
+              - cell "Active" [ref=e203]
+              - cell [ref=e204]:
+                - generic [ref=e205]:
+                  - checkbox [checked]
+              - cell [ref=e207]:
+                - button "ลบข้อมูล" [ref=e208] [cursor=pointer]
+            - row "C Boss มื้อเที่ยง 12345 รามอินทรา 13.8404, 100.6621 29 ม.ค. 2569 13:16 Active" [ref=e209]:
+              - cell "C" [ref=e210]:
+                - generic [ref=e211]: C
+              - cell "Boss มื้อเที่ยง 12345" [ref=e212]:
+                - generic [ref=e213]:
+                  - img [ref=e215]
+                  - generic [ref=e216]:
+                    - generic [ref=e217]: Boss มื้อเที่ยง
+                    - generic [ref=e218]: "12345"
+              - cell "รามอินทรา" [ref=e219]
+              - cell "13.8404, 100.6621" [ref=e220]:
+                - code [ref=e221]: 13.8404, 100.6621
+              - cell "29 ม.ค. 2569 13:16" [ref=e222]
+              - cell "Active" [ref=e223]
+              - cell [ref=e224]:
+                - generic [ref=e225]:
+                  - checkbox [checked]
+              - cell [ref=e227]:
+                - button "ลบข้อมูล" [ref=e228] [cursor=pointer]
+            - row "D บ.อาซาย่าคอร์ป CT25-0017430 พระราม 4 13.7466, 100.5563 28 ม.ค. 2569 13:13 Active" [ref=e229]:
+              - cell "D" [ref=e230]:
+                - generic [ref=e231]: D
+              - cell "บ.อาซาย่าคอร์ป CT25-0017430" [ref=e232]:
+                - generic [ref=e233]:
+                  - img [ref=e235]
+                  - generic [ref=e236]:
+                    - generic [ref=e237]: บ.อาซาย่าคอร์ป
+                    - generic [ref=e238]: CT25-0017430
+              - cell "พระราม 4" [ref=e239]
+              - cell "13.7466, 100.5563" [ref=e240]:
+                - code [ref=e241]: 13.7466, 100.5563
+              - cell "28 ม.ค. 2569 13:13" [ref=e242]
+              - cell "Active" [ref=e243]
+              - cell [ref=e244]:
+                - generic [ref=e245]:
+                  - checkbox [checked]
+              - cell [ref=e247]:
+                - button "ลบข้อมูล" [ref=e248] [cursor=pointer]
+            - row "D รวมสุขคอนโด CT-0012196 พระราม 4 13.7210, 100.5711 28 ม.ค. 2569 11:06 Active" [ref=e249]:
+              - cell "D" [ref=e250]:
+                - generic [ref=e251]: D
+              - cell "รวมสุขคอนโด CT-0012196" [ref=e252]:
+                - generic [ref=e253]:
+                  - img [ref=e255]
+                  - generic [ref=e256]:
+                    - generic [ref=e257]: รวมสุขคอนโด
+                    - generic [ref=e258]: CT-0012196
+              - cell "พระราม 4" [ref=e259]
+              - cell "13.7210, 100.5711" [ref=e260]:
+                - code [ref=e261]: 13.7210, 100.5711
+              - cell "28 ม.ค. 2569 11:06" [ref=e262]
+              - cell "Active" [ref=e263]
+              - cell [ref=e264]:
+                - generic [ref=e265]:
+                  - checkbox [checked]
+              - cell [ref=e267]:
+                - button "ลบข้อมูล" [ref=e268] [cursor=pointer]
+            - row "C Test. Boss 12345 พุทธมณฑล 13.7207, 100.4990 28 ม.ค. 2569 10:29 Active" [ref=e269]:
+              - cell "C" [ref=e270]:
+                - generic [ref=e271]: C
+              - cell "Test. Boss 12345" [ref=e272]:
+                - generic [ref=e273]:
+                  - img [ref=e275]
+                  - generic [ref=e276]:
+                    - generic [ref=e277]: Test. Boss
+                    - generic [ref=e278]: "12345"
+              - cell "พุทธมณฑล" [ref=e279]
+              - cell "13.7207, 100.4990" [ref=e280]:
+                - code [ref=e281]: 13.7207, 100.4990
+              - cell "28 ม.ค. 2569 10:29" [ref=e282]
+              - cell "Active" [ref=e283]
+              - cell [ref=e284]:
+                - generic [ref=e285]:
+                  - checkbox [checked]
+              - cell [ref=e287]:
+                - button "ลบข้อมูล" [ref=e288] [cursor=pointer]
+            - row "C รณกฤต คูกิมิยะ CT25-1234 หัวหิน 13.7939, 100.6904 27 ม.ค. 2569 15:01 Active" [ref=e289]:
+              - cell "C" [ref=e290]:
+                - generic [ref=e291]: C
+              - cell "รณกฤต คูกิมิยะ CT25-1234" [ref=e292]:
+                - generic [ref=e293]:
+                  - img [ref=e295]
+                  - generic [ref=e296]:
+                    - generic [ref=e297]: รณกฤต คูกิมิยะ
+                    - generic [ref=e298]: CT25-1234
+              - cell "หัวหิน" [ref=e299]
+              - cell "13.7939, 100.6904" [ref=e300]:
+                - code [ref=e301]: 13.7939, 100.6904
+              - cell "27 ม.ค. 2569 15:01" [ref=e302]
+              - cell "Active" [ref=e303]
+              - cell [ref=e304]:
+                - generic [ref=e305]:
+                  - checkbox [checked]
+              - cell [ref=e307]:
+                - button "ลบข้อมูล" [ref=e308] [cursor=pointer]
+            - row "H บริษัท โรงพยาบาลกรุงเทพ พัทยา CT23-00273333 พัทยา 12.9567, 100.9043 27 ม.ค. 2569 13:33 Active" [ref=e309]:
+              - cell "H" [ref=e310]:
+                - generic [ref=e311]: H
+              - cell "บริษัท โรงพยาบาลกรุงเทพ พัทยา CT23-00273333" [ref=e312]:
+                - generic [ref=e313]:
+                  - img [ref=e315]
+                  - generic [ref=e316]:
+                    - generic [ref=e317]: บริษัท โรงพยาบาลกรุงเทพ พัทยา
+                    - generic [ref=e318]: CT23-00273333
+              - cell "พัทยา" [ref=e319]
+              - cell "12.9567, 100.9043" [ref=e320]:
+                - code [ref=e321]: 12.9567, 100.9043
+              - cell "27 ม.ค. 2569 13:33" [ref=e322]
+              - cell "Active" [ref=e323]
+              - cell [ref=e324]:
+                - generic [ref=e325]:
+                  - checkbox [checked]
+              - cell [ref=e327]:
+                - button "ลบข้อมูล" [ref=e328] [cursor=pointer]
+            - row "H บ.วีไอพีแลนด์ จำกัด CT25-0018271 พัทยา 12.7588, 100.9050 27 ม.ค. 2569 10:12 Active" [ref=e329]:
+              - cell "H" [ref=e330]:
+                - generic [ref=e331]: H
+              - cell "บ.วีไอพีแลนด์ จำกัด CT25-0018271" [ref=e332]:
+                - generic [ref=e333]:
+                  - img [ref=e335]
+                  - generic [ref=e336]:
+                    - generic [ref=e337]: บ.วีไอพีแลนด์ จำกัด
+                    - generic [ref=e338]: CT25-0018271
+              - cell "พัทยา" [ref=e339]
+              - cell "12.7588, 100.9050" [ref=e340]:
+                - code [ref=e341]: 12.7588, 100.9050
+              - cell "27 ม.ค. 2569 10:12" [ref=e342]
+              - cell "Active" [ref=e343]
+              - cell [ref=e344]:
+                - generic [ref=e345]:
+                  - checkbox [checked]
+              - cell [ref=e347]:
+                - button "ลบข้อมูล" [ref=e348] [cursor=pointer]
+            - row "H ณัฐนรี 123456 ประชาชื่น 13.8431, 100.5353 27 ม.ค. 2569 07:22 Active" [ref=e349]:
+              - cell "H" [ref=e350]:
+                - generic [ref=e351]: H
+              - cell "ณัฐนรี 123456" [ref=e352]:
+                - generic [ref=e353]:
+                  - img [ref=e355]
+                  - generic [ref=e356]:
+                    - generic [ref=e357]: ณัฐนรี
+                    - generic [ref=e358]: "123456"
+              - cell "ประชาชื่น" [ref=e359]
+              - cell "13.8431, 100.5353" [ref=e360]:
+                - code [ref=e361]: 13.8431, 100.5353
+              - cell "27 ม.ค. 2569 07:22" [ref=e362]
+              - cell "Active" [ref=e363]
+              - cell [ref=e364]:
+                - generic [ref=e365]:
+                  - checkbox [checked]
+              - cell [ref=e367]:
+                - button "ลบข้อมูล" [ref=e368] [cursor=pointer]
+            - row "Z Oab test 1234566 สาทร 13.7910, 100.6898 26 ม.ค. 2569 19:40 Active" [ref=e369]:
+              - cell "Z" [ref=e370]:
+                - generic [ref=e371]: Z
+              - cell "Oab test 1234566" [ref=e372]:
+                - generic [ref=e373]:
+                  - img [ref=e375]
+                  - generic [ref=e376]:
+                    - generic [ref=e377]: Oab test
+                    - generic [ref=e378]: "1234566"
+              - cell "สาทร" [ref=e379]
+              - cell "13.7910, 100.6898" [ref=e380]:
+                - code [ref=e381]: 13.7910, 100.6898
+              - cell "26 ม.ค. 2569 19:40" [ref=e382]
+              - cell "Active" [ref=e383]
+              - cell [ref=e384]:
+                - generic [ref=e385]:
+                  - checkbox [checked]
+              - cell [ref=e387]:
+                - button "ลบข้อมูล" [ref=e388] [cursor=pointer]
+            - row "H AGA 0000000 พัฒนาการ 13.7938, 100.6903 26 ม.ค. 2569 17:21 Active" [ref=e389]:
+              - cell "H" [ref=e390]:
+                - generic [ref=e391]: H
+              - cell "AGA 0000000" [ref=e392]:
+                - generic [ref=e393]:
+                  - img [ref=e395]
+                  - generic [ref=e396]:
+                    - generic [ref=e397]: AGA
+                    - generic [ref=e398]: "0000000"
+              - cell "พัฒนาการ" [ref=e399]
+              - cell "13.7938, 100.6903" [ref=e400]:
+                - code [ref=e401]: 13.7938, 100.6903
+              - cell "26 ม.ค. 2569 17:21" [ref=e402]
+              - cell "Active" [ref=e403]
+              - cell [ref=e404]:
+                - generic [ref=e405]:
+                  - checkbox [checked]
+              - cell [ref=e407]:
+                - button "ลบข้อมูล" [ref=e408] [cursor=pointer]
+            - row "A Test 2 12345667 ปทุมวัน 13.7938, 100.6904 26 ม.ค. 2569 15:49 Active" [ref=e409]:
+              - cell "A" [ref=e410]:
+                - generic [ref=e411]: A
+              - cell "Test 2 12345667" [ref=e412]:
+                - generic [ref=e413]:
+                  - img [ref=e415]
+                  - generic [ref=e416]:
+                    - generic [ref=e417]: Test 2
+                    - generic [ref=e418]: "12345667"
+              - cell "ปทุมวัน" [ref=e419]
+              - cell "13.7938, 100.6904" [ref=e420]:
+                - code [ref=e421]: 13.7938, 100.6904
+              - cell "26 ม.ค. 2569 15:49" [ref=e422]
+              - cell "Active" [ref=e423]
+              - cell [ref=e424]:
+                - generic [ref=e425]:
+                  - checkbox [checked]
+              - cell [ref=e427]:
+                - button "ลบข้อมูล" [ref=e428] [cursor=pointer]
+```

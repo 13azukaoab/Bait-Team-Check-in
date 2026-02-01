@@ -574,9 +574,9 @@ Paragraph 2 (มี 1 บรรทัดว่าง)
 
 ---
 
-## 🧪 กฎข้อที่ 16: Cypress Testing Standards
+## 🧪 กฎข้อที่ 16: Playwright Testing Standards
 
-**สำหรับการเขียน E2E Tests ด้วย Cypress:**
+**สำหรับการเขียน E2E Tests ด้วย Playwright:**
 
 ### ✅ Data-test Attributes จำเป็น
 
@@ -592,17 +592,19 @@ Paragraph 2 (มี 1 บรรทัดว่าง)
 ### ✅ Test Structure
 
 ```javascript
-describe('Feature Name', () => {
-  beforeEach(() => {
-    cy.visit('/path');
+const { test, expect } = require('@playwright/test');
+
+test.describe('Feature Name', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/path');
   });
 
-  it('should do X', () => {
+  test('should do X', async ({ page }) => {
     // Action
-    cy.get('[data-test="btn"]').click();
+    await page.locator('[data-test="btn"]').click();
     
     // Assertion
-    cy.get('[data-test="result"]').should('be.visible');
+    await expect(page.locator('[data-test="result"]')).toBeVisible();
   });
 });
 ```
@@ -611,70 +613,56 @@ describe('Feature Name', () => {
 
 ```javascript
 // ✅ ชื่อ test ขึ้นต้นด้วยเลขลำดับ (สำหรับอ่านง่าย)
-it('1️⃣ Should load page', () => {});
-it('2️⃣ Should display form', () => {});
+test('1️⃣ Should load page', async ({ page }) => {});
+test('2️⃣ Should display form', async ({ page }) => {});
 
 // ✅ ชื่อ test เป็นประโยคสมบูรณ์
-it('should fill check-in form and submit', () => {});
+test('should fill check-in form and submit', async ({ page }) => {});
 
 // ❌ ชื่อลัวๆ
-it('Test 1', () => {});
-it('form test', () => {});
+test('Test 1', async ({ page }) => {});
+test('form test', async ({ page }) => {});
 ```
 
 ### ✅ Selectors Priority
 
 ```javascript
 // 1️⃣ ดีที่สุด: data-test attributes
-cy.get('[data-test="btn"]')
+await page.locator('[data-test="btn"]').click()
 
 // 2️⃣ ดี: semantic HTML
-cy.get('button[type="submit"]')
+await page.locator('button[type="submit"]').click()
 
 // 3️⃣ ลังเล: class names
-cy.get('.submit-btn')
+await page.locator('.submit-btn').click()
 
 // 4️⃣ ไม่ดี: nth-child, element indexes
-cy.get('div > button:nth-child(2)')
+await page.locator('div > button:nth-child(2)').click()
 ```
 
 ### ✅ Assertions Format
 
 ```javascript
 // ✅ ชัดเจน
-cy.get('h1').should('contain', 'Check-in');
+await expect(page.locator('h1')).toContainText('Check-in');
 
 // ✅ Multiple assertions
-cy.get('input')
-  .should('be.visible')
-  .should('have.attr', 'required');
+await expect(page.locator('input')).toBeVisible();
+await expect(page.locator('input')).toHaveAttribute('required');
 
 // ❌ หลายอย่างรวมกัน
-cy.get('h1').type('test').click().should(...);
-```
-
-### ✅ Custom Commands (commands.js)
-
-```javascript
-// ✅ สร้าง reusable commands
-Cypress.Commands.add('selectTeam', (team) => {
-  cy.get('[data-test="team-selector"]').click();
-  cy.get(`[data-team="${team}"]`).click();
-});
-
-// ✅ ใช้ใน tests
-cy.selectTeam('A');
+await page.locator('h1').fill('test').click();
 ```
 
 ### ✅ Test Independence
 
 ```javascript
 // ❌ Tests ต่อเนื่องกัน (ไม่ดี)
-it('step 1', () => { /* setup */ });
-it('step 2', () => { /* depends on step 1 */ });
+test('step 1', async ({ page }) => { /* setup */ });
+test('step 2', async ({ page }) => { /* depends on step 1 */ });
 
 // ✅ Tests เป็นอิสระ
-it('should complete full flow', () => {
+test('should complete full flow', async ({ page }) => {
   // setup + action + assertion ในแต่ละ test
 });
 ```
@@ -683,67 +671,86 @@ it('should complete full flow', () => {
 
 ```javascript
 // ✅ รอ element ที่อาจช้า
-cy.get('[data-test="result"]', { timeout: 5000 }).should('be.visible');
+await expect(page.locator('[data-test="result"]')).toBeVisible({ timeout: 5000 });
 
-// ✅ Configure globally ใน cypress.config.js
-defaultCommandTimeout: 10000,
+// ✅ Configure globally ใน playwright.config.js
+timeout: 30000,
+expect: {
+  timeout: 5000
+}
 ```
 
 ### 🚫 Common Mistakes to Avoid
 
 | ❌ ผิด | ✅ ถูก | เหตุผล |
 | --- | --- | --- |
-| `cy.get('.btn').click()` | `cy.get('[data-test="btn"]').click()` | Class อาจเปลี่ยน |
-| `cy.wait(5000)` | `cy.get('[data-test="result"]').should('be.visible')` | รอ element ไม่ใช่เวลา |
-| `it('test', () => {})` | `it('should do X', () => {})` | ชื่อต้องเป็นประโยค |
+| `page.locator('.btn').click()` | `page.locator('[data-test="btn"]').click()` | Class อาจเปลี่ยน |
+| `page.waitForTimeout(5000)` | `await expect(page.locator('[data-test="result"]')).toBeVisible()` | รอ element ไม่ใช่เวลา |
+| `test('test', () => {})` | `test('should do X', () => {})` | ชื่อต้องเป็นประโยค |
 | Tests ต่อเนื่อง | Tests อิสระ | แต่ละ test ต้องรันได้เฉพาะตัว |
 | ไม่มี assertions | มี assertions | ต้องตรวจสอบผลลัพธ์ |
 
 ---
 
-## 🤖 กฎข้อที่ 17: การสร้าง WebApp ต้องมี Cypress Tests
+## 🤖 กฎข้อที่ 17: การสร้าง WebApp ต้องมี Playwright Tests
 
-**เมื่อ AI สร้างหรือแก้ไข WebApp ต้องทำ Cypress ให้ด้วยเสมอ:**
+**เมื่อ AI สร้างหรือแก้ไข WebApp ต้องทำ Playwright ให้ด้วยเสมอ:**
 
 ### ✅ สิ่งที่ต้องสร้างอัตโนมัติ
 
-**1. โครงสร้าง Cypress:**
+**1. โครงสร้าง Playwright:**
 
 ```text
-cypress/
-├── jsconfig.json              # ป้องกัน TypeScript errors
-├── cypress.config.js          # Configuration
-├── e2e/
-│   └── {feature-name}.cy.js   # Test files
-└── support/
-    └── commands.js            # Custom commands
+tests/
+├── {feature-name}.spec.js   # Test files
+playwright.config.js          # Configuration
 ```
 
 **2. ไฟล์ที่ต้องสร้าง:**
 
 | ไฟล์ | เมื่อไหร่ | หมายเหตุ |
 | --- | --- | --- |
-| `cypress/jsconfig.json` | ทุกครั้ง | ป้องกัน type errors |
-| `cypress.config.js` | ถ้ายังไม่มี | ตั้งค่า Cypress |
+| `playwright.config.js` | ถ้ายังไม่มี | ตั้งค่า Playwright |
 | `package.json` | ถ้ายังไม่มี | เพิ่ม scripts & deps |
-| `cypress/e2e/*.cy.js` | ทุกครั้ง | Tests สำหรับ feature |
-| `cypress/support/commands.js` | ถ้ายังไม่มี | Custom commands |
+| `tests/*.spec.js` | ทุกครั้ง | Tests สำหรับ feature |
 
-**3. jsconfig.json สำหรับ Cypress:**
+**3. playwright.config.js Template:**
 
-```json
-{
-  "compilerOptions": {
-    "types": ["cypress"],
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "allowJs": true,
-    "noEmit": true
+```javascript
+// @ts-check
+const { defineConfig, devices } = require('@playwright/test');
+
+module.exports = defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:8080',
+    trace: 'on-first-retry',
   },
-  "include": ["**/*.js", "../node_modules/cypress"],
-  "exclude": ["node_modules"]
-}
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+  ],
+  webServer: {
+    command: 'npx http-server -p 8080',
+    url: 'http://localhost:8080',
+    reuseExistingServer: !process.env.CI,
+  },
+});
 ```
 
 ### ✅ เมื่อสร้างหน้า HTML ใหม่
@@ -774,30 +781,30 @@ cypress/
 **ต้องมีโครงสร้างนี้:**
 
 ```javascript
-/// <reference types="cypress" />
+// @ts-check
+const { test, expect } = require('@playwright/test');
 
-describe('Feature Name', () => {
-  beforeEach(() => {
-    cy.visit('/page.html');
+test.describe('Feature Name', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/page.html');
   });
 
-  it('1️⃣ Should load page correctly', () => {
-    cy.get('[data-test="main-container"]').should('be.visible');
+  test('1️⃣ Should load page correctly', async ({ page }) => {
+    await expect(page.locator('[data-test="main-container"]')).toBeVisible();
   });
 
-  it('2️⃣ Should perform action X', () => {
-    cy.get('[data-test="btn"]').click();
-    cy.get('[data-test="result"]').should('contain', 'Success');
+  test('2️⃣ Should perform action X', async ({ page }) => {
+    await page.locator('[data-test="btn"]').click();
+    await expect(page.locator('[data-test="result"]')).toContainText('Success');
   });
 });
 ```
 
 ### ✅ Checklist ก่อน Commit WebApp
 
-- [ ] สร้าง `cypress/jsconfig.json` (ป้องกัน type errors)
 - [ ] เพิ่ม `data-test` ใน HTML elements ทั้งหมด
 - [ ] เขียน tests ครอบคลุม user flows หลัก
-- [ ] รัน `npm run test` ตรวจสอบ tests ผ่าน
+- [ ] รัน `npx playwright test` ตรวจสอบ tests ผ่าน
 - [ ] ไม่มี errors ใน VS Code Problems tab
 
 ### 🚫 สิ่งที่ต้องหลีกเลี่ยง
@@ -805,7 +812,6 @@ describe('Feature Name', () => {
 | ❌ ห้ามทำ | ✅ ทำแทน |
 | --- | --- |
 | สร้าง HTML โดยไม่มี data-test | เพิ่ม data-test ทุก interactive element |
-| สร้าง .cy.js โดยไม่มี jsconfig.json | สร้าง jsconfig.json ใน cypress/ folder |
 | ใช้ class/id เป็น selectors | ใช้ data-test attributes |
 | สร้าง feature โดยไม่มี tests | เขียน tests ควบคู่กับ feature |
 
@@ -815,15 +821,7 @@ describe('Feature Name', () => {
 
 **กฎนี้รวบรวมปัญหาที่เคยเกิดขึ้น และวิธีป้องกัน:**
 
-### 1. Cypress Type Definition Error
-
-**ปัญหา:** `Cannot find type definition file for 'cypress'`
-
-**สาเหตุ:** ไม่มี jsconfig.json ใน cypress folder
-
-**ป้องกัน:** สร้าง `cypress/jsconfig.json` ทุกครั้งที่สร้าง Cypress tests
-
-### 2. Markdown Linting Errors
+### 1. Markdown Linting Errors
 
 **ปัญหา:** MD034, MD040, MD060, MD024, MD031, MD032
 
@@ -838,15 +836,15 @@ npm run lint:md
 # หรือดู Problems tab ใน VS Code
 ```
 
-### 3. Missing data-test Attributes
+### 2. Missing data-test Attributes
 
-**ปัญหา:** Cypress tests fail เพราะหา element ไม่เจอ
+**ปัญหา:** Playwright tests fail เพราะหา element ไม่เจอ
 
 **สาเหตุ:** HTML ไม่มี data-test attributes
 
 **ป้องกัน:** เพิ่ม data-test ทุก element ที่ต้องการ test
 
-### 4. Incomplete Test Coverage
+### 3. Incomplete Test Coverage
 
 **ปัญหา:** Bug หลุดไปใน production
 
@@ -863,25 +861,24 @@ npm run lint:md
 
 | ปัญหา | วิธีป้องกัน | ไฟล์ที่เกี่ยวข้อง |
 | --- | --- | --- |
-| Type definition error | สร้าง jsconfig.json | cypress/jsconfig.json |
 | Markdown errors | ตรวจสอบก่อน commit | *.md files |
 | Missing selectors | เพิ่ม data-test | *.html files |
-| Test failures | เขียน tests ครบ | cypress/e2e/*.cy.js |
+| Test failures | เขียน tests ครบ | tests/*.spec.js |
 
 ---
 
-## 📝 กฎข้อที่ 19: รายงานปัญหา Cypress Test (Test Issue Report)
+## 📝 กฎข้อที่ 19: รายงานปัญหา Playwright Test (Test Issue Report)
 
-**เมื่อรัน Cypress tests แล้วพบปัญหา ต้องสร้างรายงาน:**
+**เมื่อรัน Playwright tests แล้วพบปัญหา ต้องสร้างรายงาน:**
 
 ### ✅ ไฟล์รายงาน
 
-**สร้างไฟล์:** `Test report by Cypress.md` (root folder)
+**สร้างไฟล์:** `Test report by Playwright.md` (root folder)
 
 ### ✅ โครงสร้างรายงาน
 
 ```markdown
-# 🧪 Cypress Test Issues Report
+# 🧪 Playwright Test Issues Report
 
 ## 📊 สรุปภาพรวม
 
@@ -901,9 +898,9 @@ npm run lint:md
 
 | รายละเอียด | ข้อมูล |
 | --- | --- |
-| **Test File** | `cypress/e2e/xxx.cy.js` |
+| **Test File** | `tests/xxx.spec.js` |
 | **Test Name** | `should do something` |
-| **Error Message** | `Timed out retrying...` |
+| **Error Message** | `Timed out waiting for...` |
 | **พบเมื่อ** | DD-MM-YYYY |
 | **สถานะ** | ❌ ยังไม่แก้ไข / ✅ แก้ไขแล้ว |
 | **แก้ไขเมื่อ** | DD-MM-YYYY (ถ้าแก้แล้ว) |
@@ -947,7 +944,7 @@ npm run lint:md
 
 | สถานการณ์ | Action |
 | --- | --- |
-| รัน Cypress ครั้งแรก | สร้างไฟล์ `Test report by Cypress.md` |
+| รัน Playwright ครั้งแรก | สร้างไฟล์ `Test report by Playwright.md` |
 | พบปัญหาใหม่ | เพิ่ม Issue ใหม่ในรายงาน |
 | แก้ไขปัญหาสำเร็จ | อัพเดท สถานะ → ✅ แก้ไขแล้ว |
 | ปัญหาทั้งหมดแก้แล้ว | ย้ายไป section "Resolved" |
@@ -958,7 +955,7 @@ npm run lint:md
 **สำหรับแต่ละ Issue:**
 
 - [ ] ชื่อ Test File และ Test Name
-- [ ] Error Message จาก Cypress
+- [ ] Error Message จาก Playwright
 - [ ] วันที่พบปัญหา (DD-MM-YYYY)
 - [ ] สาเหตุของปัญหา
 - [ ] วิธีแก้ไข (ถ้าแก้แล้ว)
@@ -967,9 +964,9 @@ npm run lint:md
 ### ✅ Workflow การใช้งาน
 
 ```text
-1. รัน Cypress → npx cypress run
+1. รัน Playwright → npx playwright test
 2. ถ้า PASS ทั้งหมด → ไม่ต้องทำอะไร
-3. ถ้ามี FAIL → สร้าง/อัพเดท Test report by Cypress.md
+3. ถ้ามี FAIL → สร้าง/อัพเดท Test report by Playwright.md
 4. แก้ไขปัญหา
 5. รันทดสอบซ้ำ
 6. อัพเดทสถานะในรายงาน
@@ -988,5 +985,5 @@ npm run lint:md
 ---
 
 **อัปเดตล่าสุด:** 01-02-2026, 14:30 น.
-**เวอร์ชัน:** V.1.6.0 (01-02-2026) - เพิ่มกฎ Cypress Test Issue Report
+**เวอร์ชัน:** V.1.7.0 (01-02-2026) - เปลี่ยนจาก Cypress เป็น Playwright
 
