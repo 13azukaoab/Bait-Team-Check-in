@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Schedule Check-in - Mockup Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #6c757d;
+            position: relative;
+        }
+
+        .tab.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #667eea;
+        }
+
+        .tab i {
+            margin-right: 5px;
+        }
+
+        /* Content */
+        .content {
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Prompt', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-save i {
+            margin-right: 8px;
+        }
+
+        /* Schedule List */
+        .schedule-list {
+            margin-top: 10px;
+        }
+
+        .schedule-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .schedule-item:hover {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transform: translateX(3px);
+        }
+
+        .schedule-date {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .schedule-customer {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .schedule-details {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .schedule-actions {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-action:hover {
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+        }
+
+        /* Quick Select Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 380px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .modal-close {
+            background: #f8f9fa;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            color: #6c757d;
+        }
+
+        .quick-select-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .quick-select-item:hover {
+            border-color: #667eea;
+            background: #e7f3ff;
+        }
+
+        .quick-select-item h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .quick-select-item p {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card.yellow {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1><i class="fas fa-calendar-plus"></i> Pre-Schedule Check-in</h1>
+            <p>จัดการรายการเช็คอินล่วงหน้า</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('create')">
+                <i class="fas fa-plus-circle"></i> สร้างรายการ
+            </button>
+            <button class="tab" onclick="switchTab('list')">
+                <i class="fas fa-list"></i> รายการทั้งหมด
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Create Tab -->
+            <div id="create-tab" class="tab-content active">
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">รายการรอดำเนินการ</div>
+                    </div>
+                    <div class="stat-card yellow">
+                        <div class="stat-number">45</div>
+                        <div class="stat-label">เช็คอินสำเร็จ</div>
+                    </div>
+                </div>
+
+                <form id="schedule-form">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> วันที่นัดหมาย</label>
+                        <input type="date" id="scheduled-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> ชื่อลูกค้า</label>
+                        <input type="text" id="customer-name" placeholder="กรอกชื่อลูกค้า" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-file-contract"></i> เลขที่สัญญา</label>
+                        <input type="text" id="contract-number" list="contract-list" placeholder="เลือกหรือพิมพ์เลขสัญญา" required>
+                        <datalist id="contract-list">
+                            <option value="CT22">
+                            <option value="CT23">
+                            <option value="CT24">
+                            <option value="CT25">
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> สาขา</label>
+                        <select id="branch" required>
+                            <option value="">-- เลือกสาขา --</option>
+                            <option value="พุทธมณฑล">พุทธมณฑล (เขต 1)</option>
+                            <option value="นครปฐม">นครปฐม (เขต 1)</option>
+                            <option value="หัวหิน">หัวหิน (เขต 1)</option>
+                            <option value="พระราม 2">พระราม 2 (เขต 1)</option>
+                            <option value="สาทร">สาทร (เขต 2)</option>
+                            <option value="ปทุมวัน">ปทุมวัน (เขต 2)</option>
+                            <option value="พระราม 4">พระราม 4 (เขต 2)</option>
+                            <option value="นนทบุรี">นนทบุรี (เขต 2)</option>
+                            <option value="ปทุมธานี">ปทุมธานี (เขต 3)</option>
+                            <option value="รามอินทรา">รามอินทรา (เขต 3)</option>
+                            <option value="อยุธยา">อยุธยา (เขต 3)</option>
+                            <option value="ลาดพร้าว">ลาดพร้าว (เขต 4)</option>
+                            <option value="พัฒนาการ">พัฒนาการ (เขต 4)</option>
+                            <option value="สุวินทวงศ์">สุวินทวงศ์ (เขต 4)</option>
+                            <option value="ประชาชื่น">ประชาชื่น (เขต 4)</option>
+                            <option value="ปราจีนบุรี">ปราจีนบุรี (เขต 5)</option>
+                            <option value="สมุทรปราการ">สมุทรปราการ (เขต 5)</option>
+                            <option value="พัทยา">พัทยา (เขต 5)</option>
+                            <option value="ระยอง">ระยอง (เขต 5)</option>
+                            <option value="สุขุมวิท">สุขุมวิท (เขต 6)</option>
+                            <option value="ปากน้ำ">ปากน้ำ (เขต 6)</option>
+                            <option value="ชลบุรี">ชลบุรี (เขต 6)</option>
+                            <option value="ปากช่อง">ปากช่อง (เขต 7)</option>
+                            <option value="สระบุรี">สระบุรี (เขต 7)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i> บันทึกรายการ
+                    </button>
+                </form>
+            </div>
+
+            <!-- List Tab -->
+            <div id="list-tab" class="tab-content">
+                <div class="schedule-list">
+                    <!-- Today -->
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #667eea; margin-bottom: 10px; font-size: 14px;">
+                            <i class="fas fa-calendar-day"></i> วันนี้ (3 รายการ)
+                        </h3>
+                        
+                        <div class="schedule-item">
+                            <div class="schedule-date">
+                                <i class="fas fa-clock"></i> 02-02-2026
+                                <span class="badge badge-pending">รอดำเนินการ</span>
+                            </div>
+                            <div class="schedule-customer">นายสมชาย ใจดี</div>
+                            <div class="schedule-details">
+                                <i class="fas fa-file-contract"></i> CT23-12345 | 
+                                <i class="fas fa-map-marker-alt"></i> สาทร (เขต 2)
+                            </div>
+                            <div class="schedule-actions">
+                                <button class="btn-action btn-edit" onclick="openQuickSelect()">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn-action btn-delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item">
+                            <div class="schedule-date">
+                                <i class="fas fa-clock"></i> 02-02-2026
+                                <span class="badge badge-pending">รอดำเนินการ</span>
+                            </div>
+                            <div class="schedule-customer">นางสาวมาลี สวยงาม</div>
+                            <div class="schedule-details">
+                                <i class="fas fa-file-contract"></i> CT24-67890 | 
+                                <i class="fas fa-map-marker-alt"></i> ลาดพร้าว (เขต 4)
+                            </div>
+                            <div class="schedule-actions">
+                                <button class="btn-action btn-edit" onclick="openQuickSelect()">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn-action btn-delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item">
+                            <div class="schedule-date">
+                                <i class="fas fa-clock"></i> 02-02-2026
+                                <span class="badge badge-completed">เสร็จแล้ว</span>
+                            </div>
+                            <div class="schedule-customer">นายประเสริฐ รุ่งเรือง</div>
+                            <div class="schedule-details">
+                                <i class="fas fa-file-contract"></i> CT22-11111 | 
+                                <i class="fas fa-map-marker-alt"></i> สุขุมวิท (เขต 6)
+                            </div>
+                            <div class="schedule-actions">
+                                <button class="btn-action" style="background: #28a745; color: white;">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tomorrow -->
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #764ba2; margin-bottom: 10px; font-size: 14px;">
+                            <i class="fas fa-calendar-alt"></i> พรุ่งนี้ (2 รายการ)
+                        </h3>
+                        
+                        <div class="schedule-item">
+                            <div class="schedule-date">
+                                <i class="fas fa-clock"></i> 03-02-2026
+                                <span class="badge badge-pending">รอดำเนินการ</span>
+                            </div>
+                            <div class="schedule-customer">นายวิชัย ทรงธรรม</div>
+                            <div class="schedule-details">
+                                <i class="fas fa-file-contract"></i> CT25-99999 | 
+                                <i class="fas fa-map-marker-alt"></i> พัทยา (เขต 5)
+                            </div>
+                            <div class="schedule-actions">
+                                <button class="btn-action btn-edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-action btn-delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item">
+                            <div class="schedule-date">
+                                <i class="fas fa-clock"></i> 03-02-2026
+                                <span class="badge badge-pending">รอดำเนินการ</span>
+                            </div>
+                            <div class="schedule-customer">นางสุดา แสงจันทร์</div>
+                            <div class="schedule-details">
+                                <i class="fas fa-file-contract"></i> CT23-55555 | 
+                                <i class="fas fa-map-marker-alt"></i> ปากช่อง (เขต 7)
+                            </div>
+                            <div class="schedule-actions">
+                                <button class="btn-action btn-edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-action btn-delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Select Modal -->
+    <div id="quick-select-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-bolt"></i> เลือกรายการด่วน</h2>
+                <button class="modal-close" onclick="closeQuickSelect()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="quick-select-item" onclick="fillForm('นายสมชาย ใจดี', 'CT23-12345', 'สาทร')">
+                <h3>นายสมชาย ใจดี</h3>
+                <p><i class="fas fa-file-contract"></i> CT23-12345 | <i class="fas fa-map-marker-alt"></i> สาทร (เขต 2)</p>
+            </div>
+
+            <div class="quick-select-item" onclick="fillForm('นางสาวมาลี สวยงาม', 'CT24-67890', 'ลาดพร้าว')">
+                <h3>นางสาวมาลี สวยงาม</h3>
+                <p><i class="fas fa-file-contract"></i> CT24-67890 | <i class="fas fa-map-marker-alt"></i> ลาดพร้าว (เขต 4)</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+                <button class="btn-save" onclick="closeQuickSelect()" style="background: #6c757d;">
+                    <i class="fas fa-keyboard"></i> ยกเลิก - กรอกเอง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switching
+        function switchTab(tabName) {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to selected tab
+            event.target.closest('.tab').classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        // Form Submit
+        document.getElementById('schedule-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                date: document.getElementById('scheduled-date').value,
+                customer: document.getElementById('customer-name').value,
+                contract: document.getElementById('contract-number').value,
+                branch: document.getElementById('branch').value
+            };
+
+            // Show success message
+            alert('✅ บันทึกรายการสำเร็จ!\n\n' + 
+                  'วันที่: ' + formData.date + '\n' +
+                  'ลูกค้า: ' + formData.customer + '\n' +
+                  'สัญญา: ' + formData.contract + '\n' +
+                  'สาขา: ' + formData.branch);
+
+            // Reset form
+            this.reset();
+
+            // Switch to list tab
+            switchTab('list');
+        });
+
+        // Quick Select Modal
+        function openQuickSelect() {
+            document.getElementById('quick-select-modal').classList.add('active');
+        }
+
+        function closeQuickSelect() {
+            document.getElementById('quick-select-modal').classList.remove('active');
+        }
+
+        function fillForm(customer, contract, branch) {
+            // Fill form with selected data
+            document.getElementById('customer-name').value = customer;
+            document.getElementById('contract-number').value = contract;
+            document.getElementById('branch').value = branch;
+
+            // Close modal and switch to create tab
+            closeQuickSelect();
+            
+            // Switch to create tab
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelector('.tab').classList.add('active');
+            document.getElementById('create-tab').classList.add('active');
+
+            // Show success toast
+            alert('✅ กรอกข้อมูลอัตโนมัติแล้ว!\n\nคุณสามารถแก้ไขข้อมูลก่อนเช็คอินได้');
+        }
+
+        // Set default date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('scheduled-date').value = today;
+
+        // Close modal when clicking outside
+        document.getElementById('quick-select-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeQuickSelect();
+            }
+        });
+    </script>
+</body>
+</html>
