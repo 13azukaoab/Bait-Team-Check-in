@@ -1126,38 +1126,45 @@
                     <input type="text" placeholder="กรอกชื่อลูกค้า" id="customerName" data-test="customer-name">
                 </div>
 
-                <!-- Contract Number & Branch in 2 columns -->
-                <div class="two-col">
-                    <div class="input-group">
-                        <label><i class="fas fa-file-contract"></i> เลขที่สัญญา <span class="required">*</span></label>
-                        <select id="contractNumber" data-test="contract-number" style="cursor: pointer;">
+                <!-- Contract Number (Row Layout) -->
+                <div class="input-group">
+                    <label><i class="fas fa-file-contract"></i> เลขที่สัญญา <span class="required">*</span></label>
+                    <div style="display: flex; gap: 8px;">
+                        <select id="contractPrefix" data-test="contract-prefix" style="cursor: pointer; flex: 0 0 auto; width: 100px;">
                             <option value="">-- เลือก --</option>
-                            <option value="CT22">CT22</option>
-                            <option value="CT23">CT23</option>
-                            <option value="CT24">CT24</option>
-                            <option value="CT25">CT25</option>
+                            <option value="CT21-">CT21-</option>
+                            <option value="CT22-">CT22-</option>
+                            <option value="CT23-">CT23-</option>
+                            <option value="CT24-">CT24-</option>
+                            <option value="CT25-">CT25-</option>
+                            <option value="CT26-">CT26-</option>
                         </select>
+                        <input type="text" id="contractNumber" data-test="contract-number" placeholder="1234567" maxlength="7" pattern="[0-9]{7}" inputmode="numeric" style="flex: 1;">
                     </div>
-                    <div class="input-group">
-                        <label><i class="fas fa-building"></i> สาขา <span class="required">*</span></label>
-                        <select id="branchSelect" data-test="branch-select">
-                            <option value="">เลือกสาขา</option>
-                            <optgroup label="เขต 1">
-                                <option value="พุทธมณฑล">พุทธมณฑล</option>
-                                <option value="นครปฐม">นครปฐม</option>
-                                <option value="หัวหิน">หัวหิน</option>
-                                <option value="พระราม 2">พระราม 2</option>
-                            </optgroup>
-                            <optgroup label="เขต 2">
-                                <option value="สาทร">สาทร</option>
-                                <option value="ปทุมวัน">ปทุมวัน</option>
-                                <option value="พระราม 4">พระราม 4</option>
-                                <option value="นนทบุรี">นนทบุรี</option>
-                            </optgroup>
-                            <optgroup label="เขต 3">
-                                <option value="ปทุมธานี">ปทุมธานี</option>
-                                <option value="รามอินทรา">รามอินทรา</option>
-                                <option value="อยุธยา">อยุธยา</option>
+                </div>
+
+                <!-- Branch -->
+                <div class="input-group">
+                    <label><i class="fas fa-building"></i> สาขา <span class="required">*</span></label>
+                    <select id="branchSelect" data-test="branch-select">
+                        <option value="">เลือกสาขา</option>
+                        <optgroup label="เขต 1">
+                            <option value="พุทธมณฑล">พุทธมณฑล</option>
+                            <option value="นครปฐม">นครปฐม</option>
+                            <option value="หัวหิน">หัวหิน</option>
+                            <option value="พระราม 2">พระราม 2</option>
+                        </optgroup>
+                        <optgroup label="เขต 2">
+                            <option value="สาทร">สาทร</option>
+                            <option value="ปทุมวัน">ปทุมวัน</option>
+                            <option value="พระราม 4">พระราม 4</option>
+                            <option value="นนทบุรี">นนทบุรี</option>
+                        </optgroup>
+                        <optgroup label="เขต 3">
+                            <option value="ปทุมธานี">ปทุมธานี</option>
+                            <option value="รามอินทรา">รามอินทรา</option>
+                            <option value="อยุธยา">อยุธยา</option>
+                        </optgroup>
                             </optgroup>
                             <optgroup label="เขต 4">
                                 <option value="ลาดพร้าว">ลาดพร้าว</option>
@@ -1255,42 +1262,163 @@
 
         <!-- Pre-Schedule View -->
         <div class="main-content" id="scheduleView" style="display: none;">
-            <div class="page-title">
+            <div class="page-title" style="margin-bottom: 12px;">
                 <i class="fas fa-calendar-check"></i> เตรียมงาน
             </div>
 
-            <!-- Pre-Schedule Stats -->
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 15px; margin-bottom: 20px;">
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 12px; text-align: center;">
-                    <div style="font-size: 28px; font-weight: 700; margin-bottom: 3px;" id="schedulePending">3</div>
-                    <div style="font-size: 12px; opacity: 0.9;">รอดำเนินการ</div>
+            <!-- Pre-Schedule Stats (Compact) -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0 15px 12px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 22px; font-weight: 700; margin-bottom: 2px;" id="schedulePending">0</div>
+                    <div style="font-size: 11px; opacity: 0.9;">รอดำเนินการ</div>
                 </div>
-                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 15px; border-radius: 12px; text-align: center;">
-                    <div style="font-size: 28px; font-weight: 700; margin-bottom: 3px;" id="scheduleCompleted">45</div>
-                    <div style="font-size: 12px; opacity: 0.9;">เช็คอินแล้ว</div>
-                </div>
-            </div>
-
-            <!-- Today's Schedule -->
-            <div style="padding: 0 15px;">
-                <h3 style="color: #667eea; margin-bottom: 10px; font-size: 14px; font-weight: 600;">
-                    <i class="fas fa-calendar-day"></i> วันนี้ (3 รายการ)
-                </h3>
-                
-                <div id="todayScheduleList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-                    <!-- Items will be loaded here -->
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 10px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 22px; font-weight: 700; margin-bottom: 2px;" id="scheduleCompleted">0</div>
+                    <div style="font-size: 11px; opacity: 0.9;">เช็คอินแล้ว</div>
                 </div>
             </div>
 
-            <!-- Upcoming Schedule -->
-            <div style="padding: 0 15px;">
-                <h3 style="color: #764ba2; margin-bottom: 10px; font-size: 14px; font-weight: 600;">
-                    <i class="fas fa-calendar-alt"></i> อีก 2 วันข้างหน้า (2 รายการ)
-                </h3>
+            <!-- Tabs for Schedule Views -->
+            <div style="display: flex; border-bottom: 2px solid #e9ecef; margin: 0 15px 12px; gap: 0;">
+                <button class="schedule-tab active" onclick="switchScheduleTab(event, 'create')" style="flex: 1; padding: 10px; background: none; border: none; color: #667eea; font-weight: 600; cursor: pointer; border-bottom: 3px solid #667eea; font-family: 'Prompt', sans-serif; font-size: 13px;">
+                    <i class="fas fa-plus-circle"></i> สร้างรายการ
+                </button>
+                <button class="schedule-tab" onclick="switchScheduleTab(event, 'list')" style="flex: 1; padding: 10px; background: none; border: none; color: #6c757d; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; font-family: 'Prompt', sans-serif; font-size: 13px;">
+                    <i class="fas fa-list"></i> รายการทั้งหมด
+                </button>
+            </div>
+
+            <!-- Pre-Schedule Form (Compact) -->
+            <form id="scheduleForm" style="padding: 0 15px; margin-bottom: 20px;">
+                <div style="background: white; border-radius: 10px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="display: block; margin-bottom: 6px; font-weight: 500; color: #333; font-size: 13px;">
+                            <i class="fas fa-calendar"></i> วันที่นัดหมาย
+                        </label>
+                        <input type="date" id="scheduleDate" style="width: 100%; padding: 10px 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 13px; font-family: 'Prompt', sans-serif;" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="display: block; margin-bottom: 6px; font-weight: 500; color: #333; font-size: 13px;">
+                            <i class="fas fa-user"></i> ชื่อลูกค้า
+                        </label>
+                        <input type="text" id="scheduleCustomer" placeholder="กรอกชื่อลูกค้า" style="width: 100%; padding: 10px 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 13px; font-family: 'Prompt', sans-serif;" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="display: block; margin-bottom: 6px; font-weight: 500; color: #333; font-size: 13px;">
+                            <i class="fas fa-file-contract"></i> เลขที่สัญญา
+                        </label>
+                        <div style="display: flex; gap: 6px;">
+                            <select id="scheduleContractPrefix" style="flex: 0 0 auto; width: 90px; padding: 10px 8px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 13px; font-family: 'Prompt', sans-serif; cursor: pointer;" required>
+                                <option value="">-- เลือก --</option>
+                                <option value="CT21-">CT21-</option>
+                                <option value="CT22-">CT22-</option>
+                                <option value="CT23-">CT23-</option>
+                                <option value="CT24-">CT24-</option>
+                                <option value="CT25-">CT25-</option>
+                                <option value="CT26-">CT26-</option>
+                            </select>
+                            <input type="text" id="scheduleContractNumber" placeholder="1234567" maxlength="7" pattern="[0-9]{7}" inputmode="numeric" style="flex: 1; padding: 10px 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 13px; font-family: 'Prompt', sans-serif;" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="display: block; margin-bottom: 6px; font-weight: 500; color: #333; font-size: 13px;">
+                            <i class="fas fa-map-marker-alt"></i> สาขา
+                        </label>
+                        <select id="scheduleBranch" style="width: 100%; padding: 10px 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 13px; font-family: 'Prompt', sans-serif; cursor: pointer;" required>
+                            <option value="">-- เลือกสาขา --</option>
+                            <optgroup label="เขต 1">
+                                <option value="พุทธมณฑล">พุทธมณฑล</option>
+                                <option value="นครปฐม">นครปฐม</option>
+                                <option value="หัวหิน">หัวหิน</option>
+                                <option value="พระราม 2">พระราม 2</option>
+                            </optgroup>
+                            <optgroup label="เขต 2">
+                                <option value="สาทร">สาทร</option>
+                                <option value="ปทุมวัน">ปทุมวัน</option>
+                                <option value="พระราม 4">พระราม 4</option>
+                                <option value="นนทบุรี">นนทบุรี</option>
+                            </optgroup>
+                            <optgroup label="เขต 3">
+                                <option value="ปทุมธานี">ปทุมธานี</option>
+                                <option value="รามอินทรา">รามอินทรา</option>
+                                <option value="อยุธยา">อยุธยา</option>
+                            </optgroup>
+                            <optgroup label="เขต 4">
+                                <option value="ลาดพร้าว">ลาดพร้าว</option>
+                                <option value="พัฒนาการ">พัฒนาการ</option>
+                                <option value="สุวินทวงศ์">สุวินทวงศ์</option>
+                                <option value="ประชาชื่น">ประชาชื่น</option>
+                            </optgroup>
+                            <optgroup label="เขต 5">
+                                <option value="ปราจีนบุรี">ปราจีนบุรี</option>
+                                <option value="สมุทรปราการ">สมุทรปราการ</option>
+                                <option value="พัทยา">พัทยา</option>
+                                <option value="ระยอง">ระยอง</option>
+                            </optgroup>
+                            <optgroup label="เขต 6">
+                                <option value="สุขุมวิท">สุขุมวิท</option>
+                                <option value="ปากน้ำ">ปากน้ำ</option>
+                                <option value="ชลบุรี">ชลบุรี</option>
+                            </optgroup>
+                            <optgroup label="เขต 7">
+                                <option value="ปากช่อง">ปากช่อง</option>
+                                <option value="สระบุรี">สระบุรี</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <button type="submit" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; transition: all 0.3s; font-family: 'Prompt', sans-serif;">
+                        <i class="fas fa-save"></i> บันทึกรายการ
+                    </button>
+                </div>
+            </form>
+                </button>
+            </div>
+
+            <!-- List View -->
+            <div id="scheduleListView" style="display: none; padding: 0 15px; margin-bottom: 100px;">
+                <div style="margin-bottom: 15px;">
+                    <h3 style="color: #667eea; margin: 15px 0 10px; font-size: 14px; font-weight: 600;">
+                        <i class="fas fa-calendar-day"></i> วันนี้
+                    </h3>
+                    <div id="scheduleToday" style="display: flex; flex-direction: column; gap: 10px;">
+                        <p style="text-align: center; color: #6c757d; padding: 20px 0; font-size: 14px;">ยังไม่มีรายการ</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: #764ba2; margin: 15px 0 10px; font-size: 14px; font-weight: 600;">
+                        <i class="fas fa-calendar-alt"></i> วันถัดไป
+                    </h3>
+                    <div id="scheduleUpcoming" style="display: flex; flex-direction: column; gap: 10px;">
+                        <p style="text-align: center; color: #6c757d; padding: 20px 0; font-size: 14px;">ยังไม่มีรายการ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Select Modal -->
+        <div id="quickSelectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: none; justify-content: center; align-items: flex-end;">
+            <div style="background: white; width: 100%; max-width: 430px; border-radius: 20px 20px 0 0; padding: 20px; max-height: 70vh; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="font-size: 18px; font-weight: 600; color: #333; margin: 0;">
+                        <i class="fas fa-list-check"></i> รายการวันนี้
+                    </h3>
+                    <button id="closeQuickSelectModal" style="background: none; border: none; font-size: 24px; color: #6c757d; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
                 
-                <div id="upcomingScheduleList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 100px;">
+                <div id="quickSelectList" style="margin-bottom: 15px;">
                     <!-- Items will be loaded here -->
                 </div>
+                
+                <button id="cancelQuickSelect" style="width: 100%; padding: 12px; background: #e9ecef; color: #333; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Prompt', sans-serif;">
+                    ปิด
+                </button>
             </div>
         </div>
 
@@ -1519,6 +1647,14 @@
                 document.getElementById('zoneText').textContent = zone || '-';
             });
 
+            // Validate contract number input (only numbers, max 7 digits)
+            const contractNumberInput = document.getElementById('contractNumber');
+            if (contractNumberInput) {
+                contractNumberInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 7);
+                });
+            }
+
             // Initialize history
             renderHistory();
 
@@ -1589,13 +1725,21 @@
         function toggleCheckin() {
             // Validate required fields
             const customerName = document.getElementById('customerName').value;
+            const contractPrefix = document.getElementById('contractPrefix').value;
             const contractNumber = document.getElementById('contractNumber').value;
             const branch = document.getElementById('branchSelect').value;
             const zone = getZoneFromBranch(branch);
 
+            // Combine contract parts
+            const fullContractNumber = contractPrefix && contractNumber ? contractPrefix + contractNumber : '';
+
             if (!isCheckedIn) {
-                if (!customerName || !contractNumber || !branch) {
+                if (!customerName || !fullContractNumber || !branch) {
                     showToast('error', 'กรุณากรอกข้อมูลให้ครบ: ชื่อลูกค้า, เลขที่สัญญา, สาขา');
+                    return;
+                }
+                if (!contractPrefix || contractNumber.length !== 7) {
+                    showToast('error', 'กรุณากรอกเลขที่สัญญาให้ครบ (เลือก CT + ตัวเลข 7 หลัก)');
                     return;
                 }
                 if (!photos[1]) {
@@ -1611,7 +1755,7 @@
                     // ใช้พิกัดที่มีอยู่ (จาก Photo GPS Stamp หรือล่าสุด)
                     showLoading(true);
                     setTimeout(() => {
-                        performCheckin(customerName, contractNumber, branch, zone);
+                        performCheckin(customerName, fullContractNumber, branch, zone);
                     }, 300);
                     return;
                 }
@@ -2181,46 +2325,130 @@
             statusBadge.innerHTML = '<i class="fas fa-clock"></i><span>ยังไม่ได้ Check-in</span>';
         }
 
-        // ============== Pre-Schedule Feature (Mockup) ==============
-        // Load quick select data from sessionStorage
-        function initQuickSelectFeature() {
-            const quickSelectData = sessionStorage.getItem('quickSelectData');
-            if (quickSelectData) {
-                const data = JSON.parse(quickSelectData);
-                
-                // Show alert
-                document.getElementById('quickSelectAlert').style.display = 'block';
-                
-                // Mock pre-scheduled items for today
-                const mockScheduledItems = [
-                    { customer: data.customer, contract: data.contract, branch: data.branch }
-                ];
-                
-                // Setup quick select button
-                document.getElementById('quickSelectBtn').addEventListener('click', () => {
-                    showQuickSelectModal(mockScheduledItems);
-                });
-                
-                // Setup modal close buttons
-                document.getElementById('closeQuickSelectModal').addEventListener('click', closeQuickSelectModal);
-                document.getElementById('cancelQuickSelect').addEventListener('click', closeQuickSelectModal);
-                
-                // Close modal when clicking outside
-                document.getElementById('quickSelectModal').addEventListener('click', (e) => {
-                    if (e.target.id === 'quickSelectModal') {
-                        closeQuickSelectModal();
-                    }
-                });
-                
-                // Clear sessionStorage after loading
-                sessionStorage.removeItem('quickSelectData');
+        // ============== Pre-Schedule Feature ==============
+        // Global storage for scheduled items
+        window.scheduledItems = JSON.parse(localStorage.getItem('scheduledItems')) || [];
+
+        // Tab switching for schedule view
+        function switchScheduleTab(event, tab) {
+            const formView = document.querySelector('form#scheduleForm');
+            const listView = document.getElementById('scheduleListView');
+            const tabs = document.querySelectorAll('.schedule-tab');
+
+            tabs.forEach(t => {
+                t.style.color = '#6c757d';
+                t.style.borderBottomColor = 'transparent';
+                t.classList.remove('active');
+            });
+
+            if (tab === 'create') {
+                formView.style.display = 'block';
+                listView.style.display = 'none';
+                event.target.closest('button').style.color = '#667eea';
+                event.target.closest('button').style.borderBottomColor = '#667eea';
+                event.target.closest('button').classList.add('active');
+            } else {
+                formView.style.display = 'none';
+                listView.style.display = 'block';
+                event.target.closest('button').style.color = '#667eea';
+                event.target.closest('button').style.borderBottomColor = '#667eea';
+                event.target.closest('button').classList.add('active');
+                loadScheduleListView();
             }
         }
 
-        function showQuickSelectModal(items) {
+        function initScheduleForm() {
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('scheduleDate').value = today;
+
+            // Validate contract number input (only numbers, max 7 digits)
+            const contractNumberInput = document.getElementById('scheduleContractNumber');
+            if (contractNumberInput) {
+                contractNumberInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 7);
+                });
+            }
+
+            // Handle form submit
+            document.getElementById('scheduleForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const prefix = document.getElementById('scheduleContractPrefix').value;
+                const number = document.getElementById('scheduleContractNumber').value;
+                
+                if (!prefix || number.length !== 7) {
+                    showToast('⚠️ กรุณากรอกเลขที่สัญญาให้ครบ (7 หลัก)', 'error');
+                    return;
+                }
+
+                const newItem = {
+                    id: Date.now(),
+                    date: document.getElementById('scheduleDate').value,
+                    customer: document.getElementById('scheduleCustomer').value,
+                    contract: prefix + number,
+                    branch: document.getElementById('scheduleBranch').value
+                };
+
+                window.scheduledItems.push(newItem);
+                localStorage.setItem('scheduledItems', JSON.stringify(window.scheduledItems));
+
+                // Reset form
+                document.getElementById('scheduleForm').reset();
+                document.getElementById('scheduleDate').value = today;
+
+                // Show toast
+                showToast('✅ บันทึกรายการสำเร็จ!', 'success');
+
+                // Update quick select button count
+                updateQuickSelectButton();
+            });
+        }
+
+        function updateQuickSelectButton() {
+            const todayItems = getTodayScheduledItems();
+            const btn = document.getElementById('quickSelectBtn');
+            const alert = document.getElementById('quickSelectAlert');
+
+            if (todayItems.length > 0) {
+                alert.style.display = 'block';
+                btn.innerHTML = `<i class="fas fa-hand-pointer"></i> เลือกจากรายการ (${todayItems.length})`;
+            } else {
+                alert.style.display = 'none';
+            }
+        }
+
+        function getTodayScheduledItems() {
+            const today = new Date().toISOString().split('T')[0];
+            return window.scheduledItems.filter(item => item.date === today);
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'background: white; border-left: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem;';
+            if (type === 'success') {
+                toast.style.borderLeftColor = '#28a745';
+            }
+            toast.innerHTML = message;
+            
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Load quick select list
+        function loadQuickSelectList(items) {
             const listContainer = document.getElementById('quickSelectList');
             listContainer.innerHTML = '';
             
+            if (items.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">ไม่มีรายการสำหรับวันนี้</p>';
+                return;
+            }
+
             items.forEach(item => {
                 const div = document.createElement('div');
                 div.style.cssText = 'padding: 15px; background: #f8f9fa; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent;';
@@ -2243,44 +2471,181 @@
                 });
                 
                 div.addEventListener('click', () => {
-                    fillFormFromQuickSelect(item);
+                    fillFormFromSchedule(item);
                 });
                 
                 listContainer.appendChild(div);
             });
-            
-            document.getElementById('quickSelectModal').style.display = 'flex';
         }
 
-        function closeQuickSelectModal() {
-            document.getElementById('quickSelectModal').style.display = 'none';
+        // Load schedule list view (ดูรายการทั้งหมด)
+        function loadScheduleListView() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayItems = window.scheduledItems.filter(item => item.date === today);
+            const upcomingItems = window.scheduledItems.filter(item => item.date > today);
+
+            renderScheduleListItems(todayItems, 'scheduleToday');
+            renderScheduleListItems(upcomingItems, 'scheduleUpcoming');
         }
 
-        function fillFormFromQuickSelect(item) {
-            // Fill the form
+        function renderScheduleListItems(items, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            if (items.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px 0; font-size: 14px;">ยังไม่มีรายการ</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                const div = document.createElement('div');
+
+                div.style.cssText = 'background: white; border-left: 4px solid #667eea; border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s;';
+                
+                div.innerHTML = `
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #333; margin-bottom: 5px; font-size: 14px;">${item.customer}</div>
+                        <div style="font-size: 12px; color: #6c757d;">
+                            <i class="fas fa-file-contract"></i> ${item.contract} | 
+                            <i class="fas fa-map-marker-alt"></i> ${item.branch}
+                        </div>
+                        <div style="font-size: 11px; color: #999; margin-top: 3px;">
+                            <i class="fas fa-calendar"></i> ${item.date}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; display: flex; align-items: center; justify-content: center;" title="ใช้รายการนี้">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button style="background: #fee; color: #dc3544; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; display: flex; align-items: center; justify-content: center;" onclick="deleteScheduleItem(${item.id})" title="ลบรายการ">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                // Add click event for use button
+                div.querySelector('button:first-child').addEventListener('click', () => {
+                    useScheduleItem(item);
+                });
+
+                div.addEventListener('mouseenter', () => {
+                    div.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                    div.style.transform = 'translateY(-2px)';
+                });
+
+                div.addEventListener('mouseleave', () => {
+                    div.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+                    div.style.transform = 'translateY(0)';
+                });
+
+                container.appendChild(div);
+            });
+        }
+
+        function deleteScheduleItem(id) {
+            if (confirm('ต้องการลบรายการนี้หรือไม่?')) {
+                window.scheduledItems = window.scheduledItems.filter(item => item.id !== id);
+                localStorage.setItem('scheduledItems', JSON.stringify(window.scheduledItems));
+                loadScheduleListView();
+                updateQuickSelectButton();
+                showToast('✅ ลบรายการสำเร็จ', 'success');
+            }
+        }
+
+        function fillFormFromSchedule(item) {
             document.getElementById('customerName').value = item.customer;
             document.getElementById('contractNumber').value = item.contract;
             document.getElementById('branchSelect').value = item.branch;
-            
-            // Close modal
+
             closeQuickSelectModal();
-            
-            // Show success message
-            const toast = document.createElement('div');
-            toast.style.cssText = 'background: white; border-left: 4px solid #28a745; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem;';
-            toast.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i><span>✅ กรอกข้อมูลอัตโนมัติแล้ว</span>';
-            
-            const container = document.getElementById('toastContainer');
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-            
-            // Scroll to form
+
+            showToast('✅ กรอกข้อมูลอัตโนมัติแล้ว', 'success');
+
             setTimeout(() => {
                 document.getElementById('customerName').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 300);
+        }
+
+        function useScheduleItem(item) {
+            document.getElementById('customerName').value = item.customer;
+            document.getElementById('contractNumber').value = item.contract;
+            document.getElementById('branchSelect').value = item.branch;
+
+            showView('checkin');
+            showToast('✅ กรอกข้อมูลอัตโนมัติแล้ว', 'success');
+
+            setTimeout(() => {
+                document.getElementById('customerName').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+
+        // Load quick select data from sessionStorage (for mockup redirect)
+        function initQuickSelectFeature() {
+            const quickSelectData = sessionStorage.getItem('quickSelectData');
+            if (quickSelectData) {
+                const data = JSON.parse(quickSelectData);
+                
+                // Add to scheduled items
+                const today = new Date().toISOString().split('T')[0];
+                window.scheduledItems.push({
+                    id: Date.now(),
+                    date: today,
+                    customer: data.customer,
+                    contract: data.contract,
+                    branch: data.branch
+                });
+                localStorage.setItem('scheduledItems', JSON.stringify(window.scheduledItems));
+                
+                sessionStorage.removeItem('quickSelectData');
+            }
+
+            // Show alert if items exist
+            updateQuickSelectButton();
+
+            // Setup quick select button
+            const quickSelectBtn = document.getElementById('quickSelectBtn');
+            if (quickSelectBtn) {
+                quickSelectBtn.addEventListener('click', () => {
+                    const items = getTodayScheduledItems();
+                    loadQuickSelectList(items);
+                    showQuickSelectModal();
+                });
+            }
+
+            // Setup modal close buttons
+            const closeBtn = document.getElementById('closeQuickSelectModal');
+            const cancelBtn = document.getElementById('cancelQuickSelect');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeQuickSelectModal);
+            }
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', closeQuickSelectModal);
+            }
+
+            // Close modal when clicking outside
+            const modal = document.getElementById('quickSelectModal');
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target.id === 'quickSelectModal') {
+                        closeQuickSelectModal();
+                    }
+                });
+            }
+        }
+
+        function showQuickSelectModal() {
+            const modal = document.getElementById('quickSelectModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeQuickSelectModal() {
+            const modal = document.getElementById('quickSelectModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
         }
 
         // Initialize on page load
@@ -2374,7 +2739,6 @@
         }
 
         // Update showView function to handle schedule view
-        const originalShowView = typeof showView !== 'undefined' ? showView : null;
         window.showView = function(viewName) {
             // Hide all views
             document.querySelectorAll('[id$="View"]').forEach(el => {
@@ -2392,11 +2756,9 @@
                 item.classList.remove('active');
             });
             
-            event.target.closest('.nav-item').classList.add('active');
-
-            // Load schedule data when showing schedule view
-            if (viewName === 'schedule') {
-                loadScheduleData();
+            const navBtn = event.target.closest('.nav-item');
+            if (navBtn) {
+                navBtn.classList.add('active');
             }
         };
     </script>
