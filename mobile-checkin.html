@@ -1110,9 +1110,8 @@
             <div id="quickSelectAlert" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; margin-bottom: 15px; border-radius: 12px; margin: 10px 15px 15px 15px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                     <i class="fas fa-lightning-bolt" style="font-size: 20px;"></i>
-                    <span style="font-weight: 600;">มีรายการวันนี้!</span>
+                    <span style="font-weight: 600;">รายการที่สร้างไว้แล้ว</span>
                 </div>
-                <p style="font-size: 13px; margin-bottom: 10px; opacity: 0.95;">คุณมีรายการสั่งจองล่วงหน้า คลิกด้านล่างเพื่อเลือกใช้ข้อมูลอัตโนมัติ</p>
                 <button id="quickSelectBtn" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s;">
                     <i class="fas fa-hand-pointer"></i> เลือกจากรายการ
                 </button>
@@ -1209,11 +1208,7 @@
                     <input type="file" accept="image/jpeg,image/png" capture="environment" class="photo-input" id="cameraInput2" data-test="photo-input-2" onchange="handleFilePhoto(2, this)">
                 </div>
 
-                <!-- Notes -->
-                <div class="input-group">
-                    <label><i class="fas fa-sticky-note"></i> หมายเหตุ (ถ้ามี)</label>
-                    <textarea placeholder="เพิ่มรายละเอียดเพิ่มเติม..." id="notes" data-test="notes-input"></textarea>
-                </div>
+
 
                 <!-- Check-in Button (Moved below inputs) -->
                 <div class="checkin-section">
@@ -1399,8 +1394,8 @@
         </div>
 
         <!-- Quick Select Modal -->
-        <div id="quickSelectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: none; justify-content: center; align-items: flex-end;">
-            <div style="background: white; width: 100%; max-width: 430px; border-radius: 20px 20px 0 0; padding: 20px; max-height: 70vh; overflow-y: auto;">
+        <div id="quickSelectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+            <div style="background: white; width: 90%; max-width: 430px; border-radius: 20px; padding: 20px; max-height: 70vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3 style="font-size: 18px; font-weight: 600; color: #333; margin: 0;">
                         <i class="fas fa-list-check"></i> รายการวันนี้
