@@ -1826,7 +1826,8 @@
             const btn = document.getElementById('checkinBtn');
             const btnText = document.getElementById('btnText');
             const statusBadge = document.getElementById('statusBadge');
-            const notes = document.getElementById('notes').value;
+            const notesElement = document.getElementById('notes');
+            const notes = notesElement ? notesElement.value : '';
             const now = new Date();
 
             try {
@@ -2900,6 +2901,10 @@
 
         function renderScheduleItems(items, containerId) {
             const container = document.getElementById(containerId);
+            if (!container) {
+                console.warn(`Container ${containerId} not found`);
+                return;
+            }
             container.innerHTML = '';
 
             items.forEach(item => {
