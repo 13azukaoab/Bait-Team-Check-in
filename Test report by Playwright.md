@@ -4,11 +4,11 @@
 
 | รายการ | จำนวน |
 | --- | --- |
-| **Total Tests** | 87 |
-| **Passed** | 87 ✅ |
+| **Total Tests** | 132 |
+| **Passed** | 132 ✅ |
 | **Failed** | 0 |
 | **Pass Rate** | 100% 🎯 |
-| **Last Run** | 01-02-2026, 16:35 น. |
+| **Last Run** | 02-02-2026, 22:20 น. |
 
 ---
 
@@ -23,6 +23,16 @@
 | Mobile Safari | 16/16 | 0 | 100% ✅ |
 
 **สถานะ:** ✅ ทั้งหมดแก้ไขสำเร็จ
+
+### Admin Date Range Filter Tests (15 tests × 3 browsers = 45 runs)
+
+| Browser | Passed | Failed | Pass Rate |
+| --- | --- | --- | --- |
+| Chromium | 15/15 | 0 | 100% ✅ |
+| Mobile Chrome | 15/15 | 0 | 100% ✅ |
+| Mobile Safari | 15/15 | 0 | 100% ✅ |
+
+**สถานะ:** ✅ แก้ไขเสร็จ (02-02-2026)
 
 ### Mobile Check-in Tests (13 tests × 3 browsers = 39 runs)
 
@@ -80,12 +90,38 @@ await expect(page.locator('.login-title')).toBeVisible();
 
 ---
 
+### ✅ Issue #3: Admin Date Range Filter - Filter Panel Hidden [FIXED]
+
+| รายละเอียด | ข้อมูล |
+| --- | --- |
+| **Test File** | `tests/admin-date-range-filter.spec.js` |
+| **Fixed Tests** | Tests 1-15 (15 tests) ✅ |
+| **Solution** | เพิ่ม data-test attrs + เปิด filter panel ใน beforeEach |
+| **แก้ไขเมื่อ** | 02-02-2026 |
+| **สถานะ** | ✅ แก้ไขสำเร็จ |
+| **Current Status** | 15/15 tests passed (100%) |
+
+**วิธีแก้:**
+```javascript
+// 1. เพิ่ม data-test attributes ใน admin-dashboard.html
+data-test="quick-date-buttons"
+data-test="quick-date-today"
+data-test="clear-filter-btn"
+
+// 2. เปิด filter panel ก่อนทดสอบใน beforeEach
+await page.locator('button:has-text("Filter")').first().click();
+await page.waitForSelector('[data-test="filter-team"]', { timeout: 5000 });
+```
+
+---
+
 ## 📝 ประวัติการรันทดสอบ (Test Run History)
 
 | วันที่ | เวลา | Passed | Failed | Status | หมายเหตุ |
 | --- | --- | --- | --- | --- | --- |
 | 01-02-2026 | 15:45 น. | 95/145 (65.5%) | 50/145 (34.5%) | ❌ FAILED | Initial Playwright migration run |
 | 01-02-2026 | 16:35 น. | 87/87 (100%) | 0 | ✅ PASSED | After fix: Filter panel + Selector ambiguity |
+| 02-02-2026 | 22:00 น. | 132/132 (100%) | 0 | ✅ PASSED | After fix: Date range filter tests (15 tests added) |
 
 ---
 
@@ -178,6 +214,13 @@ npm run test:report     # ดูรายงาน HTML
 
 ## 📋 Checklist - ทั้งหมดเสร็จแล้ว ✅
 
+### Issue #3 - Admin Date Range Filter ✅
+
+- [x] เพิ่ม data-test attributes ใน HTML
+- [x] เปิด filter panel ใน beforeEach
+- [x] เปลี่ยนจาก text selectors → data-test selectors
+- [x] 15/15 tests แต่ละ browser ผ่าน ✅
+
 ### Issue #2 - Mobile Check-in ✅
 
 - [x] เปลี่ยน selector ที่ถูกต้อง
@@ -196,10 +239,10 @@ npm run test:report     # ดูรายงาน HTML
 - [x] รัน `npx playwright test --reporter=html`
 - [x] อัพเดท Test report ด้วยผลลัพธ์ใหม่ ✅
 - [x] Commit และ push changes ✅
-- [x] **Pass Rate: 100% (87/87 tests)**
+- [x] **Pass Rate: 100% (132/132 tests)**
 
 ---
 
-**อัปเดตล่าสุด:** 01-02-2026, 16:35 น.
-**เวอร์ชัน:** V.2.0.0 (01-02-2026) - ✅ 100% Pass Rate - All tests fixed and passing
+**อัปเดตล่าสุด:** 02-02-2026, 22:20 น.
+**เวอร์ชัน:** V.2.1.0 (02-02-2026) - ✅ 100% Pass Rate - All 132 tests fixed and passing
 **สถานะ:** 🎉 **ทั้งหมดแก้ไขสำเร็จ - พร้อมสำหรับ Production**
