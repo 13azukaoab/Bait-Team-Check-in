@@ -982,6 +982,35 @@
             box-shadow: var(--shadow-sm);
             display: flex;
             gap: 12px;
+            position: relative;
+        }
+
+        .history-item .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+        }
+
+        .history-item .delete-btn:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .history-item .delete-btn:active {
+            transform: scale(0.95);
         }
 
         .history-item .photo-thumb {
@@ -2243,10 +2272,14 @@
                 history.forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'history-item';
+                    div.dataset.checkinId = item.id || '';
                     const time = timestampToDate(item.checkinTime || item.createdAt);
                     const photoUrl = item.photos?.houseFront || item.photo || '';
                     
                     div.innerHTML = `
+                        <button class="delete-btn" onclick="deleteHistoryItem('${item.id}', '${(item.customerName || '').replace(/'/g, "\\'")}', event)" title="ลบรายการนี้">
+                            <i class="fas fa-trash"></i>
+                        </button>
                         <div class="photo-thumb">${photoUrl ? `<img src="${photoUrl}" alt="house">` : '<i class="fas fa-home" style="color:#94a3b8;font-size:1.5rem;"></i>'}</div>
                         <div class="info">
                             <div class="time"><i class="far fa-clock"></i> ${formatThaiDate(time)} ${time.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})} | Team ${item.team}</div>
@@ -2278,10 +2311,14 @@
             
             if (emptyEl) emptyEl.style.display = 'none';
             
-            history.forEach(item => {
+            history.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'history-item';
+                div.dataset.localIndex = index;
                 div.innerHTML = `
+                    <button class="delete-btn" onclick="deleteLocalHistoryItem(${index}, '${(item.customerName || '').replace(/'/g, "\\'")}', event)" title="ลบรายการนี้">
+                        <i class="fas fa-trash"></i>
+                    </button>
                     <div class="photo-thumb">${item.photo ? `<img src="${item.photo}" alt="house">` : ''}</div>
                     <div class="info">
                         <div class="time"><i class="far fa-clock"></i> ${formatThaiDate(item.time)} ${new Date(item.time).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})} | Team ${item.team}${item.offline ? ' <span style="color:#f59e0b;">(Offline)</span>' : ''}</div>
@@ -2292,6 +2329,57 @@
                 `;
                 listEl.appendChild(div);
             });
+        }
+
+        // ลบรายการประวัติจาก Firestore
+        async function deleteHistoryItem(checkinId, customerName, event) {
+            event.stopPropagation();
+            
+            if (!checkinId) {
+                showToast('❌ ไม่พบ ID ของรายการนี้', 'error');
+                return;
+            }
+            
+            const confirmDelete = confirm(`ต้องการลบรายการ Check-in ของ "${customerName || 'ลูกค้า'}" หรือไม่?\n\n⚠️ การลบจะไม่สามารถยกเลิกได้`);
+            
+            if (!confirmDelete) return;
+            
+            try {
+                // ลบจาก Firestore
+                await db.collection('checkins').doc(checkinId).delete();
+                
+                // รีเฟรชรายการ
+                await renderHistoryFromFirestore();
+                
+                showToast('🗑️ ลบรายการสำเร็จ', 'success');
+            } catch (error) {
+                console.error('Delete error:', error);
+                showToast('❌ ไม่สามารถลบรายการได้', 'error');
+            }
+        }
+
+        // ลบรายการประวัติจาก localStorage
+        function deleteLocalHistoryItem(index, customerName, event) {
+            event.stopPropagation();
+            
+            const confirmDelete = confirm(`ต้องการลบรายการ Check-in ของ "${customerName || 'ลูกค้า'}" หรือไม่?\n\n⚠️ การลบจะไม่สามารถยกเลิกได้`);
+            
+            if (!confirmDelete) return;
+            
+            try {
+                // ลบจาก localStorage
+                const history = JSON.parse(localStorage.getItem('bait_history') || '[]');
+                history.splice(index, 1);
+                localStorage.setItem('bait_history', JSON.stringify(history));
+                
+                // รีเฟรชรายการ
+                renderHistory();
+                
+                showToast('🗑️ ลบรายการสำเร็จ', 'success');
+            } catch (error) {
+                console.error('Delete local error:', error);
+                showToast('❌ ไม่สามารถลบรายการได้', 'error');
+            }
         }
 
         function resetForm() {

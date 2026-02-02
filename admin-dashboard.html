@@ -1889,11 +1889,11 @@
             background: var(--bg-card);
             border-radius: 12px;
             box-shadow: var(--shadow-lg);
-            min-width: 280px;
-            max-width: 300px;
+            min-width: 200px;
+            max-width: calc(100vw - 100px);
             z-index: 2000;
             display: none;
-            overflow: visible;
+            overflow: hidden;
         }
 
         .team-filter-menu.active {
@@ -1932,7 +1932,8 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 4px;
             padding: 12px;
-            max-width: 280px;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .team-filter-item {
