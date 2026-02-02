@@ -43,6 +43,30 @@ service cloud.firestore {
     }
     
     // ===========================
+    // Scheduled Check-ins Collection
+    // ===========================
+    match /scheduled_checkins/{scheduleId} {
+      // อ่านได้ - ทุกคน (Admin ใช้สำหรับ Dashboard)
+      allow read: if true;
+      
+      // สร้างได้ - ต้องมี required fields
+      allow create: if request.resource.data.keys().hasAll(['team', 'customerName', 'contractNumber', 'branch', 'scheduledDate', 'status'])
+        && request.resource.data.team is string
+        && request.resource.data.customerName is string
+        && request.resource.data.contractNumber is string
+        && request.resource.data.branch is string
+        && request.resource.data.scheduledDate is string
+        && (request.resource.data.status == 'pending' || request.resource.data.status == 'completed');
+      
+      // อัพเดท - เฉพาะ field ที่อนุญาต (status, completedAt)
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['status', 'completedAt', 'completedCheckinId']);
+      
+      // ลบได้ - Admin ผ่าน Dashboard
+      allow delete: if true;
+    }
+
+    // ===========================
     // Teams Collection (สำหรับข้อมูลทีม)
     // ===========================
     match /teams/{teamId} {

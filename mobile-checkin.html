@@ -1160,7 +1160,6 @@
                         <label><i class="fas fa-file-contract"></i> เลขที่สัญญา <span class="required">*</span></label>
                         <div style="display: flex; gap: 6px;">
                             <select id="contractPrefix" data-test="contract-prefix" style="cursor: pointer; flex: 0 0 auto; width: 80px; padding: 14px 8px;">
-                                <option value="">CT--</option>
                                 <option value="CT21-">CT21-</option>
                                 <option value="CT22-">CT22-</option>
                                 <option value="CT23-">CT23-</option>
@@ -1168,7 +1167,7 @@
                                 <option value="CT25-">CT25-</option>
                                 <option value="CT26-">CT26-</option>
                             </select>
-                            <input type="text" id="contractNumber" data-test="contract-number" placeholder="1234567" maxlength="7" pattern="[0-9]{7}" inputmode="numeric" style="flex: 1; padding: 14px 12px;">
+                            <input type="tel" id="contractNumber" data-test="contract-number" placeholder="1234567" maxlength="7" pattern="[0-9]{7}" inputmode="numeric" style="flex: 1; padding: 14px 12px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border: 2px solid #ef4444; border-radius: 6px; font-size: 16px; font-weight: 600; color: #b91c1c; text-align: center; font-family: 'Prompt', sans-serif;" required>
                         </div>
                     </div>
                     <div class="input-group">
@@ -1341,7 +1340,7 @@
                                 <option value="CT25-">CT25-</option>
                                 <option value="CT26-">CT26-</option>
                             </select>
-                            <input type="text" id="scheduleContractNumber" placeholder="1234567" maxlength="7" pattern="[0-9]{7}" inputmode="numeric" style="flex: 1; padding: 10px 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 13px; font-family: 'Prompt', sans-serif;" required>
+                            <input type="tel" id="scheduleContractNumber" placeholder="1234567" maxlength="7" pattern="[0-9]{7}" inputmode="numeric" style="flex: 1; padding: 12px 8px; border: 2px solid #ef4444; border-radius: 8px; font-size: 14px; font-weight: 600; font-family: 'Prompt', sans-serif; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: #b91c1c; text-align: center;" required>
                         </div>
                     </div>
 
@@ -1871,7 +1870,36 @@
                 showLoading(false);
                 showToast('success', 'บันทึก Check-in สำเร็จ!');
                 
-                // 5. Upload รูปภาพแบบ background (ไม่บล็อค UI)
+                // ✨ 5. Update Schedule Status (Mark as Completed)
+                (async () => {
+                    try {
+                        // หา schedule item ที่ตรงกับ contract + branch + today
+                        const today = new Date().toISOString().split('T')[0];
+                        const scheduleQuery = await db.collection('scheduled_checkins')
+                            .where('team', '==', selectedTeam)
+                            .where('contractNumber', '==', contractNumber)
+                            .where('branch', '==', branch)
+                            .where('scheduledDate', '==', today)
+                            .where('status', '==', 'pending')
+                            .get();
+                        
+                        if (!scheduleQuery.empty) {
+                            // Update first matching schedule to completed
+                            const scheduleDoc = scheduleQuery.docs[0];
+                            await db.collection('scheduled_checkins').doc(scheduleDoc.id).update({
+                                status: 'completed',
+                                completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                completedCheckinId: docId
+                            });
+                            console.log('Schedule marked as completed');
+                        }
+                    } catch (scheduleError) {
+                        console.error('Schedule update error:', scheduleError);
+                        // Silent fail - don't block UI
+                    }
+                })();
+                
+                // 6. Upload รูปภาพแบบ background (ไม่บล็อค UI)
                 (async () => {
                     try {
                         const uploadPromises = [];
@@ -1906,7 +1934,7 @@
                     }
                 })();
                 
-                // 6. Reload history แบบ background
+                // 7. Reload history แบบ background
                 renderHistoryFromFirestore().catch(console.error);
                 
                 // Reset form for next check-in
@@ -2452,7 +2480,7 @@
             }
 
             // Handle form submit
-            document.getElementById('scheduleForm').addEventListener('submit', (e) => {
+            document.getElementById('scheduleForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
                 const prefix = document.getElementById('scheduleContractPrefix').value;
@@ -2464,25 +2492,58 @@
                 }
 
                 const newItem = {
-                    id: Date.now(),
-                    date: document.getElementById('scheduleDate').value,
-                    customer: document.getElementById('scheduleCustomer').value,
-                    contract: prefix + number,
-                    branch: document.getElementById('scheduleBranch').value
+                    team: selectedTeam,
+                    scheduledDate: document.getElementById('scheduleDate').value,
+                    customerName: document.getElementById('scheduleCustomer').value,
+                    contractNumber: prefix + number,
+                    branch: document.getElementById('scheduleBranch').value,
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: selectedTeam
                 };
 
-                window.scheduledItems.push(newItem);
-                localStorage.setItem('scheduledItems', JSON.stringify(window.scheduledItems));
+                try {
+                    // Save to Firestore
+                    const docRef = await db.collection('scheduled_checkins').add(newItem);
+                    
+                    // Also add to local window object for UI update
+                    window.scheduledItems.push({
+                        id: docRef.id,
+                        date: newItem.scheduledDate,
+                        customer: newItem.customerName,
+                        contract: newItem.contractNumber,
+                        branch: newItem.branch,
+                        firestoreId: docRef.id
+                    });
 
-                // Reset form
-                document.getElementById('scheduleForm').reset();
-                document.getElementById('scheduleDate').value = today;
+                    // Reset form
+                    document.getElementById('scheduleForm').reset();
+                    document.getElementById('scheduleDate').value = today;
 
-                // Show toast
-                showToast('✅ บันทึกรายการสำเร็จ!', 'success');
+                    // Show toast
+                    showToast('✅ บันทึกรายการสำเร็จ!', 'success');
 
-                // Update quick select button count
-                updateQuickSelectButton();
+                    // Update quick select button count
+                    updateQuickSelectButton();
+                    
+                    // Reload schedule list
+                    loadScheduleListView();
+                } catch (error) {
+                    console.error('Save schedule error:', error);
+                    showToast('❌ ไม่สามารถบันทึกได้: ' + error.message, 'error');
+                    
+                    // Fallback to localStorage
+                    const item = {
+                        id: Date.now(),
+                        date: newItem.scheduledDate,
+                        customer: newItem.customerName,
+                        contract: newItem.contractNumber,
+                        branch: newItem.branch
+                    };
+                    window.scheduledItems.push(item);
+                    localStorage.setItem('scheduledItems', JSON.stringify(window.scheduledItems));
+                    showToast('✅ บันทึกออฟไลน์สำเร็จ (จะ sync เมื่อออนไลน์)', 'info');
+                }
             });
         }
 
@@ -2559,14 +2620,55 @@
             });
         }
 
-        // Load schedule list view (ดูรายการทั้งหมด)
-        function loadScheduleListView() {
-            const today = new Date().toISOString().split('T')[0];
-            const todayItems = window.scheduledItems.filter(item => item.date === today);
-            const upcomingItems = window.scheduledItems.filter(item => item.date > today);
-
-            renderScheduleListItems(todayItems, 'scheduleToday');
-            renderScheduleListItems(upcomingItems, 'scheduleUpcoming');
+        // Load schedule list view (ดูรายการทั้งหมด) - Now from Firestore
+        async function loadScheduleListView() {
+            try {
+                // Load from Firestore (team-specific)
+                const snapshot = await db.collection('scheduled_checkins')
+                    .where('team', '==', selectedTeam)
+                    .where('status', '==', 'pending')
+                    .orderBy('scheduledDate')
+                    .get();
+                
+                const today = new Date().toISOString().split('T')[0];
+                const todayItems = [];
+                const upcomingItems = [];
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const item = {
+                        id: doc.id,
+                        date: data.scheduledDate,
+                        customer: data.customerName,
+                        contract: data.contractNumber,
+                        branch: data.branch,
+                        firestoreId: doc.id
+                    };
+                    
+                    if (data.scheduledDate === today) {
+                        todayItems.push(item);
+                    } else if (data.scheduledDate > today) {
+                        upcomingItems.push(item);
+                    }
+                });
+                
+                renderScheduleListItems(todayItems, 'scheduleToday');
+                renderScheduleListItems(upcomingItems, 'scheduleUpcoming');
+                
+                // Update local cache
+                window.scheduledItems = [...todayItems, ...upcomingItems];
+                
+            } catch (error) {
+                console.error('Load schedule error:', error);
+                
+                // Fallback to localStorage
+                const today = new Date().toISOString().split('T')[0];
+                const todayItems = window.scheduledItems.filter(item => item.date === today);
+                const upcomingItems = window.scheduledItems.filter(item => item.date > today);
+                
+                renderScheduleListItems(todayItems, 'scheduleToday');
+                renderScheduleListItems(upcomingItems, 'scheduleUpcoming');
+            }
         }
 
         function renderScheduleListItems(items, containerId) {
@@ -2623,13 +2725,28 @@
             });
         }
 
-        function deleteScheduleItem(id) {
+        async function deleteScheduleItem(id) {
             if (confirm('ต้องการลบรายการนี้หรือไม่?')) {
-                window.scheduledItems = window.scheduledItems.filter(item => item.id !== id);
-                localStorage.setItem('scheduledItems', JSON.stringify(window.scheduledItems));
-                loadScheduleListView();
-                updateQuickSelectButton();
-                showToast('✅ ลบรายการสำเร็จ', 'success');
+                try {
+                    // Delete from Firestore
+                    await db.collection('scheduled_checkins').doc(id).delete();
+                    
+                    // Update local cache
+                    window.scheduledItems = window.scheduledItems.filter(item => item.firestoreId !== id && item.id !== id);
+                    
+                    loadScheduleListView();
+                    updateQuickSelectButton();
+                    showToast('✅ ลบรายการสำเร็จ', 'success');
+                } catch (error) {
+                    console.error('Delete schedule error:', error);
+                    
+                    // Fallback to localStorage
+                    window.scheduledItems = window.scheduledItems.filter(item => item.id !== id);
+                    localStorage.setItem('scheduledItems', JSON.stringify(window.scheduledItems));
+                    loadScheduleListView();
+                    updateQuickSelectButton();
+                    showToast('✅ ลบรายการสำเร็จ (ออฟไลน์)', 'success');
+                }
             }
         }
 

@@ -1985,6 +1985,10 @@
                     <i class="fas fa-list-check"></i>
                     <span class="nav-text">Check-ins List</span>
                 </div>
+                <div class="nav-item" data-page="scheduled" data-tooltip="Scheduled Check-ins" onclick="showPage('scheduled')">
+                    <i class="fas fa-calendar-check"></i>
+                    <span class="nav-text">Scheduled</span>
+                </div>
                 <div class="nav-item" data-page="customers" data-tooltip="Customers" onclick="showPage('customers')">
                     <i class="fas fa-users"></i>
                     <span class="nav-text">Customers</span>
@@ -2536,6 +2540,103 @@
                 </div>
             </div>
 
+            <!-- Scheduled Check-ins Page -->
+            <div class="page-content" id="page-scheduled" style="display: none;">
+                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-calendar-check" style="color: var(--primary);"></i> Scheduled Check-ins
+                </h2>
+                <div class="stat-cards" style="margin-bottom: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i class="fas fa-hourglass-half"></i></div>
+                        <div class="stat-info">
+                            <h3 id="scheduledPending">0</h3>
+                            <p>รอดำเนินการ</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <h3 id="scheduledCompleted">0</h3>
+                            <p>เสร็จสิ้น</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fas fa-calendar"></i></div>
+                        <div class="stat-info">
+                            <h3 id="scheduledToday">0</h3>
+                            <p>วันนี้</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-section">
+                    <div class="section-header">
+                        <input type="date" id="scheduledDateFilter" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" onchange="filterScheduledCheckins()">
+                        <select id="scheduledTeamFilter" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif; cursor: pointer;" onchange="filterScheduledCheckins()">
+                            <option value="">ทั้งหมด</option>
+                            <option value="A">Team A</option>
+                            <option value="B">Team B</option>
+                            <option value="C">Team C</option>
+                            <option value="D">Team D</option>
+                            <option value="E">Team E</option>
+                            <option value="F">Team F</option>
+                            <option value="G">Team G</option>
+                            <option value="H">Team H</option>
+                            <option value="I">Team I</option>
+                            <option value="J">Team J</option>
+                            <option value="K">Team K</option>
+                            <option value="L">Team L</option>
+                            <option value="M">Team M</option>
+                            <option value="N">Team N</option>
+                            <option value="O">Team O</option>
+                            <option value="Z">Team Z</option>
+                        </select>
+                        <select id="scheduledStatusFilter" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif; cursor: pointer;" onchange="filterScheduledCheckins()">
+                            <option value="">ทั้งหมด</option>
+                            <option value="pending">รอดำเนินการ</option>
+                            <option value="completed">เสร็จสิ้น</option>
+                        </select>
+                    </div>
+                    <div class="table-scroll-container">
+                    <table class="data-table" id="scheduled-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-column="0" onclick="sortTable('scheduled-table', 0)">
+                                    วันที่ <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="1" onclick="sortTable('scheduled-table', 1)">
+                                    ทีม <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="2" onclick="sortTable('scheduled-table', 2)">
+                                    ลูกค้า <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="3" onclick="sortTable('scheduled-table', 3)">
+                                    เลขสัญญา <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="4" onclick="sortTable('scheduled-table', 4)">
+                                    สาขา <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="5" onclick="sortTable('scheduled-table', 5)">
+                                    สถานะ <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduledTableBody">
+                            <!-- Data loaded from Firestore -->
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                    <i class="fas fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;" id="scheduledTableInfo">แสดง 0 รายการ</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Customers Page -->
             <div class="page-content" id="page-customers" style="display: none;">
                 <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
@@ -2874,6 +2975,149 @@
             } catch (error) {
                 console.error('Error loading check-ins:', error);
                 return [];
+            }
+        }
+
+        // ===== Scheduled Check-ins Management =====
+        let firestoreScheduledCheckins = [];
+
+        async function loadScheduledCheckinsFromFirestore() {
+            try {
+                const querySnapshot = await db.collection('scheduled_checkins')
+                    .orderBy('scheduledDate')
+                    .get();
+                
+                firestoreScheduledCheckins = [];
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    firestoreScheduledCheckins.push({
+                        id: doc.id,
+                        ...data,
+                        scheduledDate: data.scheduledDate,
+                        status: data.status || 'pending'
+                    });
+                });
+                
+                // Load to UI
+                loadScheduledCheckinsUI();
+                
+                return firestoreScheduledCheckins;
+            } catch (error) {
+                console.error('Error loading scheduled check-ins:', error);
+                return [];
+            }
+        }
+
+        function loadScheduledCheckinsUI() {
+            const tbody = document.getElementById('scheduledTableBody');
+            if (!tbody) return;
+            
+            if (firestoreScheduledCheckins.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;"><i class="fas fa-inbox"></i> ไม่มีรายการจองล่วงหน้า</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = firestoreScheduledCheckins.map((item, index) => {
+                const statusClass = item.status === 'completed' ? 'success' : 'warning';
+                const statusText = item.status === 'completed' ? 'เสร็จสิ้น' : 'รอดำเนินการ';
+                const statusIcon = item.status === 'completed' ? 'fa-check-circle' : 'fa-hourglass-half';
+                
+                return `
+                    <tr>
+                        <td>${item.scheduledDate}</td>
+                        <td><span style="background: #667eea20; padding: 4px 8px; border-radius: 6px; font-weight: 600;">Team ${item.team}</span></td>
+                        <td>${item.customerName}</td>
+                        <td>${item.contractNumber}</td>
+                        <td>${item.branch}</td>
+                        <td><span style="background: ${item.status === 'completed' ? '#1ab39f20' : '#f39c1220'}; color: ${item.status === 'completed' ? '#16a085' : '#e67e22'}; padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;"><i class="fas ${statusIcon}"></i> ${statusText}</span></td>
+                        <td>
+                            <div style="display: flex; gap: 6px;">
+                                ${item.status === 'pending' ? `<button style="background: #667eea; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;" onclick="markScheduleAsCompleted('${item.id}')"><i class="fas fa-check"></i> เสร็จ</button>` : ''}
+                                <button style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;" onclick="deleteScheduleItem('${item.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Update stats
+            const pending = firestoreScheduledCheckins.filter(s => s.status === 'pending').length;
+            const completed = firestoreScheduledCheckins.filter(s => s.status === 'completed').length;
+            const today = new Date().toISOString().split('T')[0];
+            const todaySchedules = firestoreScheduledCheckins.filter(s => s.scheduledDate === today).length;
+            
+            document.getElementById('scheduledPending').textContent = pending;
+            document.getElementById('scheduledCompleted').textContent = completed;
+            document.getElementById('scheduledToday').textContent = todaySchedules;
+            document.getElementById('scheduledTableInfo').textContent = `แสดง ${firestoreScheduledCheckins.length} รายการ`;
+        }
+
+        function filterScheduledCheckins() {
+            const dateFilter = document.getElementById('scheduledDateFilter').value;
+            const teamFilter = document.getElementById('scheduledTeamFilter').value;
+            const statusFilter = document.getElementById('scheduledStatusFilter').value;
+            
+            const filtered = firestoreScheduledCheckins.filter(item => {
+                const dateMatch = !dateFilter || item.scheduledDate === dateFilter;
+                const teamMatch = !teamFilter || item.team === teamFilter;
+                const statusMatch = !statusFilter || item.status === statusFilter;
+                return dateMatch && teamMatch && statusMatch;
+            });
+            
+            const tbody = document.getElementById('scheduledTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">ไม่มีรายการที่ตรงกับเงื่อนไข</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = filtered.map(item => {
+                const statusText = item.status === 'completed' ? 'เสร็จสิ้น' : 'รอดำเนินการ';
+                const statusIcon = item.status === 'completed' ? 'fa-check-circle' : 'fa-hourglass-half';
+                
+                return `
+                    <tr>
+                        <td>${item.scheduledDate}</td>
+                        <td><span style="background: #667eea20; padding: 4px 8px; border-radius: 6px; font-weight: 600;">Team ${item.team}</span></td>
+                        <td>${item.customerName}</td>
+                        <td>${item.contractNumber}</td>
+                        <td>${item.branch}</td>
+                        <td><span style="background: ${item.status === 'completed' ? '#1ab39f20' : '#f39c1220'}; color: ${item.status === 'completed' ? '#16a085' : '#e67e22'}; padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;"><i class="fas ${statusIcon}"></i> ${statusText}</span></td>
+                        <td>
+                            <div style="display: flex; gap: 6px;">
+                                ${item.status === 'pending' ? `<button style="background: #667eea; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;" onclick="markScheduleAsCompleted('${item.id}')"><i class="fas fa-check"></i> เสร็จ</button>` : ''}
+                                <button style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;" onclick="deleteScheduleItem('${item.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('scheduledTableInfo').textContent = `แสดง ${filtered.length} รายการ`;
+        }
+
+        async function markScheduleAsCompleted(scheduleId) {
+            try {
+                await db.collection('scheduled_checkins').doc(scheduleId).update({
+                    status: 'completed',
+                    completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showRealtimeToast('✅ สำเร็จ', 'อัพเดทสถานะรายการเป็นเสร็จสิ้น', 'success');
+                await loadScheduledCheckinsFromFirestore();
+            } catch (error) {
+                showRealtimeToast('❌ ข้อผิดพลาด', error.message, 'error');
+            }
+        }
+
+        async function deleteScheduleItem(scheduleId) {
+            if (!confirm('ต้องการลบรายการนี้หรือไม่?')) return;
+            
+            try {
+                await db.collection('scheduled_checkins').doc(scheduleId).delete();
+                showRealtimeToast('✅ สำเร็จ', 'ลบรายการเรียบร้อย', 'success');
+                await loadScheduledCheckinsFromFirestore();
+            } catch (error) {
+                showRealtimeToast('❌ ข้อผิดพลาด', error.message, 'error');
             }
         }
         
@@ -3748,6 +3992,7 @@
         // โหลดข้อมูลเมื่อเปิดหน้า
         async function initializeFirestoreData() {
             await loadCheckinsFromFirestore();
+            await loadScheduledCheckinsFromFirestore();
             updateDashboardStats();
             updateRecentCheckins();
             updateMapMarkersFromFirestore();
