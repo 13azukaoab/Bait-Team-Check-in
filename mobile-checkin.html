@@ -1126,45 +1126,43 @@
                     <input type="text" placeholder="กรอกชื่อลูกค้า" id="customerName" data-test="customer-name">
                 </div>
 
-                <!-- Contract Number (Row Layout) -->
-                <div class="input-group">
-                    <label><i class="fas fa-file-contract"></i> เลขที่สัญญา <span class="required">*</span></label>
-                    <div style="display: flex; gap: 8px;">
-                        <select id="contractPrefix" data-test="contract-prefix" style="cursor: pointer; flex: 0 0 auto; width: 100px;">
-                            <option value="">-- เลือก --</option>
-                            <option value="CT21-">CT21-</option>
-                            <option value="CT22-">CT22-</option>
-                            <option value="CT23-">CT23-</option>
-                            <option value="CT24-">CT24-</option>
-                            <option value="CT25-">CT25-</option>
-                            <option value="CT26-">CT26-</option>
-                        </select>
-                        <input type="text" id="contractNumber" data-test="contract-number" placeholder="1234567" maxlength="7" pattern="[0-9]{7}" inputmode="numeric" style="flex: 1;">
+                <!-- Contract Number & Branch in 2 columns -->
+                <div class="two-col">
+                    <div class="input-group">
+                        <label><i class="fas fa-file-contract"></i> เลขที่สัญญา <span class="required">*</span></label>
+                        <div style="display: flex; gap: 6px;">
+                            <select id="contractPrefix" data-test="contract-prefix" style="cursor: pointer; flex: 0 0 auto; width: 80px; padding: 14px 8px;">
+                                <option value="">CT--</option>
+                                <option value="CT21-">CT21-</option>
+                                <option value="CT22-">CT22-</option>
+                                <option value="CT23-">CT23-</option>
+                                <option value="CT24-">CT24-</option>
+                                <option value="CT25-">CT25-</option>
+                                <option value="CT26-">CT26-</option>
+                            </select>
+                            <input type="text" id="contractNumber" data-test="contract-number" placeholder="1234567" maxlength="7" pattern="[0-9]{7}" inputmode="numeric" style="flex: 1; padding: 14px 12px;">
+                        </div>
                     </div>
-                </div>
-
-                <!-- Branch -->
-                <div class="input-group">
-                    <label><i class="fas fa-building"></i> สาขา <span class="required">*</span></label>
-                    <select id="branchSelect" data-test="branch-select">
-                        <option value="">เลือกสาขา</option>
-                        <optgroup label="เขต 1">
-                            <option value="พุทธมณฑล">พุทธมณฑล</option>
-                            <option value="นครปฐม">นครปฐม</option>
-                            <option value="หัวหิน">หัวหิน</option>
-                            <option value="พระราม 2">พระราม 2</option>
-                        </optgroup>
-                        <optgroup label="เขต 2">
-                            <option value="สาทร">สาทร</option>
-                            <option value="ปทุมวัน">ปทุมวัน</option>
-                            <option value="พระราม 4">พระราม 4</option>
-                            <option value="นนทบุรี">นนทบุรี</option>
-                        </optgroup>
-                        <optgroup label="เขต 3">
-                            <option value="ปทุมธานี">ปทุมธานี</option>
-                            <option value="รามอินทรา">รามอินทรา</option>
-                            <option value="อยุธยา">อยุธยา</option>
-                        </optgroup>
+                    <div class="input-group">
+                        <label><i class="fas fa-building"></i> สาขา <span class="required">*</span></label>
+                        <select id="branchSelect" data-test="branch-select">
+                            <option value="">เลือกสาขา</option>
+                            <optgroup label="เขต 1">
+                                <option value="พุทธมณฑล">พุทธมณฑล</option>
+                                <option value="นครปฐม">นครปฐม</option>
+                                <option value="หัวหิน">หัวหิน</option>
+                                <option value="พระราม 2">พระราม 2</option>
+                            </optgroup>
+                            <optgroup label="เขต 2">
+                                <option value="สาทร">สาทร</option>
+                                <option value="ปทุมวัน">ปทุมวัน</option>
+                                <option value="พระราม 4">พระราม 4</option>
+                                <option value="นนทบุรี">นนทบุรี</option>
+                            </optgroup>
+                            <optgroup label="เขต 3">
+                                <option value="ปทุมธานี">ปทุมธานี</option>
+                                <option value="รามอินทรา">รามอินทรา</option>
+                                <option value="อยุธยา">อยุธยา</option>
                             </optgroup>
                             <optgroup label="เขต 4">
                                 <option value="ลาดพร้าว">ลาดพร้าว</option>
@@ -1424,15 +1422,15 @@
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="showView('checkin')" data-test="nav-checkin">
+            <div class="nav-item active" onclick="showView('checkin', event)" data-test="nav-checkin">
                 <i class="fas fa-home"></i>
                 <span>หน้าแรก</span>
             </div>
-            <div class="nav-item" onclick="showView('schedule')" data-test="nav-schedule">
+            <div class="nav-item" onclick="showView('schedule', event)" data-test="nav-schedule">
                 <i class="fas fa-calendar-check"></i>
                 <span>เตรียมงาน</span>
             </div>
-            <div class="nav-item" onclick="showView('history')" data-test="nav-history">
+            <div class="nav-item" onclick="showView('history', event)" data-test="nav-history">
                 <i class="fas fa-clock-rotate-left"></i>
                 <span>ประวัติ</span>
             </div>
@@ -2739,7 +2737,7 @@
         }
 
         // Update showView function to handle schedule view
-        window.showView = function(viewName) {
+        window.showView = function(viewName, event) {
             // Hide all views
             document.querySelectorAll('[id$="View"]').forEach(el => {
                 el.style.display = 'none';
@@ -2756,9 +2754,18 @@
                 item.classList.remove('active');
             });
             
-            const navBtn = event.target.closest('.nav-item');
+            // Handle event from onclick
+            const navBtn = event ? (event.target ? event.target.closest('.nav-item') : null) : null;
             if (navBtn) {
                 navBtn.classList.add('active');
+            } else {
+                // Fallback: find by viewName
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    if (item.getAttribute('onclick')?.includes(viewName)) {
+                        item.classList.add('active');
+                    }
+                });
             }
         };
     </script>
