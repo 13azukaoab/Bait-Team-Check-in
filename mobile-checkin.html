@@ -1130,7 +1130,13 @@
                 <div class="two-col">
                     <div class="input-group">
                         <label><i class="fas fa-file-contract"></i> เลขที่สัญญา <span class="required">*</span></label>
-                        <input type="text" placeholder="เช่น CT-12345" id="contractNumber" data-test="contract-number">
+                        <input type="text" id="contractNumber" list="contractList" placeholder="เลือกหรือพิมพ์" data-test="contract-number">
+                        <datalist id="contractList">
+                            <option value="CT22">
+                            <option value="CT23">
+                            <option value="CT24">
+                            <option value="CT25">
+                        </datalist>
                     </div>
                     <div class="input-group">
                         <label><i class="fas fa-building"></i> สาขา <span class="required">*</span></label>
