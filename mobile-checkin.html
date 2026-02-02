@@ -1106,6 +1106,18 @@
             <div class="main-content" id="checkinView">
                 <!-- Removed Team Selector (Moved to Login) -->
 
+            <!-- Quick Select Alert (Pre-Schedule Feature - Mockup) -->
+            <div id="quickSelectAlert" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; margin-bottom: 15px; border-radius: 12px; margin: 10px 15px 15px 15px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <i class="fas fa-lightning-bolt" style="font-size: 20px;"></i>
+                    <span style="font-weight: 600;">มีรายการวันนี้!</span>
+                </div>
+                <p style="font-size: 13px; margin-bottom: 10px; opacity: 0.95;">คุณมีรายการสั่งจองล่วงหน้า คลิกด้านล่างเพื่อเลือกใช้ข้อมูลอัตโนมัติ</p>
+                <button id="quickSelectBtn" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s;">
+                    <i class="fas fa-hand-pointer"></i> เลือกจากรายการ
+                </button>
+            </div>
+
             <!-- Form -->
             <div class="form-section">
                 <!-- Customer Name -->
@@ -2117,6 +2129,113 @@
             statusBadge.className = 'status-badge pending';
             statusBadge.innerHTML = '<i class="fas fa-clock"></i><span>ยังไม่ได้ Check-in</span>';
         }
+
+        // ============== Pre-Schedule Feature (Mockup) ==============
+        // Load quick select data from sessionStorage
+        function initQuickSelectFeature() {
+            const quickSelectData = sessionStorage.getItem('quickSelectData');
+            if (quickSelectData) {
+                const data = JSON.parse(quickSelectData);
+                
+                // Show alert
+                document.getElementById('quickSelectAlert').style.display = 'block';
+                
+                // Mock pre-scheduled items for today
+                const mockScheduledItems = [
+                    { customer: data.customer, contract: data.contract, branch: data.branch }
+                ];
+                
+                // Setup quick select button
+                document.getElementById('quickSelectBtn').addEventListener('click', () => {
+                    showQuickSelectModal(mockScheduledItems);
+                });
+                
+                // Setup modal close buttons
+                document.getElementById('closeQuickSelectModal').addEventListener('click', closeQuickSelectModal);
+                document.getElementById('cancelQuickSelect').addEventListener('click', closeQuickSelectModal);
+                
+                // Close modal when clicking outside
+                document.getElementById('quickSelectModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'quickSelectModal') {
+                        closeQuickSelectModal();
+                    }
+                });
+                
+                // Clear sessionStorage after loading
+                sessionStorage.removeItem('quickSelectData');
+            }
+        }
+
+        function showQuickSelectModal(items) {
+            const listContainer = document.getElementById('quickSelectList');
+            listContainer.innerHTML = '';
+            
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.style.cssText = 'padding: 15px; background: #f8f9fa; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent;';
+                div.innerHTML = `
+                    <h3 style="font-size: 16px; color: #333; margin-bottom: 5px;">${item.customer}</h3>
+                    <p style="font-size: 13px; color: #6c757d;">
+                        <i class="fas fa-file-contract"></i> ${item.contract} | 
+                        <i class="fas fa-map-marker-alt"></i> ${item.branch}
+                    </p>
+                `;
+                
+                div.addEventListener('mouseover', () => {
+                    div.style.borderColor = '#667eea';
+                    div.style.background = '#e7f3ff';
+                });
+                
+                div.addEventListener('mouseout', () => {
+                    div.style.borderColor = 'transparent';
+                    div.style.background = '#f8f9fa';
+                });
+                
+                div.addEventListener('click', () => {
+                    fillFormFromQuickSelect(item);
+                });
+                
+                listContainer.appendChild(div);
+            });
+            
+            document.getElementById('quickSelectModal').style.display = 'flex';
+        }
+
+        function closeQuickSelectModal() {
+            document.getElementById('quickSelectModal').style.display = 'none';
+        }
+
+        function fillFormFromQuickSelect(item) {
+            // Fill the form
+            document.getElementById('customerName').value = item.customer;
+            document.getElementById('contractNumber').value = item.contract;
+            document.getElementById('branchSelect').value = item.branch;
+            
+            // Close modal
+            closeQuickSelectModal();
+            
+            // Show success message
+            const toast = document.createElement('div');
+            toast.style.cssText = 'background: white; border-left: 4px solid #28a745; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem;';
+            toast.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i><span>✅ กรอกข้อมูลอัตโนมัติแล้ว</span>';
+            
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+            
+            // Scroll to form
+            setTimeout(() => {
+                document.getElementById('customerName').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initQuickSelectFeature();
+        });
     </script>
 </body>
 </html>

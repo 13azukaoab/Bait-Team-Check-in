@@ -711,22 +711,15 @@
         }
 
         function fillForm(customer, contract, branch) {
-            // Fill form with selected data
-            document.getElementById('customer-name').value = customer;
-            document.getElementById('contract-number').value = contract;
-            document.getElementById('branch').value = branch;
+            // Save to sessionStorage for mobile check-in
+            sessionStorage.setItem('quickSelectData', JSON.stringify({
+                customer: customer,
+                contract: contract,
+                branch: branch
+            }));
 
-            // Close modal and switch to create tab
-            closeQuickSelect();
-            
-            // Switch to create tab
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.querySelector('.tab').classList.add('active');
-            document.getElementById('create-tab').classList.add('active');
-
-            // Show success toast
-            alert('✅ กรอกข้อมูลอัตโนมัติแล้ว!\n\nคุณสามารถแก้ไขข้อมูลก่อนเช็คอินได้');
+            // Open mobile check-in in new tab (or same window)
+            window.location.href = '/mobile-checkin.html?quickSelect=true';
         }
 
         // Set default date to today
