@@ -1247,13 +1247,58 @@
             </div>
         </div>
 
+        <!-- Pre-Schedule View -->
+        <div class="main-content" id="scheduleView" style="display: none;">
+            <div class="page-title">
+                <i class="fas fa-calendar-check"></i> เตรียมงาน
+            </div>
+
+            <!-- Pre-Schedule Stats -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 15px; margin-bottom: 20px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 28px; font-weight: 700; margin-bottom: 3px;" id="schedulePending">3</div>
+                    <div style="font-size: 12px; opacity: 0.9;">รอดำเนินการ</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 15px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 28px; font-weight: 700; margin-bottom: 3px;" id="scheduleCompleted">45</div>
+                    <div style="font-size: 12px; opacity: 0.9;">เช็คอินแล้ว</div>
+                </div>
+            </div>
+
+            <!-- Today's Schedule -->
+            <div style="padding: 0 15px;">
+                <h3 style="color: #667eea; margin-bottom: 10px; font-size: 14px; font-weight: 600;">
+                    <i class="fas fa-calendar-day"></i> วันนี้ (3 รายการ)
+                </h3>
+                
+                <div id="todayScheduleList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <!-- Items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Upcoming Schedule -->
+            <div style="padding: 0 15px;">
+                <h3 style="color: #764ba2; margin-bottom: 10px; font-size: 14px; font-weight: 600;">
+                    <i class="fas fa-calendar-alt"></i> อีก 2 วันข้างหน้า (2 รายการ)
+                </h3>
+                
+                <div id="upcomingScheduleList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 100px;">
+                    <!-- Items will be loaded here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="showView('checkin')">
+            <div class="nav-item active" onclick="showView('checkin')" data-test="nav-checkin">
                 <i class="fas fa-home"></i>
                 <span>หน้าแรก</span>
             </div>
-            <div class="nav-item" onclick="showView('history')">
+            <div class="nav-item" onclick="showView('schedule')" data-test="nav-schedule">
+                <i class="fas fa-calendar-check"></i>
+                <span>เตรียมงาน</span>
+            </div>
+            <div class="nav-item" onclick="showView('history')" data-test="nav-history">
                 <i class="fas fa-clock-rotate-left"></i>
                 <span>ประวัติ</span>
             </div>
@@ -2235,7 +2280,119 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
             initQuickSelectFeature();
+            loadScheduleData();
         });
+
+        // ============== Schedule View Functions ==============
+        function loadScheduleData() {
+            // Mock data - จะแทนที่ด้วย Firestore ในการพัฒนาจริง
+            const todaySchedule = [
+                { id: 1, customer: 'นายสมชาย ใจดี', contract: 'CT23', branch: 'สาทร' },
+                { id: 2, customer: 'นางสาวมาลี สวยงาม', contract: 'CT24', branch: 'ลาดพร้าว' },
+                { id: 3, customer: 'นายประเสริฐ รุ่งเรือง', contract: 'CT22', branch: 'สุขุมวิท' }
+            ];
+
+            const upcomingSchedule = [
+                { id: 4, customer: 'นายวิชัย ทรงธรรม', contract: 'CT25', branch: 'พัทยา', date: '03-02-2026' },
+                { id: 5, customer: 'นางสุดา แสงจันทร์', contract: 'CT23', branch: 'ปากช่อง', date: '03-02-2026' }
+            ];
+
+            renderScheduleItems(todaySchedule, 'todayScheduleList');
+            renderScheduleItems(upcomingSchedule, 'upcomingScheduleList');
+        }
+
+        function renderScheduleItems(items, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.style.cssText = 'background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.3s;';
+                
+                div.innerHTML = `
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #333; margin-bottom: 3px; font-size: 14px;">${item.customer}</div>
+                        <div style="font-size: 12px; color: #6c757d;">
+                            <i class="fas fa-file-contract"></i> ${item.contract} | 
+                            <i class="fas fa-map-marker-alt"></i> ${item.branch}
+                        </div>
+                    </div>
+                    <button style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                `;
+
+                div.addEventListener('mouseenter', () => {
+                    div.style.boxShadow = '0 3px 10px rgba(0,0,0,0.1)';
+                    div.style.transform = 'translateX(3px)';
+                });
+
+                div.addEventListener('mouseleave', () => {
+                    div.style.boxShadow = 'none';
+                    div.style.transform = 'translateX(0)';
+                });
+
+                div.addEventListener('click', () => {
+                    useScheduleItem(item);
+                });
+
+                container.appendChild(div);
+            });
+        }
+
+        function useScheduleItem(item) {
+            // Fill form and switch to check-in view
+            document.getElementById('customerName').value = item.customer;
+            document.getElementById('contractNumber').value = item.contract;
+            document.getElementById('branchSelect').value = item.branch;
+
+            // Switch to check-in view
+            showView('checkin');
+
+            // Scroll to form
+            setTimeout(() => {
+                document.getElementById('customerName').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+
+            // Show toast
+            const toast = document.createElement('div');
+            toast.style.cssText = 'background: white; border-left: 4px solid #28a745; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem;';
+            toast.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i><span>✅ กรอกข้อมูลอัตโนมัติแล้ว</span>';
+            
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Update showView function to handle schedule view
+        const originalShowView = typeof showView !== 'undefined' ? showView : null;
+        window.showView = function(viewName) {
+            // Hide all views
+            document.querySelectorAll('[id$="View"]').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected view
+            const viewElement = document.getElementById(viewName + 'View');
+            if (viewElement) {
+                viewElement.style.display = 'block';
+            }
+
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            event.target.closest('.nav-item').classList.add('active');
+
+            // Load schedule data when showing schedule view
+            if (viewName === 'schedule') {
+                loadScheduleData();
+            }
+        };
     </script>
 </body>
 </html>
