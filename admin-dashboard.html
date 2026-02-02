@@ -2193,27 +2193,27 @@
                         </div>
                         <div class="filter-group filter-btn-group">
                             <label>&nbsp;</label>
-                            <button class="btn btn-outline" onclick="clearFilters()">
+                            <button class="btn btn-outline" data-test="clear-filter-btn" onclick="clearFilters()">
                                 <i class="fas fa-times"></i> ล้าง
                             </button>
                         </div>
                     </div>
                     <!-- Quick Date Range Selection -->
-                    <div class="filter-row" style="gap: 8px; padding: 0 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
+                    <div class="filter-row" data-test="quick-date-buttons" style="gap: 8px; padding: 0 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
                         <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; margin-right: 8px;">วันที่ด่วน:</span>
-                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('today'); applyFilters();" title="แสดงข้อมูลวันนี้">
+                        <button type="button" class="btn btn-outline" data-test="quick-date-today" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('today'); applyFilters();" title="แสดงข้อมูลวันนี้">
                             <i class="fas fa-calendar-day"></i> วันนี้
                         </button>
-                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('thisWeek'); applyFilters();" title="แสดงข้อมูลสัปดาห์นี้">
+                        <button type="button" class="btn btn-outline" data-test="quick-date-week" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('thisWeek'); applyFilters();" title="แสดงข้อมูลสัปดาห์นี้">
                             <i class="fas fa-calendar-week"></i> สัปดาห์นี้
                         </button>
-                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('thisMonth'); applyFilters();" title="แสดงข้อมูลเดือนนี้">
+                        <button type="button" class="btn btn-outline" data-test="quick-date-month" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('thisMonth'); applyFilters();" title="แสดงข้อมูลเดือนนี้">
                             <i class="fas fa-calendar-alt"></i> เดือนนี้
                         </button>
-                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('last7days'); applyFilters();" title="แสดงข้อมูล 7 วันที่ผ่านมา">
+                        <button type="button" class="btn btn-outline" data-test="quick-date-7days" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('last7days'); applyFilters();" title="แสดงข้อมูล 7 วันที่ผ่านมา">
                             <i class="fas fa-history"></i> 7 วัน
                         </button>
-                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('last30days'); applyFilters();" title="แสดงข้อมูล 30 วันที่ผ่านมา">
+                        <button type="button" class="btn btn-outline" data-test="quick-date-30days" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('last30days'); applyFilters();" title="แสดงข้อมูล 30 วันที่ผ่านมา">
                             <i class="fas fa-history"></i> 30 วัน
                         </button>
                     </div>

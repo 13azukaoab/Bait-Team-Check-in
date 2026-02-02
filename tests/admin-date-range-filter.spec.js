@@ -4,10 +4,14 @@ const { test, expect } = require('@playwright/test');
 test.describe('Admin Dashboard - Date Range Filter', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to admin dashboard
-    await page.goto('http://localhost:8080/admin-dashboard.html');
+    await page.goto('/admin-dashboard.html');
     
     // Wait for dashboard to load
-    await page.waitForSelector('[data-test="filter-team"]', { timeout: 10000 });
+    await page.waitForSelector('.sidebar', { timeout: 10000 });
+    
+    // Open filter panel first (it's hidden by default)
+    await page.locator('button:has-text("Filter")').first().click();
+    await page.waitForSelector('[data-test="filter-team"]', { timeout: 5000 });
   });
 
   test('1️⃣ Should display date range filter inputs', async ({ page }) => {
@@ -20,22 +24,12 @@ test.describe('Admin Dashboard - Date Range Filter', () => {
   });
 
   test('2️⃣ Should display quick date range selection buttons', async ({ page }) => {
-    // Scroll to filter section
-    await page.locator('[data-test="filter-team"]').scrollIntoViewIfNeeded();
+    // Check for quick select buttons (filter panel is already open from beforeEach)
+    const quickButtons = page.locator('[data-test="quick-date-buttons"] button');
+    const count = await quickButtons.count();
     
-    // Check for quick select buttons
-    const todayBtn = page.locator('button:has-text("วันนี้")');
-    const weekBtn = page.locator('button:has-text("สัปดาห์นี้")');
-    const monthBtn = page.locator('button:has-text("เดือนนี้")');
-    const last7daysBtn = page.locator('button:has-text("7 วัน")');
-    const last30daysBtn = page.locator('button:has-text("30 วัน")');
-    
-    // We check for buttons containing the icons and text
-    const buttons = page.locator('.filter-row:last-of-type button');
-    const count = await buttons.count();
-    
-    // Should have at least 5 quick select buttons
-    expect(count).toBeGreaterThanOrEqual(5);
+    // Should have 5 quick select buttons (today, week, month, 7days, 30days)
+    expect(count).toBe(5);
   });
 
   test('3️⃣ Should filter data by start date only', async ({ page }) => {
@@ -116,69 +110,57 @@ test.describe('Admin Dashboard - Date Range Filter', () => {
   });
 
   test('7️⃣ Should set "today" quick filter correctly', async ({ page }) => {
-    // Scroll to quick buttons
-    await page.locator('[data-test="filter-team"]').scrollIntoViewIfNeeded();
+    // Click "Today" button (filter panel is already open from beforeEach)
+    const todayButton = page.locator('[data-test="quick-date-today"]');
     
-    // Click "Today" button
-    const todayButton = page.locator('button').filter({ hasText: /วันนี้/ }).first();
+    await expect(todayButton).toBeVisible();
+    await todayButton.click();
     
-    if (await todayButton.isVisible()) {
-      await todayButton.click();
-      
-      // Wait for filter to apply
-      await page.waitForTimeout(500);
-      
-      // Check that date inputs are populated
-      const startInput = page.locator('[data-test="filter-date-start"]');
-      const today = formatDateForInput(new Date());
-      
-      const startValue = await startInput.inputValue();
-      expect(startValue).toBe(today);
-    }
+    // Wait for filter to apply
+    await page.waitForTimeout(500);
+    
+    // Check that date inputs are populated
+    const startInput = page.locator('[data-test="filter-date-start"]');
+    const today = formatDateForInput(new Date());
+    
+    const startValue = await startInput.inputValue();
+    expect(startValue).toBe(today);
   });
 
   test('8️⃣ Should set "this week" quick filter correctly', async ({ page }) => {
-    // Scroll to quick buttons
-    await page.locator('[data-test="filter-team"]').scrollIntoViewIfNeeded();
+    // Click "This Week" button (filter panel is already open from beforeEach)
+    const weekButton = page.locator('[data-test="quick-date-week"]');
     
-    // Click "This Week" button
-    const weekButton = page.locator('button').filter({ hasText: /สัปดาห์นี้/ }).first();
+    await expect(weekButton).toBeVisible();
+    await weekButton.click();
     
-    if (await weekButton.isVisible()) {
-      await weekButton.click();
-      
-      // Wait for filter to apply
-      await page.waitForTimeout(500);
-      
-      // Check that dates are set
-      const startInput = page.locator('[data-test="filter-date-start"]');
-      const startValue = await startInput.inputValue();
-      
-      // Should have a date value
-      expect(startValue).toMatch(/\d{4}-\d{2}-\d{2}/);
-    }
+    // Wait for filter to apply
+    await page.waitForTimeout(500);
+    
+    // Check that dates are set
+    const startInput = page.locator('[data-test="filter-date-start"]');
+    const startValue = await startInput.inputValue();
+    
+    // Should have a date value
+    expect(startValue).toMatch(/\d{4}-\d{2}-\d{2}/);
   });
 
   test('9️⃣ Should set "this month" quick filter correctly', async ({ page }) => {
-    // Scroll to quick buttons
-    await page.locator('[data-test="filter-team"]').scrollIntoViewIfNeeded();
+    // Click "This Month" button (filter panel is already open from beforeEach)
+    const monthButton = page.locator('[data-test="quick-date-month"]');
     
-    // Click "This Month" button
-    const monthButton = page.locator('button').filter({ hasText: /เดือนนี้/ }).first();
+    await expect(monthButton).toBeVisible();
+    await monthButton.click();
     
-    if (await monthButton.isVisible()) {
-      await monthButton.click();
-      
-      // Wait for filter to apply
-      await page.waitForTimeout(500);
-      
-      // Check that dates are set
-      const startInput = page.locator('[data-test="filter-date-start"]');
-      const startValue = await startInput.inputValue();
-      
-      // Start date should be 1st of month
-      expect(startValue).toMatch(/\d{4}-\d{2}-01/);
-    }
+    // Wait for filter to apply
+    await page.waitForTimeout(500);
+    
+    // Check that dates are set
+    const startInput = page.locator('[data-test="filter-date-start"]');
+    const startValue = await startInput.inputValue();
+    
+    // Start date should be 1st of month
+    expect(startValue).toMatch(/\d{4}-\d{2}-01/);
   });
 
   test('🔟 Should clear date filters when clearing all filters', async ({ page }) => {
@@ -190,7 +172,7 @@ test.describe('Admin Dashboard - Date Range Filter', () => {
     await page.locator('[data-test="filter-date-end"]').fill(dateString);
     
     // Click clear button
-    await page.locator('button:has-text("ล้าง")').first().click();
+    await page.locator('[data-test="clear-filter-btn"]').click();
     
     // Wait for clear to apply
     await page.waitForTimeout(500);
