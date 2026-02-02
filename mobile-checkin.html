@@ -2512,8 +2512,8 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 8px;">
-                        <button style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; display: flex; align-items: center; justify-content: center;" title="ใช้รายการนี้">
-                            <i class="fas fa-check"></i>
+                        <button style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; display: flex; align-items: center; justify-content: center;" title="แก้ไขรายการ">
+                            <i class="fas fa-pencil"></i>
                         </button>
                         <button style="background: #fee; color: #dc3544; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; display: flex; align-items: center; justify-content: center;" onclick="deleteScheduleItem(${item.id})" title="ลบรายการ">
                             <i class="fas fa-trash"></i>
@@ -2521,9 +2521,9 @@
                     </div>
                 `;
 
-                // Add click event for use button
+                // Add click event for edit button
                 div.querySelector('button:first-child').addEventListener('click', () => {
-                    useScheduleItem(item);
+                    editScheduleItem(item);
                 });
 
                 div.addEventListener('mouseenter', () => {
@@ -2548,6 +2548,34 @@
                 updateQuickSelectButton();
                 showToast('✅ ลบรายการสำเร็จ', 'success');
             }
+        }
+
+        function editScheduleItem(item) {
+            // Switch back to create tab
+            const createTab = document.querySelector('button.schedule-tab:first-child');
+            if (createTab) {
+                createTab.click();
+            }
+            
+            // Fill form with item data
+            document.getElementById('scheduleDate').value = item.date;
+            document.getElementById('scheduleCustomer').value = item.customer;
+            
+            // Split contract (e.g., "CT22-1234567" → prefix="CT22-", number="1234567")
+            const contractParts = item.contract.match(/^(CT\d+-)?(.*)$/);
+            const prefix = contractParts[1] || '';
+            const number = contractParts[2] || '';
+            
+            document.getElementById('scheduleContractPrefix').value = prefix;
+            document.getElementById('scheduleContractNumber').value = number;
+            document.getElementById('scheduleBranch').value = item.branch;
+            
+            // Scroll to form
+            setTimeout(() => {
+                document.querySelector('form#scheduleForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+            
+            showToast('✏️ แก้ไขรายการในแบบฟอร์ม', 'info');
         }
 
         function fillFormFromSchedule(item) {
