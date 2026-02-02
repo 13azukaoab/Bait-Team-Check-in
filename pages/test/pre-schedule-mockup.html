@@ -460,10 +460,10 @@
                         <label><i class="fas fa-file-contract"></i> เลขที่สัญญา</label>
                         <input type="text" id="contract-number" list="contract-list" placeholder="เลือกหรือพิมพ์เลขสัญญา" required>
                         <datalist id="contract-list">
-                            <option value="CT22">
-                            <option value="CT23">
-                            <option value="CT24">
-                            <option value="CT25">
+                            <option value="CT22-">
+                            <option value="CT23-">
+                            <option value="CT24-">
+                            <option value="CT25-">
                         </datalist>
                     </div>
 
@@ -471,30 +471,44 @@
                         <label><i class="fas fa-map-marker-alt"></i> สาขา</label>
                         <select id="branch" required>
                             <option value="">-- เลือกสาขา --</option>
-                            <option value="พุทธมณฑล">พุทธมณฑล (เขต 1)</option>
-                            <option value="นครปฐม">นครปฐม (เขต 1)</option>
-                            <option value="หัวหิน">หัวหิน (เขต 1)</option>
-                            <option value="พระราม 2">พระราม 2 (เขต 1)</option>
-                            <option value="สาทร">สาทร (เขต 2)</option>
-                            <option value="ปทุมวัน">ปทุมวัน (เขต 2)</option>
-                            <option value="พระราม 4">พระราม 4 (เขต 2)</option>
-                            <option value="นนทบุรี">นนทบุรี (เขต 2)</option>
-                            <option value="ปทุมธานี">ปทุมธานี (เขต 3)</option>
-                            <option value="รามอินทรา">รามอินทรา (เขต 3)</option>
-                            <option value="อยุธยา">อยุธยา (เขต 3)</option>
-                            <option value="ลาดพร้าว">ลาดพร้าว (เขต 4)</option>
-                            <option value="พัฒนาการ">พัฒนาการ (เขต 4)</option>
-                            <option value="สุวินทวงศ์">สุวินทวงศ์ (เขต 4)</option>
-                            <option value="ประชาชื่น">ประชาชื่น (เขต 4)</option>
-                            <option value="ปราจีนบุรี">ปราจีนบุรี (เขต 5)</option>
-                            <option value="สมุทรปราการ">สมุทรปราการ (เขต 5)</option>
-                            <option value="พัทยา">พัทยา (เขต 5)</option>
-                            <option value="ระยอง">ระยอง (เขต 5)</option>
-                            <option value="สุขุมวิท">สุขุมวิท (เขต 6)</option>
-                            <option value="ปากน้ำ">ปากน้ำ (เขต 6)</option>
-                            <option value="ชลบุรี">ชลบุรี (เขต 6)</option>
-                            <option value="ปากช่อง">ปากช่อง (เขต 7)</option>
-                            <option value="สระบุรี">สระบุรี (เขต 7)</option>
+                            <optgroup label="เขต 1">
+                                <option value="พุทธมณฑล">พุทธมณฑล</option>
+                                <option value="นครปฐม">นครปฐม</option>
+                                <option value="หัวหิน">หัวหิน</option>
+                                <option value="พระราม 2">พระราม 2</option>
+                            </optgroup>
+                            <optgroup label="เขต 2">
+                                <option value="สาทร">สาทร</option>
+                                <option value="ปทุมวัน">ปทุมวัน</option>
+                                <option value="พระราม 4">พระราม 4</option>
+                                <option value="นนทบุรี">นนทบุรี</option>
+                            </optgroup>
+                            <optgroup label="เขต 3">
+                                <option value="ปทุมธานี">ปทุมธานี</option>
+                                <option value="รามอินทรา">รามอินทรา</option>
+                                <option value="อยุธยา">อยุธยา</option>
+                            </optgroup>
+                            <optgroup label="เขต 4">
+                                <option value="ลาดพร้าว">ลาดพร้าว</option>
+                                <option value="พัฒนาการ">พัฒนาการ</option>
+                                <option value="สุวินทวงศ์">สุวินทวงศ์</option>
+                                <option value="ประชาชื่น">ประชาชื่น</option>
+                            </optgroup>
+                            <optgroup label="เขต 5">
+                                <option value="ปราจีนบุรี">ปราจีนบุรี</option>
+                                <option value="สมุทรปราการ">สมุทรปราการ</option>
+                                <option value="พัทยา">พัทยา</option>
+                                <option value="ระยอง">ระยอง</option>
+                            </optgroup>
+                            <optgroup label="เขต 6">
+                                <option value="สุขุมวิท">สุขุมวิท</option>
+                                <option value="ปากน้ำ">ปากน้ำ</option>
+                                <option value="ชลบุรี">ชลบุรี</option>
+                            </optgroup>
+                            <optgroup label="เขต 7">
+                                <option value="ปากช่อง">ปากช่อง</option>
+                                <option value="สระบุรี">สระบุรี</option>
+                            </optgroup>
                         </select>
                     </div>
 
@@ -520,7 +534,7 @@
                             </div>
                             <div class="schedule-customer">นายสมชาย ใจดี</div>
                             <div class="schedule-details">
-                                <i class="fas fa-file-contract"></i> CT23-12345 | 
+                                <i class="fas fa-file-contract"></i> CT23 | 
                                 <i class="fas fa-map-marker-alt"></i> สาทร (เขต 2)
                             </div>
                             <div class="schedule-actions">
@@ -540,7 +554,7 @@
                             </div>
                             <div class="schedule-customer">นางสาวมาลี สวยงาม</div>
                             <div class="schedule-details">
-                                <i class="fas fa-file-contract"></i> CT24-67890 | 
+                                <i class="fas fa-file-contract"></i> CT24 | 
                                 <i class="fas fa-map-marker-alt"></i> ลาดพร้าว (เขต 4)
                             </div>
                             <div class="schedule-actions">
@@ -560,7 +574,7 @@
                             </div>
                             <div class="schedule-customer">นายประเสริฐ รุ่งเรือง</div>
                             <div class="schedule-details">
-                                <i class="fas fa-file-contract"></i> CT22-11111 | 
+                                <i class="fas fa-file-contract"></i> CT22 | 
                                 <i class="fas fa-map-marker-alt"></i> สุขุมวิท (เขต 6)
                             </div>
                             <div class="schedule-actions">
@@ -584,7 +598,7 @@
                             </div>
                             <div class="schedule-customer">นายวิชัย ทรงธรรม</div>
                             <div class="schedule-details">
-                                <i class="fas fa-file-contract"></i> CT25-99999 | 
+                                <i class="fas fa-file-contract"></i> CT25 | 
                                 <i class="fas fa-map-marker-alt"></i> พัทยา (เขต 5)
                             </div>
                             <div class="schedule-actions">
@@ -604,7 +618,7 @@
                             </div>
                             <div class="schedule-customer">นางสุดา แสงจันทร์</div>
                             <div class="schedule-details">
-                                <i class="fas fa-file-contract"></i> CT23-55555 | 
+                                <i class="fas fa-file-contract"></i> CT23 | 
                                 <i class="fas fa-map-marker-alt"></i> ปากช่อง (เขต 7)
                             </div>
                             <div class="schedule-actions">
@@ -632,14 +646,14 @@
                 </button>
             </div>
             
-            <div class="quick-select-item" onclick="fillForm('นายสมชาย ใจดี', 'CT23-12345', 'สาทร')">
+            <div class="quick-select-item" onclick="fillForm('นายสมชาย ใจดี', 'CT23', 'สาทร')">
                 <h3>นายสมชาย ใจดี</h3>
-                <p><i class="fas fa-file-contract"></i> CT23-12345 | <i class="fas fa-map-marker-alt"></i> สาทร (เขต 2)</p>
+                <p><i class="fas fa-file-contract"></i> CT23 | <i class="fas fa-map-marker-alt"></i> สาทร (เขต 2)</p>
             </div>
 
-            <div class="quick-select-item" onclick="fillForm('นางสาวมาลี สวยงาม', 'CT24-67890', 'ลาดพร้าว')">
+            <div class="quick-select-item" onclick="fillForm('นางสาวมาลี สวยงาม', 'CT24', 'ลาดพร้าว')">
                 <h3>นางสาวมาลี สวยงาม</h3>
-                <p><i class="fas fa-file-contract"></i> CT24-67890 | <i class="fas fa-map-marker-alt"></i> ลาดพร้าว (เขต 4)</p>
+                <p><i class="fas fa-file-contract"></i> CT24 | <i class="fas fa-map-marker-alt"></i> ลาดพร้าว (เขต 4)</p>
             </div>
 
             <div style="text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e9ecef;">
