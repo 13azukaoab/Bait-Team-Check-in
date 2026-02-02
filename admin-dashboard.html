@@ -2193,6 +2193,25 @@
                             </button>
                         </div>
                     </div>
+                    <!-- Quick Date Range Selection -->
+                    <div class="filter-row" style="gap: 8px; padding: 0 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
+                        <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; margin-right: 8px;">วันที่ด่วน:</span>
+                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('today'); applyFilters();" title="แสดงข้อมูลวันนี้">
+                            <i class="fas fa-calendar-day"></i> วันนี้
+                        </button>
+                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('thisWeek'); applyFilters();" title="แสดงข้อมูลสัปดาห์นี้">
+                            <i class="fas fa-calendar-week"></i> สัปดาห์นี้
+                        </button>
+                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('thisMonth'); applyFilters();" title="แสดงข้อมูลเดือนนี้">
+                            <i class="fas fa-calendar-alt"></i> เดือนนี้
+                        </button>
+                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('last7days'); applyFilters();" title="แสดงข้อมูล 7 วันที่ผ่านมา">
+                            <i class="fas fa-history"></i> 7 วัน
+                        </button>
+                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('last30days'); applyFilters();" title="แสดงข้อมูล 30 วันที่ผ่านมา">
+                            <i class="fas fa-history"></i> 30 วัน
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Map Section -->
@@ -4353,6 +4372,12 @@
             const startDate = document.getElementById('filterDateStart').value;
             const endDate = document.getElementById('filterDateEnd').value;
             
+            // Validate date range
+            if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+                showRealtimeToast('⚠️ ข้อผิดพลาด', 'วันที่เริ่มต้นต้องน้อยกว่าหรือเท่ากับวันที่สิ้นสุด', 'error');
+                return;
+            }
+            
             // กรองข้อมูล
             let filtered = [...firestoreCheckins];
             
@@ -4371,12 +4396,15 @@
                 filtered = filtered.filter(item => item.branch === branch);
             }
             
-            // กรองตามช่วงวันที่
+            // กรองตามช่วงวันที่ (Date Range Filter)
             if (startDate) {
                 const start = new Date(startDate);
                 start.setHours(0, 0, 0, 0);
                 filtered = filtered.filter(item => {
-                    const itemDate = new Date(item.checkinTime);
+                    const itemDate = item.checkinTime instanceof Date 
+                        ? item.checkinTime 
+                        : new Date(item.checkinTime);
+                    itemDate.setHours(0, 0, 0, 0);
                     return itemDate >= start;
                 });
             }
@@ -4385,7 +4413,9 @@
                 const end = new Date(endDate);
                 end.setHours(23, 59, 59, 999);
                 filtered = filtered.filter(item => {
-                    const itemDate = new Date(item.checkinTime);
+                    const itemDate = item.checkinTime instanceof Date 
+                        ? item.checkinTime 
+                        : new Date(item.checkinTime);
                     return itemDate <= end;
                 });
             }
@@ -4394,11 +4424,21 @@
             updateFilteredUI(filtered);
             
             // แสดงสรุป
-            const dateRange = startDate || endDate 
-                ? `${startDate || 'ตั้งแต่ต้น'} ถึง ${endDate || 'ปัจจุบัน'}` 
-                : 'ทั้งหมด';
+            let filterSummary = [];
+            if (team !== 'all') filterSummary.push(`ทีม ${team}`);
+            if (zone !== 'all') filterSummary.push(`${zone}`);
+            if (branch !== 'all') filterSummary.push(`${branch}`);
+            if (startDate || endDate) {
+                const start = startDate ? formatThaiDate(new Date(startDate)) : 'ตั้งแต่ต้น';
+                const end = endDate ? formatThaiDate(new Date(endDate)) : 'ปัจจุบัน';
+                filterSummary.push(`${start} ถึง ${end}`);
+            }
             
-            showRealtimeToast('กรองข้อมูลสำเร็จ', `พบ ${filtered.length} รายการ`);
+            const summary = filterSummary.length > 0 
+                ? `(${filterSummary.join(', ')})` 
+                : '';
+            
+            showRealtimeToast('✅ กรองข้อมูลสำเร็จ', `พบ ${filtered.length} รายการ ${summary}`);
         }
         
         // อัพเดท UI ด้วยข้อมูลที่กรองแล้ว
@@ -4493,7 +4533,56 @@
             updateCheckinsTable();
             updateMapMarkersFromFirestore();
             
-            showRealtimeToast('ล้างตัวกรองแล้ว', 'แสดงข้อมูลทั้งหมด');
+            showRealtimeToast('✅ ล้างตัวกรองแล้ว', 'แสดงข้อมูลทั้งหมด');
+        }
+
+        // ฟังก์ชันช่วยเหลือสำหรับการตั้งค่าช่วงวันที่
+        function setDateRange(rangeType) {
+            const today = new Date();
+            const startInput = document.getElementById('filterDateStart');
+            const endInput = document.getElementById('filterDateEnd');
+            
+            let startDate, endDate;
+            
+            switch(rangeType) {
+                case 'today':
+                    startDate = new Date(today);
+                    endDate = new Date(today);
+                    break;
+                case 'thisWeek':
+                    startDate = new Date(today);
+                    startDate.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+                    endDate = new Date(today);
+                    break;
+                case 'thisMonth':
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                    endDate = new Date(today);
+                    break;
+                case 'last7days':
+                    startDate = new Date(today);
+                    startDate.setDate(today.getDate() - 7);
+                    endDate = new Date(today);
+                    break;
+                case 'last30days':
+                    startDate = new Date(today);
+                    startDate.setDate(today.getDate() - 30);
+                    endDate = new Date(today);
+                    break;
+                default:
+                    return;
+            }
+            
+            // Format dates to YYYY-MM-DD for input
+            startInput.value = formatDateToInput(startDate);
+            endInput.value = formatDateToInput(endDate);
+        }
+
+        // แปลงวันที่เป็นรูปแบบ YYYY-MM-DD สำหรับ input
+        function formatDateToInput(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         // Distance Measurement - Multi-point like Google Maps
