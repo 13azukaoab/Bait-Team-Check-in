@@ -286,7 +286,8 @@ test.describe('Admin Dashboard - Date Range Filter', () => {
     // Check for success indicator
     const content = await page.innerHTML('body');
     // Toast should show filter results summary
-    expect(content).toContain('กรอง') || expect(content).toContain('พบ');
+    const toastVisible = content.includes('กรอง') || content.includes('พบ');
+    expect(toastVisible).toBeTruthy();
   });
 
   test('1️⃣5️⃣ Should handle leap year dates correctly', async ({ page }) => {
@@ -308,6 +309,9 @@ test.describe('Admin Dashboard - Date Range Filter', () => {
 });
 
 // Helper function to format date for input
+/**
+ * @param {Date} date
+ */
 function formatDateForInput(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
