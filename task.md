@@ -172,12 +172,14 @@
 **สถานะ:** 2/7 phases complete (28.6%) 🟡 IN PROGRESS
 
 1. ✅ ~~Phase 1: Code Cleanup~~ → เสร็จสมบูรณ์
-2. ✅ ~~Phase 2: Git History Cleanup~~ → เสร็จสมบูรณ์
-3. ⏰ **Phase 2.1: Force Push** → วันนี้ (02-02-2026)
-4. ⏳ **Phase 3: Rotate API Keys** → หลัง Force Push (CRITICAL!)
-5. ⏳ **Phase 4: Firebase Security Setup**
-6. ⏳ **Phase 5: Testing**
-7. ⏳ **Phase 6: Make Repository Public**
+2. ✅ ~~Phase 2: Git History Cleanup~~ → เสร็จสมบูรณ์ (backup: backup-before-cleanup-20260201-203545)
+3. ⚡ **Phase 2.1: Force Push** → พร้อมแล้ว! รอคำสั่ง `git push origin main --force`
+4. 🔴 **Phase 3: Rotate API Keys** → หลัง Force Push ทันที (CRITICAL - ใน 10 นาที!)
+5. ⏳ **Phase 4: Firebase Security Setup** → หลัง Phase 3
+6. ⏳ **Phase 5: Testing** → ตรวจสอบหลัง Security
+7. ⏳ **Phase 6: Make Repository Public** → ขั้นตอนสุดท้าย
+
+**⚠️ สำคัญ:** Git history ถูก rewrite แล้ว (commit hashes เปลี่ยนหมด), API keys ยังอยู่ใน old HTML commits - ต้องทำ Phase 3 ทันทีหลัง Force Push!
 
 **รายละเอียด:** ดูใน [SECURITY-CHECKLIST.md](SECURITY-CHECKLIST.md)
 
@@ -244,6 +246,82 @@
   - ใช้ Dropdown เดียวกับหน้า Check-in
 
 **ระยะเวลาประมาณ:** 1-2 ชั่วโมง
+
+---
+
+### 🔐 TODO: Phase 2.1 & Phase 3 (วันนี้ - URGENT!)
+
+**Priority: CRITICAL** - ต้องทำก่อนทุกอย่าง
+
+#### Phase 2.1: Force Push (2 นาที)
+
+- [ ] **ตรวจสอบ Git status**
+  ```powershell
+  git log --oneline -10
+  git remote -v
+  ```
+
+- [ ] **Force Push ขึ้น GitHub**
+  ```powershell
+  git push origin main --force
+  ```
+
+- [ ] **ตรวจสอบ GitHub**
+  - เข้า https://github.com/13azukaoab/Bait-Team-Check-in
+  - ดูว่า commit history เปลี่ยนแล้ว
+  - ตรวจสอบไฟล์ที่ถูกลบออกจาก history
+
+**⚠️ หลัง Force Push เสร็จ → ทำ Phase 3 ทันที!**
+
+---
+
+#### Phase 3: Rotate API Keys (30 นาที) - USER ONLY!
+
+**AI ห้ามทำ - ผู้ใช้ต้องทำเอง**
+
+**3.1 Firebase API Key:**
+- [ ] เข้า [Google Cloud Console](https://console.cloud.google.com/)
+- [ ] APIs & Services → Credentials
+- [ ] สร้าง API Key ใหม่
+- [ ] Restrict key:
+  - Application restrictions: HTTP referrers
+  - Website restrictions: `bait-check-in-webapp.web.app/*`, `localhost/*`
+- [ ] ลบ/Restrict old key
+- [ ] คัดลอก new key
+
+**3.2 Longdo Map API Key:**
+- [ ] เข้า [Longdo Map Console](https://map.longdo.com/console/)
+- [ ] สร้าง API Key ใหม่
+- [ ] Restrict domain: `bait-check-in-webapp.web.app`, `localhost`
+- [ ] ลบ old key
+- [ ] คัดลอก new key
+
+**3.3 อัพเดทโค้ด:**
+- [ ] เปิด `src/config.js`
+- [ ] แทนค่า `apiKey` ใหม่ (Firebase)
+- [ ] แทนค่า `longdoKey` ใหม่
+- [ ] Save ไฟล์
+
+**3.4 ทดสอบ:**
+- [ ] เปิด Mobile Check-in (local)
+- [ ] ทดสอบ Check-in 1 ครั้ง
+- [ ] เปิด Admin Dashboard
+- [ ] ดูแผนที่ทำงานไหม
+- [ ] ถ้าทำงาน → Deploy!
+
+**3.5 Deploy:**
+```powershell
+.\deploy.ps1 -All
+```
+
+**3.6 Commit:**
+```powershell
+git add src/config.js
+git commit -m "security: Rotate API keys after force push"
+git push origin main
+```
+
+**✅ เสร็จแล้ว!** Old API keys ใน Git history ไม่สามารถใช้งานได้แล้ว
 
 ---
 
@@ -324,6 +402,6 @@
 
 ---
 
-**อัปเดตล่าสุด:** 02-02-2026, 09:00 น.
-**เวอร์ชัน:** V.2.2.0 (02-02-2026) - เพิ่มฟีเจอร์ Pre-Schedule Check-ins และ Contract Dropdown
-**สถานะ:** 🟡 IN PROGRESS - เตรียมพร้อม Public (2/7 phases complete)
+**อัปเดตล่าสุด:** 02-02-2026, 10:15 น.
+**เวอร์ชัน:** V.2.2.1 (02-02-2026) - เพิ่มฟีเจอร์ Pre-Schedule Check-ins และ Contract Dropdown
+**สถานะ:** 🟡 IN PROGRESS - Phase 2.1 พร้อม Force Push (2/7 phases complete)
