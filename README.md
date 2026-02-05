@@ -64,7 +64,7 @@ Suggestions and feedback are welcome! Please feel free to open an **Issue** or s
 
 ### 📱 Mobile Check-in
 
-| หน้าหลัก | ฟอร์มเช็คอิน | ประวัติ |
+| หน้าหลัก | เลือกทีม | ฟอร์มเช็คอิน |
 |:--------:|:------------:|:-------:|
 | ![Mobile Main](image/Screenshot/Mobile-Checkin/mobile-main.png) | ![Check-in Form](image/Screenshot/Mobile-Checkin/mobile-checkin-form.png) | ![History](image/Screenshot/Mobile-Checkin/mobile-history.png) |
 
@@ -72,11 +72,12 @@ Suggestions and feedback are welcome! Please feel free to open an **Issue** or s
 
 | Dashboard Overview | แผนที่ |
 |:------------------:|:------:|
-| ![Dashboard](image/Screenshot/Admin-Dashboard/dashboard-overview.png) | ![Map](image/Screenshot/Admin-Dashboard/dashboard-map.png) |
+| ![Table](image/Screenshot/Admin-Dashboard/dashboard-table.png) | ![Gallery](image/Screenshot/Admin-Dashboard/dashboard-gallery.png) |
+
 
 | ตารางข้อมูล | Photo Gallery |
 |:-----------:|:-------------:|
-| ![Table](image/Screenshot/Admin-Dashboard/dashboard-table.png) | ![Gallery](image/Screenshot/Admin-Dashboard/dashboard-gallery.png) |
+| ![Dashboard](image/Screenshot/Admin-Dashboard/dashboard-overview.png) | ![Map](image/Screenshot/Admin-Dashboard/dashboard-map.png) |
 
 ---
 
