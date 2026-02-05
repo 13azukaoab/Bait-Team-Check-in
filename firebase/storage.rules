@@ -34,11 +34,5 @@ service firebase.storage {
       allow write: if isImage() && isValidSize();
     }
     
-    // ===========================
-    // Test Files
-    // ===========================
-    match /_test/{filename} {
-      allow read, write: if true;
-    }
   }
 }

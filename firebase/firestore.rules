@@ -101,16 +101,5 @@ service cloud.firestore {
       allow write: if false; // Cloud Functions only
     }
     
-    // ===========================
-    // Test Collections (Development Only)
-    // ⚠️ ควรลบใน Production!
-    // ===========================
-    match /_connection_test/{docId} {
-      allow read, write: if true;
-    }
-    
-    match /_test/{docId} {
-      allow read, write: if true;
-    }
   }
 }
