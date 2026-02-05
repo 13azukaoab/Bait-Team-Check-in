@@ -1,0 +1,168 @@
+<mxfile host="app.diagrams.net" modified="2026-02-03T12:00:00.000Z" agent="Mozilla/5.0" version="24.0.0">
+  <diagram name="Simple Flowchart" id="simple-flow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="700" background="#ffffff" math="0" shadow="1">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- ===== TITLE ===== -->
+        <mxCell id="title" value="🎯 Bait Check-In System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=32;fontStyle=1;fontColor=#0ea5e9;" parent="1" vertex="1">
+          <mxGeometry x="350" y="20" width="500" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="subtitle" value="ระบบเช็คอินสำหรับทีมภาคสนาม - ง่าย รวดเร็ว ทันสมัย" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#64748b;" parent="1" vertex="1">
+          <mxGeometry x="350" y="65" width="500" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- ===== MAIN FLOW - 3 BIG BOXES ===== -->
+        
+        <!-- BOX 1: MOBILE -->
+        <mxCell id="mobile-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;strokeWidth=3;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="120" width="280" height="380" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="mobile-icon" value="📱" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=60;" parent="1" vertex="1">
+          <mxGeometry x="170" y="130" width="100" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="mobile-title" value="ทีมภาคสนาม" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#d97706;" parent="1" vertex="1">
+          <mxGeometry x="120" y="210" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m-step1" value="1️⃣ เลือกทีม" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#f59e0b;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="120" y="260" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m-step2" value="2️⃣ กรอกข้อมูลลูกค้า" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#f59e0b;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="120" y="310" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m-step3" value="3️⃣ ถ่ายรูป + จับ GPS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#f59e0b;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="120" y="360" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="m-step4" value="4️⃣ กดบันทึก ✅" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fbbf24;strokeColor=#d97706;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="120" y="420" width="200" height="45" as="geometry"/>
+        </mxCell>
+        
+        <!-- ARROW 1 -->
+        <mxCell id="arrow1" value="" style="shape=flexArrow;endArrow=classic;html=1;strokeColor=#ec4899;fillColor=#ec4899;width=20;endSize=8;endWidth=25;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="380" y="310" as="sourcePoint"/>
+            <mxPoint x="460" y="310" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow1-label" value="ส่งข้อมูล" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#ec4899;" parent="1" vertex="1">
+          <mxGeometry x="380" y="270" width="80" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- BOX 2: CLOUD -->
+        <mxCell id="cloud-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;strokeWidth=3;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="460" y="120" width="280" height="380" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="cloud-icon" value="☁️" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=60;" parent="1" vertex="1">
+          <mxGeometry x="550" y="130" width="100" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="cloud-title" value="Cloud (อินเทอร์เน็ต)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#2563eb;" parent="1" vertex="1">
+          <mxGeometry x="500" y="210" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="c-step1" value="📥 รับข้อมูล" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#3b82f6;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="260" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="c-step2" value="💾 บันทึกลงฐานข้อมูล" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#3b82f6;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="310" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="c-step3" value="📸 เก็บรูปภาพ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#3b82f6;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="360" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="c-step4" value="🔔 แจ้งเตือน Admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a5fa;strokeColor=#2563eb;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="500" y="420" width="200" height="45" as="geometry"/>
+        </mxCell>
+        
+        <!-- ARROW 2 -->
+        <mxCell id="arrow2" value="" style="shape=flexArrow;endArrow=classic;html=1;strokeColor=#ec4899;fillColor=#ec4899;width=20;endSize=8;endWidth=25;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="310" as="sourcePoint"/>
+            <mxPoint x="840" y="310" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow2-label" value="อัพเดท" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#ec4899;" parent="1" vertex="1">
+          <mxGeometry x="760" y="270" width="80" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- BOX 3: ADMIN -->
+        <mxCell id="admin-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#8b5cf6;strokeWidth=3;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="120" width="280" height="380" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="admin-icon" value="🖥️" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=60;" parent="1" vertex="1">
+          <mxGeometry x="930" y="130" width="100" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="admin-title" value="Admin (ผู้ดูแล)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#7c3aed;" parent="1" vertex="1">
+          <mxGeometry x="880" y="210" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="a-step1" value="📊 ดูสถิติรวม" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b5cf6;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="880" y="260" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="a-step2" value="🗺️ ดูแผนที่ตำแหน่ง" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b5cf6;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="880" y="310" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="a-step3" value="📋 ดูรายการเช็คอิน" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b5cf6;strokeWidth=2;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="880" y="360" width="200" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="a-step4" value="📤 ดาวน์โหลดรายงาน" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a78bfa;strokeColor=#7c3aed;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="880" y="420" width="200" height="45" as="geometry"/>
+        </mxCell>
+        
+        <!-- ===== BOTTOM INFO ===== -->
+        <mxCell id="speed-box" value="⚡ ความเร็ว: 4-5 วินาที (จากมือถือถึง Admin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#166534;" parent="1" vertex="1">
+          <mxGeometry x="350" y="530" width="500" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- KEY FEATURES -->
+        <mxCell id="feat1" value="✅ Real-time" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="180" y="590" width="100" height="35" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="feat2" value="✅ GPS อัตโนมัติ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="300" y="590" width="100" height="35" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="feat3" value="✅ 16 ทีม" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#8b5cf6;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="420" y="590" width="100" height="35" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="feat4" value="✅ รูปภาพ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="540" y="590" width="100" height="35" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="feat5" value="✅ แผนที่" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce7f3;strokeColor=#ec4899;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="660" y="590" width="100" height="35" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="feat6" value="✅ Export Excel" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#f97316;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="780" y="590" width="100" height="35" as="geometry"/>
+        </mxCell>
+        
+        <!-- VERSION -->
+        <mxCell id="version" value="Version 2.1.0 | 03-02-2026 | Simple Edition" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;fontColor=#94a3b8;" parent="1" vertex="1">
+          <mxGeometry x="400" y="650" width="400" height="20" as="geometry"/>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

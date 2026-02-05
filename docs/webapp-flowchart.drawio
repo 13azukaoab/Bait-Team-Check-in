@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2026-01-26T09:00:00.000Z" agent="Mozilla/5.0" version="22.0.0">
+<mxfile host="app.diagrams.net" modified="2026-02-03T12:00:00.000Z" agent="Mozilla/5.0" version="24.0.0">
   <diagram name="Bait Check-In Flowchart" id="webapp-flow">
     <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
       <root>
@@ -211,7 +211,7 @@
         </mxCell>
         
         <!-- Version -->
-        <mxCell id="version" value="Version 2.0.0 | 26-01-2026 | Bait Check-In WebApp" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+        <mxCell id="version" value="Version 2.1.0 | 03-02-2026 | Bait Check-In WebApp" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="400" y="650" width="400" height="20" as="geometry"/>
         </mxCell>
         
