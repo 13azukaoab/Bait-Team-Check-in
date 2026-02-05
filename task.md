@@ -6,7 +6,7 @@
 
 **🌐 Live URL:** [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
 
-### 🎯 สถานะล่าสุด (02-02-2026, 22:20 น.)
+### 🎯 สถานะล่าสุด (05-02-2026, 19:00 น.)
 
 | หมวด | สถานะ |
 |------|-------|
@@ -14,7 +14,7 @@
 | 🔐 **API Keys** | ✅ Rotated & Deployed |
 | 📦 **Pre-Schedule** | ✅ 100% Complete |
 | 🧪 **Tests** | ✅ Fixed (พร้อมรัน) |
-| 📂 **Public Repo** | 🟡 57% (Phase 4-6 ค้าง) |
+| 📂 **Public Repo** | 🟡 71% (Phase 4, 6 ค้าง) |
 
 ---
 
@@ -179,14 +179,14 @@
 
 ### 🔐 การเตรียมพร้อม Public Repository
 
-**สถานะ:** 4/7 phases complete (57.1%) 🟢 GOOD PROGRESS
+**สถานะ:** 5/7 phases complete (71.4%) 🟢 GOOD PROGRESS
 
 1. ✅ ~~Phase 1: Code Cleanup~~ → เสร็จสมบูรณ์
 2. ✅ ~~Phase 2: Git History Cleanup~~ → เสร็จสมบูรณ์
 3. ✅ ~~Phase 2.1: Force Push~~ → เสร็จสมบูรณ์
 4. ✅ ~~**Phase 3: API Key Rotation**~~ → เสร็จสมบูรณ์ (New key deployed & tested)
 5. ⏳ **Phase 4: Firebase Security Setup** → ต่อไป
-6. ⏳ **Phase 5: Testing & Bug Fixes** → แก้ Playwright tests
+6. ✅ **Phase 5: Testing & Bug Fixes** → แก้ Playwright tests เสร็จแล้ว
 7. ⏳ **Phase 6: Make Repository Public** → ขั้นตอนสุดท้าย
 
 **✅ ความคืบหน้า:** API Key ใหม่ deploy แล้ว, ระบบทำงานปกติ
@@ -400,6 +400,6 @@ git push origin main
 
 ---
 
-**อัปเดตล่าสุด:** 02-02-2026, 22:30 น.
-**เวอร์ชัน:** V.2.2.2 (02-02-2026) - Updated Status: Phase 2.1 Complete, Phase 3 Pending
-**สถานะ:** 🟡 IN PROGRESS - Phase 2.1 ✅ Complete, Phase 3 Ready to Execute (3/7 phases complete)
+**อัปเดตล่าสุด:** 05-02-2026, 19:00 น.
+**เวอร์ชัน:** V.2.2.3 (05-02-2026) - Updated Status: Phase 5 Complete, Phase 4-6 Pending
+**สถานะ:** 🟡 IN PROGRESS - Phase 4 Pending, Phase 5 ✅ Complete, Phase 6 Pending (5/7 phases complete)
