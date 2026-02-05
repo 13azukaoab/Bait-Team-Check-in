@@ -1,18 +1,18 @@
-# 📖 คู่มือการใช้งาน - Bait Check-In WebApp
+# 📖 User Guide / คู่มือการใช้งาน
 
-## สำหรับผู้ใช้ทั่วไป (ทีมภาคสนาม + Admin)
+> **🇹🇭 [ภาษาไทย](#-ภาษาไทย) | 🇬🇧 [English](#-english)**
 
 ---
 
-## 📱 สำหรับทีมภาคสนาม (Mobile)
+# 🇹🇭 ภาษาไทย
+
+## สำหรับทีมภาคสนาม (Mobile)
 
 ### 🚀 เริ่มต้นใช้งาน
 
 1. **เปิด Browser** บนมือถือ (Chrome, Safari)
 2. **เข้าเว็บ**: `https://bait-check-in-webapp.web.app`
 3. **เลือกทีม**: กดปุ่มเลือกทีมของคุณ (A-O, Z)
-
----
 
 ### ✅ วิธี Check-in
 
@@ -21,7 +21,7 @@
 | ช่อง | คำอธิบาย | ตัวอย่าง |
 | --- | --- | --- |
 | **ชื่อลูกค้า** | ชื่อเจ้าของบ้าน/ร้าน | คุณสมชาย |
-| **เลขที่สัญญา** | เลขสัญญาจากใบงาน | BT-2026-0001 |
+| **เลขที่สัญญา** | เลขสัญญาจากใบงาน | CT24-0001234 |
 | **สาขา** | เลือกจาก Dropdown | สาทร |
 
 #### ขั้นตอนที่ 2: ถ่ายรูป
@@ -36,15 +36,13 @@
 - กดปุ่ม **"บันทึก Check-in"** สีฟ้าใหญ่
 - รอจนเห็นข้อความ **"สำเร็จ!"**
 
----
-
 ### 📍 GPS และตำแหน่ง
 
 | สถานะ | ความหมาย |
 | --- | --- |
-| 🟢**พร้อม** | GPS ทำงานปกติ |
-| 🟡**กำลังหา...** | กำลังจับพิกัด รอสักครู่ |
-| 🔴**ไม่พบ** | เปิด Location ในการตั้งค่า |
+| 🟢 **พร้อม** | GPS ทำงานปกติ |
+| 🟡 **กำลังหา...** | กำลังจับพิกัด รอสักครู่ |
+| 🔴 **ไม่พบ** | เปิด Location ในการตั้งค่า |
 
 **แก้ไขเมื่อ GPS ไม่ทำงาน:**
 
@@ -52,15 +50,11 @@
 2. กดปุ่ม **"รีเฟรช GPS"** ในแอป
 3. ให้สิทธิ์ Browser เข้าถึงตำแหน่ง
 
----
-
 ### 📜 ดูประวัติ Check-in
 
 1. กดเมนู **"ประวัติ"** ด้านล่าง
 2. เห็นรายการ Check-in ที่ผ่านมา
 3. กดที่รายการเพื่อดูรายละเอียด
-
----
 
 ### ⚠️ ปัญหาที่พบบ่อย
 
@@ -73,14 +67,12 @@
 
 ---
 
-## 🖥️ สำหรับ Admin (Desktop)
+## สำหรับ Admin (Desktop)
 
-### 🚀 เริ่มต้นใช้งาน Admin
+### 🚀 เริ่มต้นใช้งาน
 
 1. **เปิด Browser** บนคอมพิวเตอร์
 2. **เข้าเว็บ**: `https://bait-check-in-webapp.web.app/admin-dashboard.html`
-
----
 
 ### 📊 หน้า Dashboard
 
@@ -99,8 +91,6 @@
 - 🏢 **HQ** = สำนักงานใหญ่
 - กดหมุดเพื่อดูรายละเอียด
 
----
-
 ### 🔍 การกรองข้อมูล
 
 | ตัวกรอง | ใช้ทำอะไร |
@@ -110,8 +100,6 @@
 | **สาขา** | ดูเฉพาะสาขาที่เลือก |
 | **วันที่** | ดูข้อมูลย้อนหลัง |
 
----
-
 ### 📋 ดูรายการ Check-ins
 
 1. กดเมนู **"Check-ins"** ที่ Sidebar
@@ -119,24 +107,16 @@
 3. กด **หัวตาราง** เพื่อ Sort
 4. กดปุ่ม **👁️** เพื่อซ่อน/แสดงบนแผนที่
 
----
-
 ### 📤 Export ข้อมูล
 
 1. กดปุ่ม **"Export"** มุมขวาบน
-2. เลือกรูปแบบ:
-   - **Excel** (.xlsx) - เปิดด้วย Excel
-   - **CSV** (.csv) - เปิดด้วยโปรแกรมใดก็ได้
-
----
+2. เลือกรูปแบบ: **Excel** (.xlsx) หรือ **CSV** (.csv)
 
 ### 📏 วัดระยะทาง
 
 1. กดปุ่ม **"📏 วัดระยะ"** บนแผนที่
 2. คลิกจุดแรก → คลิกจุดที่สอง
 3. เห็นระยะทางเป็น กม.
-
----
 
 ### 🖼️ ดูรูปภาพ (Photo Gallery)
 
@@ -146,14 +126,134 @@
 
 ---
 
-## ❓ ติดต่อช่วยเหลือ
+# 🇬🇧 English
 
-หากพบปัญหา ติดต่อ:
+## For Field Teams (Mobile)
 
-- 📧 Email: [weerachon@advancegroupasia.com]
-- 📱 โทร: [เบอร์โทรศัพท์]
+### 🚀 Getting Started
+
+1. **Open Browser** on your mobile (Chrome, Safari)
+2. **Go to**: `https://bait-check-in-webapp.web.app`
+3. **Select Team**: Tap your team button (A-O, Z)
+
+### ✅ How to Check-in
+
+#### Step 1: Fill Information
+
+| Field | Description | Example |
+| --- | --- | --- |
+| **Customer Name** | House/shop owner name | Mr. Smith |
+| **Contract Number** | Contract number from work order | CT24-0001234 |
+| **Branch** | Select from Dropdown | Sathorn |
+
+#### Step 2: Take Photos
+
+- 📷 **House Photo**: Capture front of house/shop clearly
+- 📷 **Contract Photo**: Capture contract number from work order
+
+> 💡 **Tip**: Take photos in good lighting, avoid blur
+
+#### Step 3: Save
+
+- Tap the big blue **"Save Check-in"** button
+- Wait until you see **"Success!"** message
+
+### 📍 GPS and Location
+
+| Status | Meaning |
+| --- | --- |
+| 🟢 **Ready** | GPS working normally |
+| 🟡 **Searching...** | Finding coordinates, please wait |
+| 🔴 **Not Found** | Enable Location in settings |
+
+**Fix GPS Issues:**
+
+1. Enable **Location/GPS** in phone settings
+2. Tap **"Refresh GPS"** in the app
+3. Allow Browser to access location
+
+### 📜 View Check-in History
+
+1. Tap **"History"** menu at bottom
+2. See list of past check-ins
+3. Tap an item for details
+
+### ⚠️ Common Issues
+
+| Issue | Solution |
+| --- | --- |
+| **Photo not showing** | Check camera, grant Browser permission |
+| **Can't save** | Check internet connection |
+| **GPS not working** | Enable Location in settings |
+| **Screen frozen** | Close and reopen Browser |
 
 ---
 
-**อัปเดตล่าสุด:** 26-01-2026
-**เวอร์ชัน:** V.1.6.0
+## For Admin (Desktop)
+
+### 🚀 Getting Started
+
+1. **Open Browser** on computer
+2. **Go to**: `https://bait-check-in-webapp.web.app/admin-dashboard.html`
+
+### 📊 Dashboard
+
+#### Stat Cards (Top)
+
+| Card | Shows |
+| --- | --- |
+| **Check-ins** | Total check-ins today |
+| **Locations** | Number of service locations |
+| **Customers** | Number of customers served |
+| **Success Rate** | Success percentage |
+
+#### Map
+
+- 📍 **Colored pins** = Check-in locations (different color per team)
+- 🏢 **HQ** = Headquarters
+- Click pin for details
+
+### 🔍 Filtering Data
+
+| Filter | Purpose |
+| --- | --- |
+| **Team** | View specific team only |
+| **Zone** | View specific zone (1-7) |
+| **Branch** | View specific branch |
+| **Date** | View historical data |
+
+### 📋 View Check-ins List
+
+1. Click **"Check-ins"** in Sidebar
+2. See all records in table
+3. Click **column header** to Sort
+4. Click **👁️** button to hide/show on map
+
+### 📤 Export Data
+
+1. Click **"Export"** button (top right)
+2. Choose format: **Excel** (.xlsx) or **CSV** (.csv)
+
+### 📏 Measure Distance
+
+1. Click **"📏 Measure"** button on map
+2. Click first point → Click second point
+3. See distance in km
+
+### 🖼️ View Photos (Photo Gallery)
+
+1. Click **"Photos"** in Sidebar
+2. Browse all photos in Gallery view
+3. Click photo to enlarge
+
+---
+
+## ❓ Support / ติดต่อช่วยเหลือ
+
+- 📧 Email: weerachon@advancegroupasia.com
+- 🐛 GitHub Issues: Open an issue in repository
+
+---
+
+**Version:** 2.2.5  
+**Last Updated / อัปเดตล่าสุด:** 05-02-2026
