@@ -72,12 +72,11 @@ Suggestions and feedback are welcome! Please feel free to open an **Issue** or s
 
 | Dashboard Overview | แผนที่ |
 |:------------------:|:------:|
-| ![Table](image/Screenshot/Admin-Dashboard/dashboard-table.png) | ![Gallery](image/Screenshot/Admin-Dashboard/dashboard-gallery.png) |
-
+| <img src="image/Screenshot/Admin-Dashboard/dashboard-overview.png" width="400"> | <img src="image/Screenshot/Admin-Dashboard/dashboard-map.png" width="400"> |
 
 | ตารางข้อมูล | Photo Gallery |
 |:-----------:|:-------------:|
-| ![Dashboard](image/Screenshot/Admin-Dashboard/dashboard-overview.png) | ![Map](image/Screenshot/Admin-Dashboard/dashboard-map.png) |
+| <img src="image/Screenshot/Admin-Dashboard/dashboard-table.png" width="400"> | <img src="image/Screenshot/Admin-Dashboard/dashboard-gallery.png" width="400"> |
 
 ---
 
