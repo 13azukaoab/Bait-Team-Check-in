@@ -1,161 +1,247 @@
-# Bait Team Check-in ✈️
+# 📍 Bait Team Check-in
 
-เว็บแอปพลิเคชันสำหรับเช็คอิน ติดตามตำแหน่ง และบริหารจัดการทีมงานภาคสนาม
+> **🇹🇭 ภาษาไทย | 🇬🇧 English**
+
+---
+
+## 🇹🇭 ภาษาไทย
+
+### เกี่ยวกับโปรเจกต์
+
+**Bait Team Check-in** เป็นเว็บแอปพลิเคชันสำหรับเช็คอินและติดตามตำแหน่งการทำงานของทีมงานภาคสนาม พัฒนาขึ้นเพื่อใช้งานภายในบริษัทกำจัดแมลง
 
 **🌐 Live URL:** [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
 
----
+### วัตถุประสงค์
 
-## 🚀 คุณสมบัติหลัก (Key Features)
+- **ติดตามการทำงาน**: ให้ทีมสนับสนุน (Back Office) เห็นเส้นทางและตำแหน่งการทำงานของพนักงานแบบ Real-time
+- **วางแผนเส้นทาง**: ใช้ข้อมูลในการวิเคราะห์และวางแผนเส้นทางการทำงานในอนาคต
+- **บันทึกหลักฐาน**: ถ่ายรูปและบันทึกข้อมูลหน้างานเพื่อใช้อ้างอิง
 
-### 📱 สำหรับทีมภาคสนาม (Mobile)
+### เบื้องหลังการพัฒนา
 
-- **เช็คอินง่าย**: ระบุพิกัด GPS แม่นยำ พร้อมแปลงเป็นที่อยู่อัตโนมัติ
-- **ถ่ายรูปหน้างาน**: กล้องถ่ายรูปพร้อมบีบอัดไฟล์ 120-450 KB
-- **เลือกทีม**: รองรับ 16 ทีม (A-O, Z)
-- **ดูประวัติ**: ดูรายการเช็คอินย้อนหลัง
-- **ซ่อน/แสดง**: ควบคุมการแสดงหมุดบนแผนที่
+โปรเจกต์นี้พัฒนาด้วยแนวคิด **Vibe Coding** — การเขียนโค้ดโดยมี AI เป็นผู้ช่วย โดยผู้พัฒนาเป็น **นักกีฏวิทยา (Entomologist)** ในบริษัทกำจัดแมลง ไม่ใช่โปรแกรมเมอร์โดยอาชีพ จัดทำขึ้นเพื่อ:
 
-## 🖥️ สำหรับ Admin (Dashboard)
+- ฝึกฝนการสร้าง Web Application
+- แก้ปัญหาจริงในการทำงาน
+- เรียนรู้เทคโนโลยีใหม่ๆ
 
-- **Dashboard**: ดูสถิติและภาพรวมแบบ Real-time
-- **แผนที่**: แสดงตำแหน่งทีมงานทั้งหมด พร้อมหมุดสีตามทีม
-- **วัดระยะทาง**: วัดระยะหลายจุด + วงกลมรัศมี
-- **ตารางข้อมูล**: Sort, Filter, ซ่อน/แสดงหมุด
-- **Export**: ส่งออกเป็น Excel/CSV
-- **Photo Gallery**: ดูรูปภาพทั้งหมด
-- **Reports**: กราฟสถิติและ Performance
+### 📢 ข้อเสนอแนะ
 
-## 🛠 เทคโนโลยีที่ใช้ (Tech Stack)
-
-### Frontend
-
-- HTML5, CSS3, JavaScript (Vanilla)
-- Leaflet.js + OpenStreetMap (แผนที่)
-- Longdo Map API (Reverse Geocoding)
-- Font Awesome 6 (ไอคอน)
-- Google Fonts - Prompt (ฟอนต์)
-
-### Backend (Firebase)
-
-- **Firestore**: ฐานข้อมูล NoSQL, Real-time sync
-- **Cloud Storage**: เก็บรูปภาพ
-- **Hosting**: โฮสต์เว็บไซต์ (SSL อัตโนมัติ)
+หากมีคำแนะนำหรือข้อเสนอแนะ ยินดีรับฟังผ่าน **Issues** หรือ **Discussions** ได้เลยครับ!
 
 ---
 
-## 📁 โครงสร้างโปรเจกต์
+## 🇬🇧 English
 
-```bash
-Bait-Team-Check-in/
-├── index.html              # หน้าเริ่มต้น (Auto-redirect)
-├── mobile-checkin.html     # หน้า Mobile Check-in
-├── admin-dashboard.html    # หน้า Admin Dashboard
-├── firebase.json           # ตั้งค่า Firebase Hosting
-├── deploy.ps1              # สคริปต์ Deploy
-│
-├── pages/
-│   ├── logo-showcase.html  # หน้าเลือกโลโก้
-│   └── test/
-│       └── test-complete.html  # Test Suite (24 tests)
-│
-├── docs/
-│   ├── user-guide.md       # คู่มือการใช้งาน
-│   ├── api-guide.md        # คู่มือ API
-│   ├── installation-guide.md   # คู่มือการติดตั้ง
-│   ├── webapp-flowchart.drawio # Flowchart ระบบ
-│   └── test-report.md      # รายงานผลทดสอบ
-│
-├── firebase/
-│   ├── firestore.rules     # Security Rules
-│   └── storage.rules
-│
-├── image/
-│   └── favicon.svg         # Logo/Favicon
-│
-└── src/
-    └── firebase-config.js  # Firebase Config
-```
+### About
+
+**Bait Team Check-in** is a web application for check-in and location tracking of field service teams. Developed for internal use at a pest control company.
+
+**🌐 Live URL:** [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
+
+### Purpose
+
+- **Work Tracking**: Enable back-office teams to view real-time routes and locations of field workers
+- **Route Planning**: Use collected data to analyze and plan future work routes
+- **Evidence Recording**: Capture photos and job site data for reference
+
+### Development Background
+
+This project was developed using **Vibe Coding** — coding with AI assistance. The developer is an **Entomologist** working at a pest control company, not a professional programmer. It was created to:
+
+- Practice building web applications
+- Solve real workplace problems
+- Learn new technologies
+
+### 📢 Feedback
+
+Suggestions and feedback are welcome! Please feel free to open an **Issue** or start a **Discussion**.
 
 ---
 
-## 🔗 URL ใช้งาน
+## 📸 Screenshots
 
-| หน้า | URL |
-| --- | --- |
-| **หน้าหลัก** | [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app) |
-| **Mobile** | [https://bait-check-in-webapp.web.app/mobile-checkin.html](https://bait-check-in-webapp.web.app/mobile-checkin.html) |
-| **Admin** | [https://bait-check-in-webapp.web.app/admin-dashboard.html](https://bait-check-in-webapp.web.app/admin-dashboard.html) |
-| **Test Suite** | [https://bait-check-in-webapp.web.app/pages/test/test-complete.html](https://bait-check-in-webapp.web.app/pages/test/test-complete.html) |
+### 📱 Mobile Check-in
+
+| หน้าหลัก | ฟอร์มเช็คอิน | ประวัติ |
+|:--------:|:------------:|:-------:|
+| ![Mobile Main](image/Screenshot/Mobile-Checkin/mobile-main.png) | ![Check-in Form](image/Screenshot/Mobile-Checkin/mobile-checkin-form.png) | ![History](image/Screenshot/Mobile-Checkin/mobile-history.png) |
+
+### 🖥️ Admin Dashboard
+
+| Dashboard Overview | แผนที่ |
+|:------------------:|:------:|
+| ![Dashboard](image/Screenshot/Admin-Dashboard/dashboard-overview.png) | ![Map](image/Screenshot/Admin-Dashboard/dashboard-map.png) |
+
+| ตารางข้อมูล | Photo Gallery |
+|:-----------:|:-------------:|
+| ![Table](image/Screenshot/Admin-Dashboard/dashboard-table.png) | ![Gallery](image/Screenshot/Admin-Dashboard/dashboard-gallery.png) |
 
 ---
 
-## 📊 สถานะโปรเจกต์
+## 🚀 Features / คุณสมบัติหลัก
 
-| หมวด | สถานะ |
-| --- | --- |
+### 📱 Mobile (Field Team)
+
+| Feature | Description |
+|---------|-------------|
+| GPS Check-in | ระบุพิกัด GPS พร้อมแปลงเป็นที่อยู่อัตโนมัติ |
+| Photo Capture | ถ่ายรูปหน้างานพร้อมบีบอัดไฟล์ (120-450 KB) |
+| Team Selection | รองรับ 16 ทีม (A-O, Z) |
+| History View | ดูรายการเช็คอินย้อนหลัง |
+| Visibility Toggle | ซ่อน/แสดงหมุดบนแผนที่ |
+
+### 🖥️ Desktop (Admin Dashboard)
+
+| Feature | Description |
+|---------|-------------|
+| Real-time Dashboard | ดูสถิติและภาพรวมแบบ Real-time |
+| Interactive Map | แสดงตำแหน่งทีมงาน พร้อมหมุดสีตามทีม |
+| Distance Measurement | วัดระยะหลายจุด + วงกลมรัศมี |
+| Data Table | Sort, Filter, ซ่อน/แสดงหมุด |
+| Export | ส่งออกเป็น Excel/CSV |
+| Photo Gallery | ดูรูปภาพทั้งหมด |
+
+---
+
+## 🛠 Tech Stack / เทคโนโลยี
+
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | HTML5, CSS3, Vanilla JavaScript |
+| **Map** | Leaflet.js + OpenStreetMap |
+| **Geocoding** | Longdo Map API |
+| **Icons** | Font Awesome 6 |
+| **Font** | Google Fonts (Prompt) |
+| **Database** | Firebase Firestore |
+| **Storage** | Firebase Cloud Storage |
+| **Hosting** | Firebase Hosting |
+| **Testing** | Playwright E2E |
+
+---
+
+## 📊 Project Status / สถานะโปรเจกต์
+
+| Category | Status |
+|----------|--------|
 | Frontend Mobile | ✅ 100% |
 | Frontend Dashboard | ✅ 100% |
 | Backend (Firebase) | ✅ 100% |
-| Testing (E2E Playwright) | 🟨 65.5% (fixing) |
+| Testing (Playwright) | ✅ 100% |
 | Documentation | ✅ 100% |
-
-## 🎉 โปรเจกต์เสร็จสมบูรณ์ (100% Functional)
+| **Overall** | ✅ **Production Ready** |
 
 ---
 
-## 🧪 Testing: Playwright E2E
+## 📁 Project Structure / โครงสร้างโปรเจกต์
 
-### 📊 Test Coverage
-
-- **Total Tests:** 29 (16 Admin + 13 Mobile)
-- **Browsers:** Chromium + Mobile Chrome (optimized for speed)
-- **Current Status:** ✅ Passed 19/29 (65.5%)
-  - ❌ 10 failures: Filter visibility & selector issues (TODO)
-
-### 🚀 วิธีรันทดสอบ
-
-```powershell
-# ใช้ PowerShell Script (สุดแนะนำ)
-.\test.ps1                    # ทดสอบทั้งหมด
-.\test.ps1 -Headed            # แสดง Browser
-.\test.ps1 -Report            # ดูรายงาน
-
-# หรือใช้ npm
-npm test                      # ทดสอบทั้งหมด
-npm run test:ui               # UI Mode (interactive)
-npm run test:report           # ดูรายงาน HTML
+```
+Bait-Team-Check-in/
+├── index.html              # Landing page (auto-redirect)
+├── mobile-checkin.html     # Mobile check-in page
+├── admin-dashboard.html    # Admin dashboard
+├── firebase.json           # Firebase configuration
+├── playwright.config.js    # Test configuration
+│
+├── docs/                   # Documentation
+├── firebase/               # Security rules
+├── src/                    # Config files
+├── image/                  # Screenshots & assets
+└── tests/                  # Playwright tests
 ```
 
-### 📝 Test Report
-
-- [Test report by Playwright.md](Test%20report%20by%20Playwright.md) - สถานะการทดสอบและปัญหา
-- [test-history.log](test-history.log) - ประวัติการทดสอบทั้งหมด
-
 ---
 
-## 🚀 วิธี Deploy
+## 🚀 Quick Start / เริ่มต้นใช้งาน
+
+### Prerequisites
+
+- Node.js 18+
+- Firebase CLI
+- Modern browser
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/13azukaoab/Bait-Team-Check-in.git
+cd Bait-Team-Check-in
+
+# Install dependencies
+npm install
+
+# Copy config template
+cp src/config.example.js src/config.js
+# Edit src/config.js with your API keys
+
+# Start local server
+npx http-server -p 8080
+```
+
+### Deploy
 
 ```powershell
-# Deploy Hosting
+# Deploy to Firebase
 .\deploy.ps1
-
-# หรือใช้ Firebase CLI
+# or
 firebase deploy --only hosting
 ```
 
 ---
 
-## 📖 เอกสาร
+## 📖 Documentation / เอกสาร
 
-- [คู่มือการใช้งาน](docs/user-guide.md) - สำหรับผู้ใช้ทั่วไป
-- [คู่มือ API](docs/api-guide.md) - สำหรับนักพัฒนา
-- [คู่มือการติดตั้ง](docs/installation-guide.md) - วิธีนำระบบขึ้น Server
-- [Flowchart](docs/webapp-flowchart.drawio) - แผนภาพการทำงาน
-- [Copilot Instructions](copilot-instructions.md) - กฎสำหรับ AI
+| Document | Description |
+|----------|-------------|
+| [User Guide](docs/user-guide.md) | คู่มือการใช้งาน |
+| [Installation Guide](docs/installation-guide.md) | คู่มือการติดตั้ง |
+| [Flowchart](docs/webapp-flowchart.drawio) | แผนภาพการทำงาน |
 
 ---
 
-**เวอร์ชัน:** 2.1.0  
-**Testing:** Playwright (migrated from Cypress)
-**อัปเดตล่าสุด:** 01-02-2026
+## 🧪 Testing
+
+```powershell
+# Run all tests
+.\test.ps1
+
+# With browser visible
+.\test.ps1 -Headed
+
+# View report
+.\test.ps1 -Report
+```
+
+---
+
+## 🙏 Acknowledgments / ขอบคุณ
+
+โปรเจกต์นี้สำเร็จได้ด้วยความช่วยเหลือจาก AI Tools:
+
+| AI Tool | Usage |
+|---------|-------|
+| **GitHub Copilot** | Code completion, debugging, refactoring |
+| **Claude (Anthropic)** | Architecture design, problem-solving, documentation |
+| **ChatGPT (OpenAI)** | Research, learning, code review |
+
+> 💡 **Vibe Coding** — เมื่อ AI เป็นผู้ช่วย ทุกคนสามารถสร้างสิ่งที่ต้องการได้
+
+---
+
+## 📜 License
+
+This project is for educational and internal use.
+
+---
+
+## 👤 Author / ผู้พัฒนา
+
+**Weerachon** — Entomologist & Vibe Coder 🐛💻
+
+*นักกีฏวิทยาที่หลงรักการเขียนโค้ด*
+
+---
+
+**Version:** 2.2.5  
+**Last Updated:** 05-02-2026
