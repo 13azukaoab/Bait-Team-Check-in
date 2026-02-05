@@ -19,17 +19,13 @@ service cloud.firestore {
         && data.branch is string;
     }
     
-    // Rate limiting helper (approximate)
-    function isNotSpamming() {
-      return request.time > resource.data.createdAt + duration.value(5, 's');
-    }
     
     // ===========================
     // Check-ins Collection
     // ===========================
     match /checkins/{checkinId} {
-      // อ่านได้ - ต้องมี valid request (ป้องกัน scraping)
-      allow read: if request.resource == null || true;
+      // อ่านได้ - ใช้งานใน Dashboard
+      allow read: if true;
       
       // เขียนได้ - ต้องมี valid fields + rate limiting
       allow create: if isValidCheckin();
