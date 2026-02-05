@@ -219,13 +219,21 @@ firebase deploy --only hosting
 
 โปรเจกต์นี้สำเร็จได้ด้วยความช่วยเหลือจาก AI Tools:
 
-| AI Tool | Usage |
-|---------|-------|
-| **GitHub Copilot** | Code completion, debugging, refactoring |
-| **Claude (Anthropic)** | Architecture design, problem-solving, documentation |
-| **ChatGPT (OpenAI)** | Research, learning, code review |
+This project was made possible with the help of AI Tools:
+
+| AI Tool | Usage / การใช้งาน |
+|---------|-------------------|
+| **Claude Opus 4.5** | Main development, architecture design / พัฒนาหลัก, ออกแบบโครงสร้าง |
+| **Claude Sonnet 4.5** | Code review, debugging / ตรวจสอบโค้ด, แก้บั๊ก |
+| **Claude Haiku 4.5** | Quick fixes, small tasks / แก้ไขเล็กน้อย, งานย่อย |
+| **GPT-5.1-Codex-Max** | Code generation, automation / สร้างโค้ด, ระบบอัตโนมัติ |
+| **GPT-5** | Research, problem-solving / ค้นคว้า, แก้ปัญหา |
+| **Gemini 3 Pro** | Documentation, learning / เอกสาร, การเรียนรู้ |
+| **GitHub Copilot** | Code completion, refactoring / เติมโค้ด, ปรับปรุงโค้ด |
 
 > 💡 **Vibe Coding** — เมื่อ AI เป็นผู้ช่วย ทุกคนสามารถสร้างสิ่งที่ต้องการได้
+>
+> 💡 **Vibe Coding** — When AI assists, anyone can build what they imagine.
 
 ---
 
