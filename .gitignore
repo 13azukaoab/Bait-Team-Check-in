@@ -32,9 +32,9 @@ yarn-error.log*
 # Environment variables
 .env
 
-# Screenshots (temp) - ยกเว้น image/Screenshot/
+# Screenshots (temp) - ยกเว้น images/Screenshot/
 *.png
-!image/Screenshot/**/*.png
+!images/Screenshot/**/*.png
 .env.local
 .env.development.local
 .env.test.local

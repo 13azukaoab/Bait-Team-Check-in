@@ -66,17 +66,17 @@ Suggestions and feedback are welcome! Please feel free to open an **Issue** or s
 
 | หน้าหลัก | เลือกทีม | ฟอร์มเช็คอิน |
 |:--------:|:------------:|:-------:|
-| ![Mobile Main](image/Screenshot/Mobile-Checkin/mobile-main.png) | ![Check-in Form](image/Screenshot/Mobile-Checkin/mobile-checkin-form.png) | ![History](image/Screenshot/Mobile-Checkin/mobile-history.png) |
+| ![Mobile Main](images/Screenshot/Mobile-Checkin/mobile-main.png) | ![Check-in Form](images/Screenshot/Mobile-Checkin/mobile-checkin-form.png) | ![History](images/Screenshot/Mobile-Checkin/mobile-history.png) |
 
 ### 🖥️ Admin Dashboard
 
 | Dashboard Overview | แผนที่ |
 |:------------------:|:------:|
-| <img src="image/Screenshot/Admin-Dashboard/dashboard-overview.png" width="400"> | <img src="image/Screenshot/Admin-Dashboard/dashboard-map.png" width="400"> |
+| <img src="images/Screenshot/Admin-Dashboard/dashboard-overview.png" width="400"> | <img src="images/Screenshot/Admin-Dashboard/dashboard-map.png" width="400"> |
 
 | ตารางข้อมูล | Photo Gallery |
 |:-----------:|:-------------:|
-| <img src="image/Screenshot/Admin-Dashboard/dashboard-table.png" width="400"> | <img src="image/Screenshot/Admin-Dashboard/dashboard-gallery.png" width="400"> |
+| <img src="images/Screenshot/Admin-Dashboard/dashboard-table.png" width="400"> | <img src="images/Screenshot/Admin-Dashboard/dashboard-gallery.png" width="400"> |
 
 ---
 
@@ -146,8 +146,10 @@ Bait-Team-Check-in/
 │
 ├── docs/                   # Documentation
 ├── firebase/               # Security rules
+├── images/                 # Screenshots & assets
+├── scripts/                # PowerShell scripts
+├── secrets/                # API keys (gitignored)
 ├── src/                    # Config files
-├── image/                  # Screenshots & assets
 └── tests/                  # Playwright tests
 ```
 
@@ -183,7 +185,7 @@ npx http-server -p 8080
 
 ```powershell
 # Deploy to Firebase
-.\deploy.ps1
+.\scripts\deploy.ps1
 # or
 firebase deploy --only hosting
 ```
@@ -204,13 +206,13 @@ firebase deploy --only hosting
 
 ```powershell
 # Run all tests
-.\test.ps1
+.\scripts\test.ps1
 
 # With browser visible
-.\test.ps1 -Headed
+.\scripts\test.ps1 -Headed
 
 # View report
-.\test.ps1 -Report
+.\scripts\test.ps1 -Report
 ```
 
 ---
