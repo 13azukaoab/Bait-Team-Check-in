@@ -711,6 +711,58 @@
         .leaflet-control-zoom {
             z-index: 500 !important;
         }
+        
+        /* Layer Control Styling */
+        .leaflet-control-layers {
+            background: white;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+            border: none !important;
+            padding: 0 !important;
+            overflow: hidden;
+        }
+        
+        .leaflet-control-layers-expanded {
+            padding: 8px 12px !important;
+        }
+        
+        .leaflet-control-layers-base label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            margin: 4px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-family: 'Prompt', sans-serif;
+            font-size: 0.85rem;
+            color: #334155;
+        }
+        
+        .leaflet-control-layers-base label:hover {
+            background: #f1f5f9;
+        }
+        
+        .leaflet-control-layers-base input {
+            margin: 0;
+            accent-color: #0ea5e9;
+        }
+        
+        .leaflet-control-layers-base label i {
+            width: 18px;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        .leaflet-control-layers-base label:has(input:checked) {
+            background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+            color: #0284c7;
+        }
+        
+        .leaflet-control-layers-base label:has(input:checked) i {
+            color: #0ea5e9;
+        }
 
         /* Checkins List */
         .checkins-section {
@@ -1020,8 +1072,8 @@
         .filter-panel {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
             box-shadow: var(--shadow);
             display: none;
         }
@@ -1033,17 +1085,23 @@
         .filter-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
             align-items: flex-end;
+        }
+        
+        .filter-row + .filter-row {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
             flex: 1;
-            min-width: 120px;
-            max-width: 180px;
+            min-width: 100px;
+            max-width: 150px;
         }
         
         .filter-group.filter-btn-group {
@@ -1052,17 +1110,17 @@
         }
 
         .filter-group label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
             color: var(--text-secondary);
         }
 
         .filter-group select,
         .filter-group input {
-            padding: 8px 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.85rem;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.8rem;
             font-family: 'Prompt', sans-serif;
             background: white;
             transition: all 0.3s ease;
@@ -1075,8 +1133,8 @@
         }
         
         .filter-group .btn {
-            padding: 8px 16px;
-            font-size: 0.85rem;
+            padding: 6px 12px;
+            font-size: 0.8rem;
         }
 
         /* Distance Panel */
@@ -1154,6 +1212,37 @@
         .btn-radius:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+
+        /* Layer Switch Buttons */
+        .layer-switch {
+            display: flex;
+            background: var(--bg-main);
+            border-radius: 10px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .layer-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .layer-btn:hover {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--primary);
+        }
+
+        .layer-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
         }
 
         /* Radius Panel - Compact Design like Distance Panel */
@@ -1882,18 +1971,29 @@
 
         .team-filter-menu {
             position: absolute;
-            top: 100%;
-            right: 0;
-            left: auto;
-            margin-top: 8px;
+            top: calc(100% + 8px);
+            left: 0;
+            right: auto;
             background: var(--bg-card);
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            min-width: 200px;
-            max-width: calc(100vw - 100px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            width: 280px;
             z-index: 2000;
             display: none;
             overflow: hidden;
+            border: 1px solid var(--border);
+            animation: slideDown 0.2s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .team-filter-menu.active {
@@ -1901,13 +2001,40 @@
         }
 
         .team-filter-header {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border);
+            padding: 14px 16px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
+        }
+
+        .team-filter-header > span {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .team-filter-header > div {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-link {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: 'Prompt', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-link:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .btn-mini {
@@ -1930,10 +2057,52 @@
         .team-filter-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-            padding: 12px;
-            max-width: 100%;
-            box-sizing: border-box;
+            gap: 8px;
+            padding: 16px;
+            background: var(--bg-card);
+        }
+
+        .team-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .team-checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .team-checkbox .team-badge {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-checkbox input[type="checkbox"]:not(:checked) + .team-badge {
+            opacity: 0.35;
+            filter: grayscale(80%);
+            box-shadow: none;
+        }
+
+        .team-checkbox input[type="checkbox"]:checked + .team-badge {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .team-checkbox:hover .team-badge {
+            transform: scale(1.1);
         }
 
         .team-filter-item {
@@ -2095,143 +2264,25 @@
 
             <!-- Content Grid -->
             <div class="content-grid">
-                <!-- Filter Panel -->
-                <div class="filter-panel" id="filterPanel">
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label><i class="fas fa-users"></i> ทีม</label>
-                            <select id="filterTeam" data-test="filter-team">
-                                <option value="all">ทั้งหมด</option>
-                                <option value="A">Team A</option>
-                                <option value="B">Team B</option>
-                                <option value="C">Team C</option>
-                                <option value="D">Team D</option>
-                                <option value="E">Team E</option>
-                                <option value="F">Team F</option>
-                                <option value="G">Team G</option>
-                                <option value="H">Team H</option>
-                                <option value="I">Team I</option>
-                                <option value="J">Team J</option>
-                                <option value="K">Team K</option>
-                                <option value="L">Team L</option>
-                                <option value="M">Team M</option>
-                                <option value="N">Team N</option>
-                                <option value="O">Team O</option>
-                                <option value="Z">Team Z</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label><i class="fas fa-map-marker-alt"></i> เขต</label>
-                            <select id="filterZone" data-test="filter-zone">
-                                <option value="all">ทั้งหมด</option>
-                                <option value="เขต 1">เขต 1</option>
-                                <option value="เขต 2">เขต 2</option>
-                                <option value="เขต 3">เขต 3</option>
-                                <option value="เขต 4">เขต 4</option>
-                                <option value="เขต 5">เขต 5</option>
-                                <option value="เขต 6">เขต 6</option>
-                                <option value="เขต 7">เขต 7</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label><i class="fas fa-building"></i> สาขา</label>
-                            <select id="filterBranch" data-test="filter-branch">
-                                <option value="all">ทั้งหมด</option>
-                                <optgroup label="เขต 1">
-                                    <option>พุทธมณฑล</option>
-                                    <option>นครปฐม</option>
-                                    <option>หัวหิน</option>
-                                    <option>พระราม 2</option>
-                                </optgroup>
-                                <optgroup label="เขต 2">
-                                    <option>สาทร</option>
-                                    <option>ปทุมวัน</option>
-                                    <option>พระราม 4</option>
-                                    <option>นนทบุรี</option>
-                                </optgroup>
-                                <optgroup label="เขต 3">
-                                    <option>ปทุมธานี</option>
-                                    <option>รามอินทรา</option>
-                                    <option>อยุธยา</option>
-                                </optgroup>
-                                <optgroup label="เขต 4">
-                                    <option>ลาดพร้าว</option>
-                                    <option>พัฒนาการ</option>
-                                    <option>สุวินทวงศ์</option>
-                                    <option>ประชาชื่น</option>
-                                </optgroup>
-                                <optgroup label="เขต 5">
-                                    <option>ปราจีนบุรี</option>
-                                    <option>สมุทรปราการ</option>
-                                    <option>พัทยา</option>
-                                    <option>ระยอง</option>
-                                </optgroup>
-                                <optgroup label="เขต 6">
-                                    <option>สุขุมวิท</option>
-                                    <option>ปากน้ำ</option>
-                                    <option>ชลบุรี</option>
-                                </optgroup>
-                                <optgroup label="เขต 7">
-                                    <option>ปากช่อง</option>
-                                    <option>สระบุรี</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label><i class="fas fa-calendar"></i> เริ่มต้น</label>
-                            <input type="date" id="filterDateStart" data-test="filter-date-start">
-                        </div>
-                        <div class="filter-group">
-                            <label><i class="fas fa-calendar-check"></i> สิ้นสุด</label>
-                            <input type="date" id="filterDateEnd" data-test="filter-date-end">
-                        </div>
-                        <div class="filter-group filter-btn-group">
-                            <label>&nbsp;</label>
-                            <button class="btn btn-primary" data-test="apply-filter-btn" onclick="applyFilters()">
-                                <i class="fas fa-search"></i> ค้นหา
-                            </button>
-                        </div>
-                        <div class="filter-group filter-btn-group">
-                            <label>&nbsp;</label>
-                            <button class="btn btn-outline" data-test="clear-filter-btn" onclick="clearFilters()">
-                                <i class="fas fa-times"></i> ล้าง
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Quick Date Range Selection -->
-                    <div class="filter-row" data-test="quick-date-buttons" style="gap: 8px; padding: 0 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
-                        <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; margin-right: 8px;">วันที่ด่วน:</span>
-                        <button type="button" class="btn btn-outline" data-test="quick-date-today" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('today'); applyFilters();" title="แสดงข้อมูลวันนี้">
-                            <i class="fas fa-calendar-day"></i> วันนี้
-                        </button>
-                        <button type="button" class="btn btn-outline" data-test="quick-date-week" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('thisWeek'); applyFilters();" title="แสดงข้อมูลสัปดาห์นี้">
-                            <i class="fas fa-calendar-week"></i> สัปดาห์นี้
-                        </button>
-                        <button type="button" class="btn btn-outline" data-test="quick-date-month" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('thisMonth'); applyFilters();" title="แสดงข้อมูลเดือนนี้">
-                            <i class="fas fa-calendar-alt"></i> เดือนนี้
-                        </button>
-                        <button type="button" class="btn btn-outline" data-test="quick-date-7days" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('last7days'); applyFilters();" title="แสดงข้อมูล 7 วันที่ผ่านมา">
-                            <i class="fas fa-history"></i> 7 วัน
-                        </button>
-                        <button type="button" class="btn btn-outline" data-test="quick-date-30days" style="padding: 6px 12px; font-size: 0.85rem;" onclick="setDateRange('last30days'); applyFilters();" title="แสดงข้อมูล 30 วันที่ผ่านมา">
-                            <i class="fas fa-history"></i> 30 วัน
-                        </button>
-                    </div>
-                </div>
-
                 <!-- Map Section -->
                 <div class="map-section">
                     <div class="section-header">
                         <h2><i class="fas fa-map"></i> Location Map</h2>
                         <div class="header-actions-group">
+                            <!-- Layer Switch -->
+                            <div class="layer-switch">
+                                <button class="layer-btn active" id="layerBtnStreet" onclick="switchLayer('street')" title="แผนที่ถนน">
+                                    <i class="fas fa-map"></i>
+                                </button>
+                                <button class="layer-btn" id="layerBtnSatellite" onclick="switchLayer('satellite')" title="ดาวเทียม">
+                                    <i class="fas fa-satellite"></i>
+                                </button>
+                            </div>
                             <button class="btn btn-hq" onclick="goToHQ()" title="ไปสำนักงานใหญ่">
                                 <i class="fas fa-building"></i> HQ
                             </button>
                             <button class="btn btn-navigate" onclick="navigateToSelected()" title="นำทางไปยังจุดที่เลือก" id="navigateBtn">
                                 <i class="fas fa-location-arrow"></i>
-                            </button>
-                            <button class="btn btn-outline" onclick="toggleFilter()">
-                                <i class="fas fa-filter"></i> Filter
                             </button>
                             <button class="btn btn-measure" id="measureBtn" onclick="toggleMeasure()">
                                 <i class="fas fa-ruler"></i> วัดระยะ
@@ -2279,29 +2330,29 @@
                                 </button>
                                 <div class="team-filter-menu" id="teamFilterMenu">
                                     <div class="team-filter-header">
-                                        <span style="font-weight: 600;">เลือกทีมที่จะแสดง</span>
-                                        <div style="display: flex; gap: 8px;">
-                                            <button onclick="selectAllTeams(true)" class="btn-mini">เลือกทั้งหมด</button>
-                                            <button onclick="selectAllTeams(false)" class="btn-mini">ยกเลิกทั้งหมด</button>
+                                        <span>เลือกทีมที่จะแสดง</span>
+                                        <div>
+                                            <button class="btn-link" onclick="selectAllTeams(true)">เลือกทั้งหมด</button>
+                                            <button class="btn-link" onclick="selectAllTeams(false)">ยกเลิกทั้งหมด</button>
                                         </div>
                                     </div>
                                     <div class="team-filter-grid">
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('A', this.checked)"><span class="team-badge team-badge-sm team-a">A</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('B', this.checked)"><span class="team-badge team-badge-sm team-b">B</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('C', this.checked)"><span class="team-badge team-badge-sm team-c">C</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('D', this.checked)"><span class="team-badge team-badge-sm team-d">D</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('E', this.checked)"><span class="team-badge team-badge-sm team-e">E</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('F', this.checked)"><span class="team-badge team-badge-sm team-f">F</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('G', this.checked)"><span class="team-badge team-badge-sm team-g">G</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('H', this.checked)"><span class="team-badge team-badge-sm team-h">H</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('I', this.checked)"><span class="team-badge team-badge-sm team-i">I</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('J', this.checked)"><span class="team-badge team-badge-sm team-j">J</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('K', this.checked)"><span class="team-badge team-badge-sm team-k">K</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('L', this.checked)"><span class="team-badge team-badge-sm team-l">L</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('M', this.checked)"><span class="team-badge team-badge-sm team-m">M</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('N', this.checked)"><span class="team-badge team-badge-sm team-n">N</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('O', this.checked)"><span class="team-badge team-badge-sm team-o">O</span></label>
-                                        <label class="team-filter-item"><input type="checkbox" checked onchange="filterByTeam('Z', this.checked)"><span class="team-badge team-badge-sm team-z">Z</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('A', this.checked)"><span class="team-badge team-a">A</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('B', this.checked)"><span class="team-badge team-b">B</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('C', this.checked)"><span class="team-badge team-c">C</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('D', this.checked)"><span class="team-badge team-d">D</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('E', this.checked)"><span class="team-badge team-e">E</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('F', this.checked)"><span class="team-badge team-f">F</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('G', this.checked)"><span class="team-badge team-g">G</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('H', this.checked)"><span class="team-badge team-h">H</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('I', this.checked)"><span class="team-badge team-i">I</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('J', this.checked)"><span class="team-badge team-j">J</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('K', this.checked)"><span class="team-badge team-k">K</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('L', this.checked)"><span class="team-badge team-l">L</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('M', this.checked)"><span class="team-badge team-m">M</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('N', this.checked)"><span class="team-badge team-n">N</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('O', this.checked)"><span class="team-badge team-o">O</span></label>
+                                        <label class="team-checkbox"><input type="checkbox" checked onchange="filterByTeam('Z', this.checked)"><span class="team-badge team-z">Z</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -2336,9 +2387,6 @@
                 <div class="section-header">
                     <h2><i class="fas fa-table"></i> All Check-ins Data</h2>
                     <div class="header-actions-group">
-                        <button class="btn btn-outline" onclick="toggleFilter()">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
                         <div class="export-dropdown">
                             <button class="btn btn-primary" onclick="toggleExportMenu('full')">
                                 <i class="fas fa-file-export"></i> Export <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
@@ -2357,6 +2405,151 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Filter Panel - Redesigned -->
+                <div class="filter-panel active" id="filterPanel" style="margin: 0 0 16px 0; padding: 16px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 12px;">
+                    <!-- Filter Controls Row -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;">
+                        <!-- Team Filter -->
+                        <div style="min-width: 110px;">
+                            <label style="display: block; font-size: 0.7rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <i class="fas fa-users" style="margin-right: 4px;"></i>ทีม
+                            </label>
+                            <select id="filterTeam" data-test="filter-team" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; font-family: 'Prompt', sans-serif; background: white; cursor: pointer;">
+                                <option value="all">ทั้งหมด</option>
+                                <option value="A">Team A</option>
+                                <option value="B">Team B</option>
+                                <option value="C">Team C</option>
+                                <option value="D">Team D</option>
+                                <option value="E">Team E</option>
+                                <option value="F">Team F</option>
+                                <option value="G">Team G</option>
+                                <option value="H">Team H</option>
+                                <option value="I">Team I</option>
+                                <option value="J">Team J</option>
+                                <option value="K">Team K</option>
+                                <option value="L">Team L</option>
+                                <option value="M">Team M</option>
+                                <option value="N">Team N</option>
+                                <option value="O">Team O</option>
+                                <option value="Z">Team Z</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Zone Filter -->
+                        <div style="min-width: 100px;">
+                            <label style="display: block; font-size: 0.7rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i>เขต
+                            </label>
+                            <select id="filterZone" data-test="filter-zone" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; font-family: 'Prompt', sans-serif; background: white; cursor: pointer;">
+                                <option value="all">ทั้งหมด</option>
+                                <option value="เขต 1">เขต 1</option>
+                                <option value="เขต 2">เขต 2</option>
+                                <option value="เขต 3">เขต 3</option>
+                                <option value="เขต 4">เขต 4</option>
+                                <option value="เขต 5">เขต 5</option>
+                                <option value="เขต 6">เขต 6</option>
+                                <option value="เขต 7">เขต 7</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Branch Filter -->
+                        <div style="min-width: 120px;">
+                            <label style="display: block; font-size: 0.7rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <i class="fas fa-building" style="margin-right: 4px;"></i>สาขา
+                            </label>
+                            <select id="filterBranch" data-test="filter-branch" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; font-family: 'Prompt', sans-serif; background: white; cursor: pointer;">
+                                <option value="all">ทั้งหมด</option>
+                                <optgroup label="เขต 1">
+                                    <option>พุทธมณฑล</option>
+                                    <option>นครปฐม</option>
+                                    <option>หัวหิน</option>
+                                    <option>พระราม 2</option>
+                                </optgroup>
+                                <optgroup label="เขต 2">
+                                    <option>สาทร</option>
+                                    <option>ปทุมวัน</option>
+                                    <option>พระราม 4</option>
+                                    <option>นนทบุรี</option>
+                                </optgroup>
+                                <optgroup label="เขต 3">
+                                    <option>ปทุมธานี</option>
+                                    <option>รามอินทรา</option>
+                                    <option>อยุธยา</option>
+                                </optgroup>
+                                <optgroup label="เขต 4">
+                                    <option>ลาดพร้าว</option>
+                                    <option>พัฒนาการ</option>
+                                    <option>สุวินทวงศ์</option>
+                                    <option>ประชาชื่น</option>
+                                </optgroup>
+                                <optgroup label="เขต 5">
+                                    <option>ปราจีนบุรี</option>
+                                    <option>สมุทรปราการ</option>
+                                    <option>พัทยา</option>
+                                    <option>ระยอง</option>
+                                </optgroup>
+                                <optgroup label="เขต 6">
+                                    <option>สุขุมวิท</option>
+                                    <option>ปากน้ำ</option>
+                                    <option>ชลบุรี</option>
+                                </optgroup>
+                                <optgroup label="เขต 7">
+                                    <option>ปากช่อง</option>
+                                    <option>สระบุรี</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <!-- Date Range -->
+                        <div style="min-width: 130px;">
+                            <label style="display: block; font-size: 0.7rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <i class="fas fa-calendar" style="margin-right: 4px;"></i>เริ่มต้น
+                            </label>
+                            <input type="date" id="filterDateStart" data-test="filter-date-start" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; font-family: 'Prompt', sans-serif; background: white;">
+                        </div>
+                        
+                        <div style="min-width: 130px;">
+                            <label style="display: block; font-size: 0.7rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <i class="fas fa-calendar-check" style="margin-right: 4px;"></i>สิ้นสุด
+                            </label>
+                            <input type="date" id="filterDateEnd" data-test="filter-date-end" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; font-family: 'Prompt', sans-serif; background: white;">
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 8px; align-items: flex-end;">
+                            <button class="btn btn-primary" data-test="apply-filter-btn" onclick="applyFilters()" style="padding: 8px 16px; font-size: 0.85rem; white-space: nowrap;">
+                                <i class="fas fa-search"></i> ค้นหา
+                            </button>
+                            <button class="btn btn-outline" data-test="clear-filter-btn" onclick="clearFilters()" style="padding: 8px 12px; font-size: 0.85rem;">
+                                <i class="fas fa-times"></i> ล้าง
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Date Buttons -->
+                    <div data-test="quick-date-buttons" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; align-items: center;">
+                        <span style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-right: 4px;">
+                            <i class="fas fa-bolt" style="color: #f59e0b;"></i> ด่วน:
+                        </span>
+                        <button type="button" class="btn btn-outline" data-test="quick-date-today" style="padding: 5px 12px; font-size: 0.8rem; border-radius: 20px;" onclick="setDateRange('today'); applyFilters();" title="แสดงข้อมูลวันนี้">
+                            <i class="fas fa-calendar-day"></i> วันนี้
+                        </button>
+                        <button type="button" class="btn btn-outline" data-test="quick-date-week" style="padding: 5px 12px; font-size: 0.8rem; border-radius: 20px;" onclick="setDateRange('thisWeek'); applyFilters();" title="แสดงข้อมูลสัปดาห์นี้">
+                            <i class="fas fa-calendar-week"></i> สัปดาห์นี้
+                        </button>
+                        <button type="button" class="btn btn-outline" data-test="quick-date-month" style="padding: 5px 12px; font-size: 0.8rem; border-radius: 20px;" onclick="setDateRange('thisMonth'); applyFilters();" title="แสดงข้อมูลเดือนนี้">
+                            <i class="fas fa-calendar-alt"></i> เดือนนี้
+                        </button>
+                        <button type="button" class="btn btn-outline" data-test="quick-date-7days" style="padding: 5px 12px; font-size: 0.8rem; border-radius: 20px;" onclick="setDateRange('last7days'); applyFilters();" title="แสดงข้อมูล 7 วันที่ผ่านมา">
+                            <i class="fas fa-history"></i> 7 วัน
+                        </button>
+                        <button type="button" class="btn btn-outline" data-test="quick-date-30days" style="padding: 5px 12px; font-size: 0.8rem; border-radius: 20px;" onclick="setDateRange('last30days'); applyFilters();" title="แสดงข้อมูล 30 วันที่ผ่านมา">
+                            <i class="fas fa-history"></i> 30 วัน
+                        </button>
+                    </div>
+                </div>
+                
                 <table class="data-table" id="main-checkins-table">
                     <thead>
                         <tr>
@@ -2948,7 +3141,7 @@
                 // console.log('Loading check-ins from Firestore...');
                 const querySnapshot = await db.collection('checkins')
                     .orderBy('createdAt', 'desc')
-                    .limit(100)
+                    .limit(2000)
                     .get();
                 
                 firestoreCheckins = [];
@@ -3616,12 +3809,19 @@
             if (!map) return;
             
             // Clear existing markers (except HQ)
-            markers.forEach(m => map.removeLayer(m));
+            markers.forEach(m => {
+                if (m && map.hasLayer(m)) {
+                    map.removeLayer(m);
+                }
+            });
             markers.length = 0;
             
+            // สร้าง markers สำหรับทุก item เพื่อให้ index ตรงกับ firestoreCheckins
             firestoreCheckins.forEach((item, index) => {
-                if (!item.visible || !item.lat || !item.lng) return;
-                if (!teamVisibility[item.team]) return;
+                if (!item.lat || !item.lng) {
+                    markers.push(null); // placeholder เพื่อรักษา index
+                    return;
+                }
                 
                 const marker = L.marker([item.lat, item.lng], { icon: createCustomIcon(item.team) })
                     .bindPopup(`
@@ -3642,8 +3842,13 @@
                             location: { lat: item.lat, lng: item.lng }
                         };
                         document.getElementById('navigateBtn').style.background = '#22c55e';
-                    })
-                    .addTo(map);
+                    });
+                
+                // เพิ่มเข้า map เฉพาะถ้า visible และ teamVisibility
+                if (item.visible && teamVisibility[item.team]) {
+                    marker.addTo(map);
+                }
+                
                 markers.push(marker);
             });
         }
@@ -3853,7 +4058,7 @@
             
             realtimeUnsubscribe = db.collection('checkins')
                 .orderBy('createdAt', 'desc')
-                .limit(100)
+                .limit(2000)
                 .onSnapshot(
                     (snapshot) => {
                         // ตรวจสอบว่ามีการเปลี่ยนแปลงจริงหรือไม่
@@ -4019,6 +4224,10 @@
         // OpenStreetMap tiles (default)
         const osmTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         
+        // Satellite tiles (Esri World Imagery - Free)
+        const satelliteTileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+        const satelliteLabelsUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
+        
         // ===========================
         // HQ (สำนักงานใหญ่) - 13°47'39.9"N 100°41'23.7"E
         // ===========================
@@ -4040,10 +4249,53 @@
             wheelPxPerZoomLevel: 120
         }).setView([13.7400, 100.5400], 13);
         
-        // Add tile layer (OpenStreetMap)
-        L.tileLayer(osmTileUrl, {
+        // Create base layers for layer control
+        const osmLayer = L.tileLayer(osmTileUrl, {
             attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+        });
+        
+        const satelliteLayer = L.tileLayer(satelliteTileUrl, {
+            attribution: '© Esri World Imagery'
+        });
+        
+        const satelliteLabels = L.tileLayer(satelliteLabelsUrl, {
+            attribution: ''
+        });
+        
+        // Satellite with labels (combined layer group)
+        const satelliteWithLabels = L.layerGroup([satelliteLayer, satelliteLabels]);
+        
+        // Base maps for layer control
+        const baseMaps = {
+            '<i class="fas fa-map"></i> แผนที่ถนน': osmLayer,
+            '<i class="fas fa-satellite"></i> ดาวเทียม': satelliteWithLabels
+        };
+        
+        // Add default layer (Street Map)
+        osmLayer.addTo(map);
+        
+        // Layer control hidden - using custom header buttons instead
+        // const layerControl = L.control.layers(baseMaps, null, {
+        //     position: 'topright',
+        //     collapsed: false
+        // }).addTo(map);
+        
+        // Layer switch function
+        let currentLayer = 'street';
+        function switchLayer(layerType) {
+            if (layerType === 'street') {
+                map.removeLayer(satelliteWithLabels);
+                osmLayer.addTo(map);
+                document.getElementById('layerBtnStreet').classList.add('active');
+                document.getElementById('layerBtnSatellite').classList.remove('active');
+            } else {
+                map.removeLayer(osmLayer);
+                satelliteWithLabels.addTo(map);
+                document.getElementById('layerBtnStreet').classList.remove('active');
+                document.getElementById('layerBtnSatellite').classList.add('active');
+            }
+            currentLayer = layerType;
+        }
         
         // Layer Group สำหรับ filtered markers
         let markersLayer = L.layerGroup().addTo(map);
@@ -4198,8 +4450,34 @@
                     zoomSnap: 0.5,
                     wheelPxPerZoomLevel: 120
                 }).setView([13.7400, 100.5400], 13);
-                L.tileLayer(osmTileUrl, {
+                
+                // Create base layers for Map View
+                const osmLayerMapView = L.tileLayer(osmTileUrl, {
                     attribution: '© OpenStreetMap contributors'
+                });
+                
+                const satelliteLayerMapView = L.tileLayer(satelliteTileUrl, {
+                    attribution: '© Esri World Imagery'
+                });
+                
+                const satelliteLabelsMapView = L.tileLayer(satelliteLabelsUrl, {
+                    attribution: ''
+                });
+                
+                const satelliteWithLabelsMapView = L.layerGroup([satelliteLayerMapView, satelliteLabelsMapView]);
+                
+                const baseMapsMapView = {
+                    '<i class="fas fa-map"></i> แผนที่ถนน': osmLayerMapView,
+                    '<i class="fas fa-satellite"></i> ดาวเทียม': satelliteWithLabelsMapView
+                };
+                
+                // Add default layer
+                osmLayerMapView.addTo(mapView);
+                
+                // Add layer control
+                L.control.layers(baseMapsMapView, null, {
+                    position: 'topright',
+                    collapsed: false
                 }).addTo(mapView);
                 
                 // Add click handler for Map View distance measurement
@@ -4242,6 +4520,7 @@
         // Custom marker icon generator
         function createCustomIcon(team) {
             // Define gradients based on team (16 teams: A-O, Z)
+            // Colors match team-badge CSS exactly
             const gradients = {
                 'A': 'linear-gradient(135deg, #ef4444, #dc2626)', // Red
                 'B': 'linear-gradient(135deg, #10b981, #059669)', // Green
@@ -4249,16 +4528,16 @@
                 'D': 'linear-gradient(135deg, #0ea5e9, #0284c7)', // Blue
                 'E': 'linear-gradient(135deg, #8b5cf6, #7c3aed)', // Purple
                 'F': 'linear-gradient(135deg, #ec4899, #db2777)', // Pink
-                'G': 'linear-gradient(135deg, #14b8a6, #0d9488)', // Teal
-                'H': 'linear-gradient(135deg, #f97316, #ea580c)', // Deep Orange
-                'I': 'linear-gradient(135deg, #6366f1, #4f46e5)', // Indigo
-                'J': 'linear-gradient(135deg, #84cc16, #65a30d)', // Lime
-                'K': 'linear-gradient(135deg, #06b6d4, #0891b2)', // Cyan
+                'G': 'linear-gradient(135deg, #06b6d4, #0891b2)', // Cyan
+                'H': 'linear-gradient(135deg, #84cc16, #65a30d)', // Lime
+                'I': 'linear-gradient(135deg, #f97316, #ea580c)', // Deep Orange
+                'J': 'linear-gradient(135deg, #6366f1, #4f46e5)', // Indigo
+                'K': 'linear-gradient(135deg, #14b8a6, #0d9488)', // Teal
                 'L': 'linear-gradient(135deg, #a855f7, #9333ea)', // Violet
                 'M': 'linear-gradient(135deg, #f43f5e, #e11d48)', // Rose
-                'N': 'linear-gradient(135deg, #22c55e, #16a34a)', // Emerald
-                'O': 'linear-gradient(135deg, #eab308, #ca8a04)', // Yellow
-                'Z': 'linear-gradient(135deg, #64748b, #475569)'  // Slate (Special Team)
+                'N': 'linear-gradient(135deg, #3b82f6, #2563eb)', // Blue
+                'O': 'linear-gradient(135deg, #22c55e, #16a34a)', // Emerald
+                'Z': 'linear-gradient(135deg, #1e1e1e, #3d3d3d)'  // Dark (Special Team)
             };
 
             const gradient = gradients[team] || 'linear-gradient(135deg, #0ea5e9, #06b6d4)'; // Default Blue
@@ -4288,11 +4567,16 @@
 
         // Toggle marker visibility (ใช้กับ Firestore markers)
         function toggleMarker(index, visible) {
-            if (markers[index]) {
-                if (visible) {
-                    markers[index].addTo(map);
-                } else {
-                    map.removeLayer(markers[index]);
+            const marker = markers[index];
+            if (!marker) return;
+            
+            if (visible) {
+                if (!map.hasLayer(marker)) {
+                    marker.addTo(map);
+                }
+            } else {
+                if (map.hasLayer(marker)) {
+                    map.removeLayer(marker);
                 }
             }
         }
@@ -4419,11 +4703,17 @@
         function updateMarkersVisibility() {
             // Update markers on main map จาก Firestore data
             firestoreCheckins.forEach((item, index) => {
-                if (!markers[index]) return;
+                const marker = markers[index];
+                if (!marker) return; // skip null markers (items without lat/lng)
+                
                 if (teamVisibility[item.team] && item.visible) {
-                    markers[index].addTo(map);
+                    if (!map.hasLayer(marker)) {
+                        marker.addTo(map);
+                    }
                 } else {
-                    map.removeLayer(markers[index]);
+                    if (map.hasLayer(marker)) {
+                        map.removeLayer(marker);
+                    }
                 }
             });
 
