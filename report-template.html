@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานสรุปโครงการ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #4A90E2;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2C3E50;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #7F8C8D;
+            font-size: 16px;
+            margin: 0;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            color: #2980B9;
+            font-size: 20px;
+            border-left: 5px solid #2980B9;
+            padding-left: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .workflow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+            background: #F8F9FA;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .workflow-box {
+            background: #ffffff;
+            border: 2px solid #3498DB;
+            border-radius: 8px;
+            padding: 15px 20px;
+            width: 80%;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .workflow-title {
+            color: #2980B9;
+            font-size: 18px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .workflow-desc {
+            color: #555;
+            font-size: 14px;
+        }
+        .workflow-arrow {
+            color: #BDC3C7;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        .highlight-box {
+            background-color: #E8F4F8;
+            border-left: 4px solid #3498DB;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #95A5A6;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #F2F6F8;
+            color: #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>รายงานสรุปโครงการแบบผู้บริหาร (Executive Summary)</h1>
+            <p>ระบบบันทึกการเข้างานและวิเคราะห์ข้อมูลเวลาปฏิบัติงาน (Workload Analysis System)</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">1. บทสรุปผู้บริหาร (Overview)</div>
+            <p>โครงการนี้ถูกพัฒนาขึ้นเพื่อยกระดับการติดตามและวิเคราะห์การลงพื้นที่ของทีมงาน โดยเปลี่ยนจากการจดบันทึกแบบเดิมมาเป็นระบบดิจิทัล ซึ่งพนักงานสามารถกดบันทึกพิกัดและเวลาผ่านโทรศัพท์มือถือได้ทันที ระบบจะนำข้อมูลเหล่านั้นมาวิเคราะห์อัตโนมัติ เพื่อให้ผู้บริหารเห็นภาพรวมว่า <b>"ทีมงานใช้เวลาไปกับการปฏิบัติงานหน้างานเท่าใด และใช้เวลาไปกับการเดินทางเท่าใด"</b> ซึ่งจะช่วยให้การประเมินภาระงานมีความเป็นธรรมและโปร่งใสมากขึ้น</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">2. แผนภาพขั้นตอนการทำงาน (Workflow)</div>
+            <div class="workflow-container">
+                <div class="workflow-box">
+                    <div class="workflow-title">📍 1. พนักงานลงพื้นที่</div>
+                    <div class="workflow-desc">พนักงานเดินทางถึงจุดหมาย และกดปุ่มบันทึกผ่านระบบมือถือ</div>
+                </div>
+                <div class="workflow-arrow">▼</div>
+                <div class="workflow-box">
+                    <div class="workflow-title">⏱️ 2. ระบบจัดเก็บข้อมูล</div>
+                    <div class="workflow-desc">ระบบบันทึก "เวลาปัจจุบัน" และ "พิกัดสถานที่จริง" ไว้ในฐานข้อมูลกลาง</div>
+                </div>
+                <div class="workflow-arrow">▼</div>
+                <div class="workflow-box">
+                    <div class="workflow-title">🗺️ 3. ระบบวิเคราะห์อัตโนมัติ</div>
+                    <div class="workflow-desc">เมื่อสิ้นเดือน ระบบจะนำเวลามาลบกันเพื่อหา "เวลาทำงาน" และเชื่อมโยงข้อมูลแผนที่เพื่อหา "ระยะทาง/เวลาเดินทาง"</div>
+                </div>
+                <div class="workflow-arrow">▼</div>
+                <div class="workflow-box">
+                    <div class="workflow-title">📊 4. ออกรายงานสำหรับผู้บริหาร</div>
+                    <div class="workflow-desc">สรุปผลเป็นตารางที่เข้าใจง่าย แยกเป็นทีม สาขา และระยะเวลาการปฏิบัติงาน</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">3. หลักการคำนวณเวลาทำงาน (Calculation Logic)</div>
+            <p>เพื่อให้การประเมินเวลาทำงานมีความถูกต้องสมจริงที่สุด ระบบได้ใช้หลักการคำนวณที่เข้าใจง่ายดังนี้:</p>
+            
+            <div class="highlight-box">
+                <b>📌 กฎการคำนวณ "เวลาทำงานที่หน้างาน"</b><br>
+                ระบบจะดู <b>เวลาที่เข้าจุดที่ 1</b> นำไปเปรียบเทียบกับ <b>เวลาที่เข้าจุดที่ 2</b> ส่วนต่างของเวลาตรงนี้คือ "เวลาที่พนักงานใช้ปฏิบัติงานอยู่ที่จุดที่ 1"
+            </div>
+
+            <ul>
+                <li><b>คำนวณเฉพาะภายใน "วันเดียวกัน" เท่านั้น:</b> เพื่อป้องกันความคลาดเคลื่อน ระบบจะไม่นำเวลาของจุดสุดท้ายของวัน ไปลบกับจุดแรกของวันถัดไป (ป้องกันเวลาทำงานข้ามคืน) ดังนั้นจุดสุดท้ายของแต่ละวันจะไม่มีการสรุปเวลาทำงานต่อ</li>
+                <li><b>การคำนวณการเดินทาง (ระยะทาง & เวลา):</b> ระบบจะอ้างอิงฐานข้อมูลแผนที่มาตรฐานระดับโลก (Google Maps) โดยนำพิกัดสถานที่ที่ 1 และ สถานที่ที่ 2 มาจำลองเส้นทางการขับรถจริง เพื่อคำนวณว่าใช้ระยะทางกี่กิโลเมตร และต้องใช้เวลาเดินทางกี่นาที</li>
+            </ul>
+
+            <p><b>ตัวอย่างการคำนวณของระบบ:</b></p>
+            <table>
+                <tr>
+                    <th>ลำดับจุด</th>
+                    <th>เวลาเข้าพื้นที่</th>
+                    <th>เวลาทำงานที่ได้ (สรุปโดยระบบ)</th>
+                </tr>
+                <tr>
+                    <td>📍 จุดที่ 1 (บริษัท A)</td>
+                    <td>10:00 น.</td>
+                    <td><b>60 นาที</b> <br><small>(เพราะจุดต่อไปคือ 11:00 น.)</small></td>
+                </tr>
+                <tr>
+                    <td>📍 จุดที่ 2 (บริษัท B)</td>
+                    <td>11:00 น.</td>
+                    <td><b>90 นาที</b> <br><small>(เพราะจุดต่อไปคือ 12:30 น.)</small></td>
+                </tr>
+                <tr>
+                    <td>📍 จุดที่ 3 (จุดสุดท้ายของวัน)</td>
+                    <td>12:30 น.</td>
+                    <td><b>-</b> <br><small>(ไม่มีจุดต่อไปในวันเดียวกันแล้ว ระบบจึงจบการคำนวณ)</small></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">4. ประโยชน์ที่ได้รับจากการวิเคราะห์ (Business Benefits)</div>
+            <ul>
+                <li><b>ความโปร่งใสและเป็นธรรม:</b> ผู้บริหารมีข้อมูลตัวเลขที่ชัดเจนสำหรับการประเมินผลการทำงานของพนักงานแต่ละทีม</li>
+                <li><b>บริหารต้นทุนเวลา:</b> มองเห็นได้ชัดเจนว่าพนักงานเสียเวลาไปกับการปฏิบัติงานหน้างานจริง หรือเสียเวลาไปกับการเดินทางบนท้องถนนมากกว่ากัน</li>
+                <li><b>การวางแผนที่ดีขึ้น:</b> สามารถนำข้อมูลระยะทางไปปรับปรุงการจัดเส้นทางเดินรถให้กับทีม เพื่อลดค่าใช้จ่ายด้านเชื้อเพลิงและประหยัดเวลา</li>
+                <li><b>ลดงานเอกสาร:</b> ระบบทำงานและออกรายงานให้อัตโนมัติ โดยไม่ต้องใช้คนมานั่งคำนวณตัวเลขในตารางแบบเดิม</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            รายงานฉบับนี้ถูกสร้างขึ้นอัตโนมัติโดยระบบ Bait Check-in Workload Analysis
+        </div>
+    </div>
+</body>
+</html>
