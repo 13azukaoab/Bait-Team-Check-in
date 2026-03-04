@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการอัปเกรดระบบ Bait Team Check-in</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .prompt-box {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        
+        <!-- Header -->
+        <div class="bg-blue-600 text-white p-6 md:p-8 text-center">
+            <h1 class="text-3xl font-bold mb-2">🚀 แผนการอัปเกรด Bait Team Check-in</h1>
+            <p class="text-blue-100 text-lg">สรุปขั้นตอนย้ายโครงสร้างสู่ Next.js และเพิ่มระบบคำนวณระยะทาง Google Maps</p>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-8">
+
+            <!-- Section 1: เปลี่ยนโครงสร้างโปรเจกต์ -->
+            <section>
+                <h2 class="text-2xl font-semibold text-blue-700 border-b-2 border-blue-100 pb-2 mb-4 flex items-center">
+                    <span class="mr-2">📦</span> 1. เปลี่ยนโครงสร้างโปรเจกต์ (Next.js Migration)
+                </h2>
+                <p class="mb-3 text-gray-700">เป้าหมายคือการย้ายจาก Vanilla HTML/JS ไปเป็นระบบที่มี Frontend และ Backend ในตัว เพื่อความปลอดภัยในการเก็บ API Key</p>
+                <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                    <li><strong>โครงสร้างใหม่:</strong> ใช้ Next.js (App Router)</li>
+                    <li><strong>Frontend:</strong> เปลี่ยนไฟล์ <code>.html</code> (เช่น <code>index.html</code>, <code>mobile-checkin.html</code>) เป็น React Components (<code>page.tsx</code>)</li>
+                    <li><strong>Backend (API Routes):</strong> สร้างโฟลเดอร์ <code>app/api/</code> เพื่อซ่อนโค้ดที่ติดต่อกับ Firebase Admin และ Google Maps API</li>
+                    <li><strong>Styling:</strong> เปลี่ยนไปใช้ Tailwind CSS เพื่อให้จัดหน้าเว็บได้ไวขึ้นและเป็นระเบียบ</li>
+                </ul>
+            </section>
+
+            <!-- Section 2: เชื่อมต่อ API Google Maps -->
+            <section>
+                <h2 class="text-2xl font-semibold text-blue-700 border-b-2 border-blue-100 pb-2 mb-4 flex items-center">
+                    <span class="mr-2">🗺️</span> 2. การเชื่อมต่อ Google Maps API Key
+                </h2>
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h3 class="font-semibold text-blue-800 mb-2">สิ่งที่ต้องทำใน Google Cloud Console:</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700 ml-2">
+                        <li>สร้างโปรเจกต์ใหม่ใน <a href="https://console.cloud.google.com/" target="_blank" class="text-blue-600 underline">Google Cloud Console</a></li>
+                        <li>เปิดใช้งาน API: <strong>Distance Matrix API</strong> และ <strong>Geocoding API</strong></li>
+                        <li>สร้าง API Key (Credentials)</li>
+                        <li><strong>การรักษาความปลอดภัย (สำคัญมาก):</strong>
+                            <ul class="list-disc list-inside ml-6 mt-1 text-sm text-red-600 font-medium">
+                                <li>เก็บ API Key ไว้ในไฟล์ <code>.env.local</code> ของ Next.js (ห้ามเอาขึ้น GitHub)</li>
+                                <li>เรียกใช้ API Key ผ่านฝั่ง Server (API Routes) เท่านั้น ห้ามเรียกจากฝั่ง Client เด็ดขาด</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Section 3: การจัดการโควต้าและค่าใช้จ่าย -->
+            <section>
+                <h2 class="text-2xl font-semibold text-blue-700 border-b-2 border-blue-100 pb-2 mb-4 flex items-center">
+                    <span class="mr-2">💰</span> 3. การตรวจสอบโควต้าและการป้องกันบิลช็อก
+                </h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h4 class="font-semibold text-gray-800 mb-2">📊 วิธีเช็คโควต้าใช้งาน (Usage)</h4>
+                        <ol class="list-decimal list-inside text-sm text-gray-600 space-y-1">
+                            <li>เข้า Google Cloud Console</li>
+                            <li>เมนูซ้ายเลือก <strong>Google Maps Platform</strong></li>
+                            <li>คลิกที่ <strong>Quotas</strong> หรือ <strong>Metrics</strong></li>
+                            <li>ดูจำนวนครั้งที่ API ถูกเรียกใช้ในเดือนปัจจุบัน</li>
+                        </ol>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                        <h4 class="font-semibold text-red-800 mb-2">🚨 วิธีตั้งเตือนงบประมาณ (กันเงินไหล)</h4>
+                        <ol class="list-decimal list-inside text-sm text-gray-600 space-y-1">
+                            <li>เมนูซ้ายเลือก <strong>Billing</strong> -> <strong>Budgets & alerts</strong></li>
+                            <li>คลิก <strong>Create budget</strong></li>
+                            <li>ตั้งชื่อ (เช่น Maps Budget) และเลือกโปรเจกต์</li>
+                            <li>ตั้ง Target Amount ไว้ที่ <strong>$1.00</strong></li>
+                            <li>ให้ระบบส่ง Email เตือนเมื่อยอดถึง 50% และ 100% ของ $1</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Prompts สำหรับ Windsurf -->
+            <section>
+                <h2 class="text-2xl font-semibold text-blue-700 border-b-2 border-blue-100 pb-2 mb-4 flex items-center">
+                    <span class="mr-2">🤖</span> 4. Prompts สำหรับ Agentic IDE (Windsurf)
+                </h2>
+                <p class="text-gray-700 mb-4">แนะนำให้ก็อปปี้คำสั่งให้ Windsurf ทำทีละ Phase เพื่อป้องกัน AI สับสนและเกิดบั๊กครับ (Prompt เขียนเป็นภาษาอังกฤษเพื่อให้ AI เข้าใจบริบทการเขียนโค้ดได้ดีที่สุด)</p>
+
+                <h3 class="font-semibold text-lg text-gray-800">Phase 1: Setup Next.js & UI Migration</h3>
+                <div class="prompt-box">
+                    I want to migrate my current vanilla HTML/JS project "Bait Team Check-in" to Next.js (App Router) using Tailwind CSS.<br><br>
+                    1. Initialize a new Next.js project in this directory.<br>
+                    2. Convert the existing `index.html` (Admin Dashboard) and `mobile-checkin.html` into Next.js React components (`app/page.tsx` and `app/checkin/page.tsx`).<br>
+                    3. Maintain the exact same UI/UX but rewrite the styling using Tailwind CSS utility classes.<br>
+                    4. Do not implement Firebase logic yet, just setup the UI structure and mock data.
+                </div>
+
+                <h3 class="font-semibold text-lg text-gray-800 mt-6">Phase 2: Firebase Integration (Secure Backend)</h3>
+                <div class="prompt-box">
+                    Now, let's connect Firebase securely.<br><br>
+                    1. Set up Firebase Client SDK for the frontend components.<br>
+                    2. Set up Firebase Admin SDK. Create a secure Next.js API Route (`app/api/checkin/route.ts`).<br>
+                    3. When a user submits a check-in from `app/checkin/page.tsx`, it should send a POST request to our API Route.<br>
+                    4. The API Route should use Firebase Admin to save the check-in data (team ID, timestamp, lat, lng) securely to Firestore.
+                </div>
+
+                <h3 class="font-semibold text-lg text-gray-800 mt-6">Phase 3: Google Maps Distance API Logic</h3>
+                <div class="prompt-box">
+                    I need to calculate the distance traveled between check-ins using Google Maps Distance Matrix API.<br><br>
+                    1. I will provide my GOOGLE_MAPS_API_KEY in the `.env.local` file.<br>
+                    2. Update the `app/api/checkin/route.ts`. Before saving the new check-in to Firestore, fetch the user's LAST check-in location from Firestore.<br>
+                    3. If a previous location exists for today, call the Google Maps Distance Matrix API from the server-side to calculate the distance (in km) and travel time (in mins) between the last location and the current location.<br>
+                    4. Save this calculated `distanceFromLastPoint` and `travelTimeFromLastPoint` into the new Firestore check-in document.
+                </div>
+
+                <h3 class="font-semibold text-lg text-gray-800 mt-6">Phase 4: Workload Dashboard Calculation</h3>
+                <div class="prompt-box">
+                    Finally, let's build the Workload Dashboard for the Admin.<br><br>
+                    1. In `app/page.tsx`, fetch today's and this month's check-in data from Firestore.<br>
+                    2. Calculate the "Daily Workload" per team: Total task count (number of check-ins) and Total Distance traveled (sum of `distanceFromLastPoint`).<br>
+                    3. Display this data in a clean, modern summary table or cards using Tailwind CSS.<br>
+                    4. Add a simple date filter to let the admin view workload by specific days or months.
+                </div>
+            </section>
+
+        </div>
+        
+        <!-- Footer -->
+        <div class="bg-gray-100 p-4 text-center text-sm text-gray-500 border-t border-gray-200">
+            ขอให้สนุกกับการทำ Vibe Coding กับ Windsurf นะครับ! ถ้าติดขัดตรงไหน นำ Error มาถามได้ตลอดครับ
+        </div>
+    </div>
+
+</body>
+</html>

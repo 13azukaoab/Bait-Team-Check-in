@@ -2387,6 +2387,42 @@
                 <div class="section-header">
                     <h2><i class="fas fa-table"></i> All Check-ins Data</h2>
                     <div class="header-actions-group">
+                        <!-- Workload Analysis Export Button -->
+                        <button
+                            data-test="btn-workload-export"
+                            onclick="exportWorkloadAnalysis()"
+                            style="
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 8px;
+                                padding: 9px 16px;
+                                background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+                                color: white;
+                                border: none;
+                                border-radius: 10px;
+                                font-family: 'Prompt', sans-serif;
+                                font-size: 0.85rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                                box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+                                transition: all 0.2s ease;
+                            "
+                            onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 16px rgba(79,70,229,0.45)'"
+                            onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(79,70,229,0.35)'"
+                            title="Export ข้อมูล Workload พร้อมระยะทางและเวลาเดินทาง (Google Maps) ช่วง 01-28 ก.พ. 2569"
+                        >
+                            <i class="fas fa-route"></i>
+                            Workload Analysis
+                            <span style="
+                                background: rgba(255,255,255,0.25);
+                                padding: 2px 7px;
+                                border-radius: 20px;
+                                font-size: 0.72rem;
+                                font-weight: 700;
+                                letter-spacing: 0.3px;
+                            ">ก.พ. 2569</span>
+                        </button>
+
                         <div class="export-dropdown">
                             <button class="btn btn-primary" onclick="toggleExportMenu('full')">
                                 <i class="fas fa-file-export"></i> Export <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
@@ -6374,6 +6410,224 @@
         // Start real-time badge on page load
         startRealtime();
 
+        // ===========================
+        // Workload Analysis Export
+        // ===========================
+
+        function showWorkloadModal() {
+            const modal = document.getElementById('workloadModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function hideWorkloadModal() {
+            const modal = document.getElementById('workloadModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function updateWorkloadProgress(current, total, teamName) {
+            const bar = document.getElementById('workloadProgressBar');
+            const text = document.getElementById('workloadProgressText');
+            const detail = document.getElementById('workloadProgressDetail');
+            const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+            if (bar) bar.style.width = pct + '%';
+            if (text) text.textContent = pct + '%';
+            if (detail) detail.textContent = `กำลังประมวลผล ${teamName}... (${current}/${total} จุด)`;
+        }
+
+        function getDistanceAndDuration(lat1, lng1, lat2, lng2) {
+            const apiKey = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.googleMapsApiKey) 
+                ? APP_CONFIG.googleMapsApiKey : '';
+            if (!apiKey || apiKey === 'YOUR_GOOGLE_MAPS_API_KEY') {
+                return Promise.resolve({ distance: null, duration: null, error: 'NO_API_KEY' });
+            }
+            return new Promise((resolve) => {
+                const cbName = 'gmCb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                const timeout = setTimeout(() => {
+                    delete window[cbName];
+                    const script = document.getElementById(cbName);
+                    if (script) script.remove();
+                    resolve({ distance: null, duration: null, error: 'TIMEOUT' });
+                }, 8000);
+                window[cbName] = function(data) {
+                    clearTimeout(timeout);
+                    delete window[cbName];
+                    const script = document.getElementById(cbName);
+                    if (script) script.remove();
+                    if (data.status === 'OK' && data.rows[0].elements[0].status === 'OK') {
+                        resolve({
+                            distance: (data.rows[0].elements[0].distance.value / 1000).toFixed(2),
+                            duration: Math.round(data.rows[0].elements[0].duration.value / 60)
+                        });
+                    } else {
+                        resolve({ distance: null, duration: null, error: data.status });
+                    }
+                };
+                const script = document.createElement('script');
+                script.id = cbName;
+                script.src = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${lat1},${lng1}&destinations=${lat2},${lng2}&mode=driving&language=th&key=${apiKey}&callback=${cbName}`;
+                script.onerror = () => {
+                    clearTimeout(timeout);
+                    delete window[cbName];
+                    resolve({ distance: null, duration: null, error: 'SCRIPT_ERROR' });
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        function thaiDayName(date) {
+            const days = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+            return days[date.getDay()];
+        }
+
+        function formatThaiDateTime(date) {
+            if (!date) return '-';
+            const d = String(date.getDate()).padStart(2, '0');
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const y = date.getFullYear();
+            const hh = String(date.getHours()).padStart(2, '0');
+            const mm = String(date.getMinutes()).padStart(2, '0');
+            return `${d}-${m}-${y} ${hh}:${mm} น.`;
+        }
+
+        async function exportWorkloadAnalysis() {
+            const apiKey = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.googleMapsApiKey) 
+                ? APP_CONFIG.googleMapsApiKey : '';
+            if (!apiKey || apiKey === 'YOUR_GOOGLE_MAPS_API_KEY') {
+                alert('❌ ไม่พบ Google Maps API Key\nกรุณาเพิ่ม googleMapsApiKey ใน src/config.js');
+                return;
+            }
+
+            showWorkloadModal();
+            updateWorkloadProgress(0, 1, 'กำลังดึงข้อมูล...');
+
+            try {
+                const startDate = new Date('2026-02-01T00:00:00+07:00');
+                const endDate   = new Date('2026-02-28T23:59:59+07:00');
+
+                const snapshot = await db.collection('checkins')
+                    .where('checkinTime', '>=', firebase.firestore.Timestamp.fromDate(startDate))
+                    .where('checkinTime', '<=', firebase.firestore.Timestamp.fromDate(endDate))
+                    .orderBy('checkinTime', 'asc')
+                    .get();
+
+                if (snapshot.empty) {
+                    hideWorkloadModal();
+                    alert('⚠️ ไม่พบข้อมูล Check-in ในช่วง 01-28 ก.พ. 2569');
+                    return;
+                }
+
+                const rawData = [];
+                snapshot.forEach(doc => {
+                    const d = doc.data();
+                    const ts = d.checkinTime?.toDate ? d.checkinTime.toDate() : new Date(d.checkinTime);
+                    rawData.push({
+                        team: d.team || '-',
+                        branch: d.branch || '-',
+                        lat: d.location?.lat || null,
+                        lng: d.location?.lng || null,
+                        checkinTime: ts,
+                        customerName: d.customerName || '-',
+                        contractNumber: d.contractNumber || '-'
+                    });
+                });
+
+                const teamData = {};
+                rawData.forEach(item => {
+                    if (!teamData[item.team]) teamData[item.team] = [];
+                    teamData[item.team].push(item);
+                });
+
+                const csvRows = [
+                    'ทีม,ลำดับ,สาขา,วัน,เวลา Check-in,พิกัด(X),พิกัด(Y),พิกัด(X\u002CY),เวลาทำงานที่หน้างาน(นาที),ระยะทางไปจุดถัดไป(กม.),เวลาเดินทางไปจุดถัดไป(นาที),เวลารวม(นาที)'
+                ];
+
+                let totalProcessed = 0;
+                const totalPoints = rawData.length;
+                const teams = Object.keys(teamData).sort();
+
+                for (const team of teams) {
+                    const checkins = teamData[team];
+                    for (let i = 0; i < checkins.length; i++) {
+                        const cur = checkins[i];
+                        const next = checkins[i + 1] || null;
+
+                        updateWorkloadProgress(totalProcessed, totalPoints, `Team ${team}`);
+
+                        const seq = i + 1;
+                        const dayName = thaiDayName(cur.checkinTime);
+                        const timeStr = formatThaiDateTime(cur.checkinTime);
+                        const latStr = cur.lat !== null ? cur.lat.toFixed(6) : '-';
+                        const lngStr = cur.lng !== null ? cur.lng.toFixed(6) : '-';
+                        const coordStr = (cur.lat !== null && cur.lng !== null) ? `${cur.lat.toFixed(6)}\u0020${cur.lng.toFixed(6)}` : '-';
+
+                        let workDuration = '-';
+                        let distKm = '-';
+                        let travelMins = '-';
+                        let totalMins = '-';
+
+                        const curDateStr = cur.checkinTime.toDateString();
+                        const nextSameDay = next && next.checkinTime.toDateString() === curDateStr;
+
+                        if (nextSameDay) {
+                            const diffMs = next.checkinTime - cur.checkinTime;
+                            const diffMins = Math.round(diffMs / 60000);
+                            workDuration = diffMins > 0 ? diffMins : '-';
+
+                            if (cur.lat && cur.lng && next.lat && next.lng) {
+                                await new Promise(r => setTimeout(r, 200));
+                                const dist = await getDistanceAndDuration(cur.lat, cur.lng, next.lat, next.lng);
+                                if (dist.distance !== null) {
+                                    distKm = dist.distance;
+                                    travelMins = dist.duration;
+                                    if (workDuration !== '-' && travelMins !== '-') {
+                                        totalMins = Number(workDuration) + Number(travelMins);
+                                    }
+                                }
+                            }
+                        }
+
+                        const row = [
+                            `"Team ${team}"`,
+                            `"${seq}"`,
+                            `"${cur.branch}"`,
+                            `"${dayName}"`,
+                            `"${timeStr}"`,
+                            `"${latStr}"`,
+                            `"${lngStr}"`,
+                            `"${coordStr}"`,
+                            `"${workDuration}"`,
+                            `"${distKm}"`,
+                            `"${travelMins}"`,
+                            `"${totalMins}"`
+                        ].join(',');
+                        csvRows.push(row);
+                        totalProcessed++;
+                    }
+                }
+
+                updateWorkloadProgress(totalPoints, totalPoints, 'กำลังสร้างไฟล์...');
+
+                const csvContent = '\uFEFF' + csvRows.join('\n');
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'workload_analysis_01-28_Feb_2026.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                hideWorkloadModal();
+                showExportNotification('Workload CSV', 'workload_analysis_01-28_Feb_2026.csv');
+
+            } catch (err) {
+                hideWorkloadModal();
+                console.error('Workload export error:', err);
+                alert('❌ เกิดข้อผิดพลาด: ' + err.message);
+            }
+        }
+
         // Add CSS animations
         const style = document.createElement('style');
         style.textContent = `
@@ -6396,5 +6650,89 @@
         `;
         document.head.appendChild(style);
     </script>
+    <!-- Workload Analysis Progress Modal -->
+    <div id="workloadModal" style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,0.65);
+        backdrop-filter: blur(4px);
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+    ">
+        <div style="
+            background: white;
+            border-radius: 20px;
+            padding: 40px 48px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+            text-align: center;
+        ">
+            <!-- Icon -->
+            <div style="
+                width: 72px; height: 72px;
+                background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                margin: 0 auto 20px;
+                box-shadow: 0 8px 24px rgba(79,70,229,0.35);
+            ">
+                <i class="fas fa-route" style="font-size: 1.8rem; color: white;"></i>
+            </div>
+
+            <!-- Title -->
+            <h3 style="margin: 0 0 6px; font-size: 1.3rem; font-weight: 700; color: #0f172a;">
+                กำลังวิเคราะห์ Workload
+            </h3>
+            <p style="margin: 0 0 24px; font-size: 0.9rem; color: #64748b;">
+                คำนวณระยะทางและเวลาเดินทาง (Google Maps API)
+            </p>
+
+            <!-- Progress Bar -->
+            <div style="background: #f1f5f9; border-radius: 99px; height: 12px; overflow: hidden; margin-bottom: 10px;">
+                <div id="workloadProgressBar" style="
+                    height: 100%;
+                    width: 0%;
+                    background: linear-gradient(90deg, #7c3aed, #4f46e5, #06b6d4);
+                    border-radius: 99px;
+                    transition: width 0.3s ease;
+                    background-size: 200% 100%;
+                    animation: shimmer 1.5s infinite;
+                "></div>
+            </div>
+
+            <!-- Progress Text -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <span id="workloadProgressDetail" style="font-size: 0.82rem; color: #64748b;">กำลังเริ่มต้น...</span>
+                <span id="workloadProgressText" style="font-size: 0.9rem; font-weight: 700; color: #4f46e5;">0%</span>
+            </div>
+
+            <!-- Info Note -->
+            <div style="
+                background: #f0f9ff;
+                border: 1px solid #bae6fd;
+                border-radius: 10px;
+                padding: 12px 16px;
+                font-size: 0.8rem;
+                color: #0369a1;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                text-align: left;
+            ">
+                <i class="fas fa-info-circle" style="flex-shrink: 0;"></i>
+                <span>กรุณารอสักครู่ ระบบกำลังเรียก Google Maps API สำหรับแต่ละเส้นทาง (~1,500 จุด)</span>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
 </body>
 </html>

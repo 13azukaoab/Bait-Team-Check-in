@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Team Check-in Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            padding: 20px;
+        }
+        
+        .export-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .chart-page {
+            width: 800px;
+            height: 600px;
+            background: white;
+            border: 1px solid #ddd;
+            margin-bottom: 40px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            font-size: 1.1em;
+            color: #666;
+        }
+        
+        .chart-wrapper {
+            width: 100%;
+            height: 450px;
+            position: relative;
+        }
+        
+        .data-labels {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 200px;
+        }
+        
+        .data-labels h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .data-labels ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .data-labels li {
+            margin-bottom: 3px;
+            font-size: 11px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media print {
+            .controls {
+                display: none;
+            }
+            
+            .chart-page {
+                border: none;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="export-container">
+        <div class="controls">
+            <h2>📸 Export กราฟเป็นรูปภาพ</h2>
+            <button class="btn" onclick="exportPage1()">📊 Export หน้า 1: กราฟแท่งทีม</button>
+            <button class="btn" onclick="exportPage2()">📈 Export หน้า 2: กราฟวงกลม</button>
+            <button class="btn" onclick="exportAll()">📚 Export ทั้งหมด</button>
+            <div id="status" class="status hidden"></div>
+        </div>
+        
+        <!-- หน้า 1: กราฟแท่ง -->
+        <div id="page1" class="chart-page">
+            <div class="page-header">
+                <h1>📊 กราฟแสดงจำนวน Check-in แต่ละทีม</h1>
+                <p>กุมภาพันธ์ 2026 | วันที่ 1-28 กุมภาพันธ์ 2026</p>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="barChart"></canvas>
+                <div class="data-labels">
+                    <h4>📈 ข้อมูลสำคัญ:</h4>
+                    <ul>
+                        <li><strong>ทีมทั้งหมด:</strong> 15 ทีม</li>
+                        <li><strong>Check-in ทั้งหมด:</strong> 1,635 ครั้ง</li>
+                        <li><strong>เฉลี่ยยต่อทีม:</strong> 109 ครั้ง</li>
+                        <li><strong>ทีมที่สูงสุด:</strong> Team K (180)</li>
+                        <li><strong>ทีมที่ต่ำสุด:</strong> Team D (40)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- หน้า 2: กราฟวงกลม -->
+        <div id="page2" class="chart-page">
+            <div class="page-header">
+                <h1>🎯 การกระจายตัวของ Check-in</h1>
+                <p>กุมภาพันธ์ 2026 | วันที่ 1-28 กุมภาพันธ์ 2026</p>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="pieChart"></canvas>
+                <div class="data-labels">
+                    <h4>📊 การแบ่งกลุ่ม:</h4>
+                    <ul>
+                        <li><strong>🟢 สูง (>120):</strong> 4 ทีม</li>
+                        <li><strong>🟡 ปานกลาง (80-120):</strong> 8 ทีม</li>
+                        <li><strong>🔴 ต่ำ (<80):</strong> 3 ทีม</li>
+                        <li><strong>ทีมที่สูงสุด:</strong> Team K</li>
+                        <li><strong>ทีมที่ต่ำสุด:</strong> Team D</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ข้อมูลจำนวน Check-in แต่ละทีม
+        const teamData = {
+            'Team A': 99,
+            'Team B': 106,
+            'Team C': 51,
+            'Team D': 40,
+            'Team E': 138,
+            'Team F': 85,
+            'Team G': 156,
+            'Team H': 108,
+            'Team I': 104,
+            'Team J': 103,
+            'Team K': 180,
+            'Team L': 117,
+            'Team M': 120,
+            'Team N': 153,
+            'Team O': 72
+        };
+        
+        // สร้างกราฟแท่ง
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(teamData),
+                datasets: [{
+                    label: 'จำนวน Check-in',
+                    data: Object.values(teamData),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                        'rgba(255, 159, 64, 0.8)',
+                        'rgba(199, 199, 199, 0.8)',
+                        'rgba(83, 102, 255, 0.8)',
+                        'rgba(255, 99, 255, 0.8)',
+                        'rgba(99, 255, 132, 0.8)',
+                        'rgba(255, 206, 186, 0.8)',
+                        'rgba(102, 255, 255, 0.8)',
+                        'rgba(255, 102, 102, 0.8)',
+                        'rgba(102, 255, 102, 0.8)',
+                        'rgba(255, 255, 102, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(199, 199, 199, 1)',
+                        'rgba(83, 102, 255, 1)',
+                        'rgba(255, 99, 255, 1)',
+                        'rgba(99, 255, 132, 1)',
+                        'rgba(255, 206, 186, 1)',
+                        'rgba(102, 255, 255, 1)',
+                        'rgba(255, 102, 102, 1)',
+                        'rgba(102, 255, 102, 1)',
+                        'rgba(255, 255, 102, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' ครั้ง';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'จำนวน Check-in (ครั้ง)',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'ทีม',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // สร้างกราฟวงกลม
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['สูง (>120)', 'ปานกลาง (80-120)', 'ต่ำ (<80)'],
+                datasets: [{
+                    data: [4, 8, 3],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(255, 193, 7, 0.8)',
+                        'rgba(220, 53, 69, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(255, 193, 7, 1)',
+                        'rgba(220, 53, 69, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return context.label + ': ' + context.parsed + ' ทีม (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // ฟังก์ชัน Export
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.classList.remove('hidden');
+            
+            setTimeout(() => {
+                statusEl.classList.add('hidden');
+            }, 3000);
+        }
+        
+        async function exportPage1() {
+            try {
+                showStatus('🔄 กำลัง Export หน้า 1...', 'success');
+                
+                const page1 = document.getElementById('page1');
+                const canvas = await html2canvas(page1, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                // สร้าง link สำหรับ download
+                const link = document.createElement('a');
+                link.download = 'team-checkin-bar-chart-feb2026.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.click();
+                
+                showStatus('✅ Export หน้า 1 เรียบร้อยแล้ว!', 'success');
+            } catch (error) {
+                console.error('Error exporting page 1:', error);
+                showStatus('❌ เกิดข้อผิดพลาดในการ Export หน้า 1', 'error');
+            }
+        }
+        
+        async function exportPage2() {
+            try {
+                showStatus('🔄 กำลัง Export หน้า 2...', 'success');
+                
+                const page2 = document.getElementById('page2');
+                const canvas = await html2canvas(page2, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                // สร้าง link สำหรับ download
+                const link = document.createElement('a');
+                link.download = 'team-checkin-distribution-chart-feb2026.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.click();
+                
+                showStatus('✅ Export หน้า 2 เรียบร้อยแล้ว!', 'success');
+            } catch (error) {
+                console.error('Error exporting page 2:', error);
+                showStatus('❌ เกิดข้อผิดพลาดในการ Export หน้า 2', 'error');
+            }
+        }
+        
+        async function exportAll() {
+            try {
+                showStatus('🔄 กำลัง Export ทั้งหมด...', 'success');
+                
+                // Export หน้า 1
+                const page1 = document.getElementById('page1');
+                const canvas1 = await html2canvas(page1, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                const link1 = document.createElement('a');
+                link1.download = 'team-checkin-bar-chart-feb2026.jpg';
+                link1.href = canvas1.toDataURL('image/jpeg', 0.95);
+                link1.click();
+                
+                // รอสักครู่เล็กก่อน Export หน้า 2
+                setTimeout(async () => {
+                    const page2 = document.getElementById('page2');
+                    const canvas2 = await html2canvas(page2, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true
+                    });
+                    
+                    const link2 = document.createElement('a');
+                    link2.download = 'team-checkin-distribution-chart-feb2026.jpg';
+                    link2.href = canvas2.toDataURL('image/jpeg', 0.95);
+                    link2.click();
+                    
+                    showStatus('✅ Export ทั้งหมดเรียบร้อยแล้ว!', 'success');
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Error exporting all pages:', error);
+                showStatus('❌ เกิดข้อผิดพลาดในการ Export', 'error');
+            }
+        }
+        
+        // เพิ่มข้อมูลบนกราฟแท่ง
+        Chart.register({
+            id: 'dataLabels',
+            afterDraw: (chart) => {
+                if (chart.config.type === 'bar') {
+                    const ctx = chart.ctx;
+                    const meta = chart.getDatasetMeta(0);
+                    
+                    if (!meta.hidden) {
+                        meta.data.forEach((bar, index) => {
+                            const data = chart.data.datasets[0].data[index];
+                            ctx.fillStyle = '#333';
+                            ctx.font = 'bold 12px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(data, bar.x, bar.y - 5);
+                        });
+                    }
+                }
+            }
+        });
+        
+        // เปิดใช้ dataLabels สำหรับกราฟแท่ง
+        barChart.options.plugins.dataLabels = {
+            display: true
+        };
+        barChart.update();
+    </script>
+</body>
+</html>

@@ -32,6 +32,11 @@ const APP_CONFIG = {
         apiKey: "YOUR_LONGDO_API_KEY"
     },
 
+    // Google Maps API (สำหรับ Distance Matrix - คำนวณระยะทางและเวลาเดินทาง)
+    // Get from: https://console.cloud.google.com/ → APIs & Services → Credentials
+    // Enable: Distance Matrix API
+    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY",
+
     // App Settings
     app: {
         name: "Bait Check-In",

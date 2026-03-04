@@ -400,6 +400,17 @@ git push origin main
 
 ---
 
-**อัปเดตล่าสุด:** 05-02-2026, 19:30 น.
-**เวอร์ชัน:** V.2.2.5 (05-02-2026) - Updated Status: Phase 4 Rules Deployed
+---
+
+## 📊 ฟีเจอร์ใหม่: Workload Analysis Export (04-03-2026)
+
+- **ปุ่ม "Workload Analysis ก.พ. 2569"** ใน Admin Dashboard → All Check-ins Data
+- Export CSV 12 columns พร้อม Google Maps Distance Matrix API
+- ช่วงข้อมูล: 01-02-2026 ถึง 28-02-2026 (ทุกทีม)
+- Columns: ทีม, ลำดับ, สาขา, วัน, เวลา Check-in, พิกัด(X), พิกัด(Y), พิกัด(X,Y), เวลาทำงานที่หน้างาน(นาที), ระยะทางไปจุดถัดไป(กม.), เวลาเดินทางไปจุดถัดไป(นาที), เวลารวม(นาที)
+- Filename: `workload_analysis_01-28_Feb_2026.csv`
+- **ต้องการ:** `googleMapsApiKey` ใน `src/config.js`
+
+**อัปเดตล่าสุด:** 04-03-2026, 10:30 น.
+**เวอร์ชัน:** V.2.3.0 (04-03-2026) - Workload Analysis Export Feature
 **สถานะ:** 🟡 IN PROGRESS - Phase 4 ✅ Complete, Phase 5 ✅ Complete, Phase 6 Pending (6/7 phases complete)
