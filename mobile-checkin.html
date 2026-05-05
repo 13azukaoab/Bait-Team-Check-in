@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -1239,6 +1239,23 @@
             text-align: center; margin-bottom: 12px;
         }
         .ws-edit-note { font-size: 11px; color: #94a3b8; font-style: italic; text-align: center; }
+        /* 4-button quick action row */
+        .ws-quick-row { display: flex; gap: 8px; margin: 12px 0; }
+        .ws-quick-btn {
+            flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+            padding: 10px 4px; border: 2px solid #e2e8f0; border-radius: 14px;
+            background: #fff; cursor: pointer; font-family: 'Prompt', sans-serif;
+            font-size: 11.5px; color: #374151; transition: all 0.2s; line-height: 1.3;
+        }
+        .ws-quick-btn i { font-size: 22px; margin-bottom: 2px; }
+        .ws-quick-btn.start i  { color: #22c55e; }
+        .ws-quick-btn.lastjob i { color: #f59e0b; }
+        .ws-quick-btn.arrival i { color: #8b5cf6; }
+        .ws-quick-btn.done { border-width: 2px; }
+        .ws-quick-btn.start.done  { background: #f0fdf4; border-color: #86efac; }
+        .ws-quick-btn.lastjob.done { background: #fffbeb; border-color: #fcd34d; }
+        .ws-quick-btn.arrival.done { background: #f5f3ff; border-color: #c4b5fd; }
+        .ws-quick-time { font-size: 10px; color: #64748b; font-weight: 600; }
         /* Checkin button disabled state */
         .checkin-btn.ws-disabled {
             background: #e2e8f0 !important;
@@ -1310,156 +1327,36 @@
             <!-- ===== Work Session Card ===== -->
             <div id="workSessionCard" class="work-session-card" data-test="work-session-card">
 
-                <!-- STATE 1: ยังไม่เริ่มงาน -->
-                <div id="wsState1">
-                    <div class="ws-title-row">
-                        <div class="ws-title-left">
-                            <div class="ws-icon blue"><i class="fas fa-briefcase"></i></div>
-                            <div>
-                                <div class="ws-title-text">วันทำงานวันนี้</div>
-                                <div class="ws-title-date" id="wsTitleDate">05-05-2026</div>
-                            </div>
+                                <!-- Work Session: 4 ปุ่มอิสระ -->
+                <div class="ws-title-row">
+                    <div class="ws-title-left">
+                        <div class="ws-icon blue"><i class="fas fa-briefcase"></i></div>
+                        <div>
+                            <div class="ws-title-text">วันทำงานวันนี้</div>
+                            <div class="ws-title-date" id="wsTitleDate"></div>
                         </div>
-                        <span class="ws-chip gray"><i class="far fa-circle" style="font-size:9px;"></i> ยังไม่เริ่ม</span>
                     </div>
-                    <button class="ws-btn-start" data-test="ws-start-btn" onclick="wsStartWork()">
-                        <span class="ws-btn-icon"><i class="fas fa-play-circle"></i></span>
-                        <div class="ws-btn-text">
-                            <span class="ws-btn-main">เริ่มงาน</span>
-                            <span class="ws-btn-sub">บันทึกจุดเริ่มต้นของวัน</span>
-                        </div>
-                    </button>
-                    <p class="ws-hint"><i class="fas fa-circle-info" style="color:#38bdf8;margin-right:4px;"></i>กดเริ่มงานก่อนออกปฏิบัติงาน</p>
                 </div>
-
-                <!-- STATE 2: กำลังทำงาน -->
-                <div id="wsState2" style="display:none;">
-                    <div class="ws-title-row">
-                        <div class="ws-title-left">
-                            <div class="ws-icon green"><i class="fas fa-person-walking"></i></div>
-                            <div>
-                                <div class="ws-title-text">วันทำงานวันนี้</div>
-                                <div class="ws-title-date" id="wsTitleDate2"></div>
-                            </div>
-                        </div>
-                        <span class="ws-chip green"><span class="ws-pulse"></span> กำลังทำงาน</span>
-                    </div>
-                    <div class="ws-info-rows">
-                        <div class="ws-info-row">
-                            <i class="far fa-clock ws-info-icon"></i>
-                            <span><strong>เริ่มงาน:</strong> <span id="wsStartTimeDisplay">--:-- น.</span></span>
-                        </div>
-                        <div class="ws-info-row">
-                            <i class="fas fa-location-dot ws-info-icon"></i>
-                            <span id="wsStartAddrDisplay" style="font-size:12px;">กำลังรอพิกัด...</span>
-                        </div>
-                    </div>
-                    <div class="ws-timer-box">
-                        <div class="ws-timer-label">⏱ เวลาทำงานสะสม</div>
-                        <div class="ws-timer-value" id="wsWorkTimer">00:00:00</div>
-                    </div>
-                    <div class="ws-sep"></div>
-                    <button class="ws-btn-lastjob" data-test="ws-lastjob-btn" onclick="wsLastJob()">
-                        <span class="ws-btn-icon"><i class="fas fa-flag-checkered"></i></span>
-                        <div class="ws-btn-text">
-                            <span class="ws-btn-main">เสร็จงานสุดท้าย</span>
-                            <span class="ws-btn-sub">บันทึกจุดสิ้นสุดงานล่าสุด</span>
-                        </div>
+                <div class="ws-quick-row">
+                    <button class="ws-quick-btn start" id="wsBtnStart" data-test="ws-start-btn" onclick="wsStartWork()">
+                        <i class="fas fa-play-circle"></i>
+                        <span>เริ่มงาน</span>
+                        <div class="ws-quick-time" id="wsTimeStart"></div>
                     </button>
-                    <a class="ws-cancel-link" data-test="ws-cancel-link" onclick="wsCancelStart()">ยกเลิก (กรณีกดผิด)</a>
-                </div>
-
-                <!-- STATE 3: กำลังเดินทางกลับ -->
-                <div id="wsState3" style="display:none;">
-                    <div class="ws-title-row">
-                        <div class="ws-title-left">
-                            <div class="ws-icon purple"><i class="fas fa-car-side"></i></div>
-                            <div>
-                                <div class="ws-title-text">กำลังเดินทางกลับ</div>
-                                <div class="ws-title-date" id="wsTitleDate3"></div>
-                            </div>
-                        </div>
-                        <span class="ws-chip purple"><span class="ws-pulse" style="background:#8b5cf6;"></span> เดินทาง</span>
-                    </div>
-                    <div class="ws-info-rows">
-                        <div class="ws-info-row">
-                            <i class="fas fa-flag-checkered ws-info-icon" style="color:#f59e0b;"></i>
-                            <span><strong>งานสุดท้าย:</strong> <span id="wsLastJobTimeDisplay">--:-- น.</span></span>
-                        </div>
-                        <div class="ws-info-row">
-                            <i class="fas fa-location-dot ws-info-icon" style="color:#f59e0b;"></i>
-                            <span id="wsLastJobAddrDisplay" style="font-size:12px;">กำลังรอพิกัด...</span>
-                        </div>
-                    </div>
-                    <div class="ws-timer-box">
-                        <div class="ws-timer-label">🚗 เวลาเดินทางกลับ</div>
-                        <div class="ws-timer-value traveling" id="wsTravelTimer">00:00:00</div>
-                    </div>
-                    <div class="ws-sep"></div>
-                    <button class="ws-btn-arrival" data-test="ws-arrival-btn" onclick="wsArrived()">
-                        <span class="ws-btn-icon"><i class="fas fa-house-chimney-crack"></i></span>
-                        <div class="ws-btn-text">
-                            <span class="ws-btn-main">ถึงที่พัก</span>
-                            <span class="ws-btn-sub">บันทึกจุดสิ้นสุดของวัน</span>
-                        </div>
+                    <button class="ws-quick-btn lastjob" id="wsBtnLastJob" data-test="ws-lastjob-btn" onclick="wsLastJob()">
+                        <i class="fas fa-flag-checkered"></i>
+                        <span>เลิกงาน</span>
+                        <div class="ws-quick-time" id="wsTimeLastJob"></div>
                     </button>
-                    <a class="ws-cancel-link" data-test="ws-cancel-lastjob-link" onclick="wsCancelLastJob()">ยกเลิก (กรณีกดผิด)</a>
+                    <button class="ws-quick-btn arrival" id="wsBtnArrival" data-test="ws-arrival-btn" onclick="wsArrived()">
+                        <i class="fas fa-house-chimney-crack"></i>
+                        <span>ถึงที่พัก</span>
+                        <div class="ws-quick-time" id="wsTimeArrival"></div>
+                    </button>
                 </div>
-
-                <!-- STATE 4: เสร็จสมบูรณ์ -->
-                <div id="wsState4" style="display:none;">
-                    <div class="ws-title-row">
-                        <div class="ws-title-left">
-                            <div class="ws-icon gray"><i class="fas fa-circle-check"></i></div>
-                            <div>
-                                <div class="ws-title-text">สรุปวันทำงาน</div>
-                                <div class="ws-title-date" id="wsTitleDate4"></div>
-                            </div>
-                        </div>
-                        <span class="ws-chip done"><i class="fas fa-circle-check" style="font-size:9px;color:#10b981;"></i> เสร็จแล้ว</span>
-                    </div>
-                    <div class="ws-summary-grid">
-                        <div class="ws-sum-item">
-                            <div class="ws-sum-emoji">🟢</div>
-                            <div class="ws-sum-label">เริ่มงาน</div>
-                            <div class="ws-sum-value" id="wsSumStart">--:--</div>
-                        </div>
-                        <div class="ws-sum-item">
-                            <div class="ws-sum-emoji">🟠</div>
-                            <div class="ws-sum-label">งานสุดท้าย</div>
-                            <div class="ws-sum-value" id="wsSumLastJob">--:--</div>
-                        </div>
-                        <div class="ws-sum-item">
-                            <div class="ws-sum-emoji">🟣</div>
-                            <div class="ws-sum-label">ถึงที่พัก</div>
-                            <div class="ws-sum-value" id="wsSumArrival">--:--</div>
-                        </div>
-                        <div class="ws-sum-item">
-                            <div class="ws-sum-emoji">⏱</div>
-                            <div class="ws-sum-label">รวมทำงาน</div>
-                            <div class="ws-sum-value" id="wsSumDuration">--</div>
-                        </div>
-                        <div class="ws-sum-item">
-                            <div class="ws-sum-emoji">�</div>
-                            <div class="ws-sum-label">ก→ข (ออก→งาน)</div>
-                            <div class="ws-sum-value" id="wsSumWorkDist">-- กม.</div>
-                        </div>
-                        <div class="ws-sum-item">
-                            <div class="ws-sum-emoji">🚗</div>
-                            <div class="ws-sum-label">ข→ค (งาน→บ้าน)</div>
-                            <div class="ws-sum-value" id="wsSumTravelTime">--</div>
-                        </div>
-                        <div class="ws-sum-item" style="grid-column: 1 / -1;">
-                            <div class="ws-sum-emoji">🛣️</div>
-                            <div class="ws-sum-label">ระยะทางกลับบ้าน</div>
-                            <div class="ws-sum-value" id="wsSumDistance">-- กม.</div>
-                        </div>
-                    </div>
-                    <div class="ws-count-badge" id="wsSumCheckinCount">
-                        <i class="fas fa-check-double" style="margin-right:6px;"></i>
-                        วันนี้ Check-in แล้ว <strong id="wsSumCheckinNum">0</strong> ครั้ง
-                    </div>
-                    <a class="ws-cancel-link" data-test="ws-cancel-arrival-link" onclick="wsCancelArrival()">ยกเลิก (กรณีกดผิด)</a>
+                <div class="ws-count-badge" id="wsSumCheckinCount" style="display:none;">
+                    <i class="fas fa-check-double" style="margin-right:6px;"></i>
+                    วันนี้ Check-in แล้ว <strong id="wsSumCheckinNum">0</strong> ครั้ง
                 </div>
 
             </div>
@@ -3312,6 +3209,9 @@
         let workSession = null;
         let wsTimerHandle = null;
 
+        // Debug helper for E2E tests (sets workSession from same lexical scope)
+        window.wsDebugSetSession = function(s) { workSession = s; };
+
         const WS_STATUS = { NONE: 'none', STARTED: 'started', LAST_DONE: 'last_done', ARRIVED: 'arrived' };
 
         function wsTodayKey() {
@@ -3460,72 +3360,42 @@
 
         function wsUpdateDateLabel() {
             const label = wsTodayKey();
-            ['wsTitleDate', 'wsTitleDate2', 'wsTitleDate3', 'wsTitleDate4'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = label;
-            });
+            const el = document.getElementById('wsTitleDate');
+            if (el) el.textContent = label;
         }
 
         function wsRenderState() {
             wsUpdateDateLabel();
-            if (!workSession || workSession.status === WS_STATUS.NONE) {
-                wsStopTimer();
-                wsShowState(1);
-                wsEnableCheckin(true);
-                return;
+            if (!workSession) workSession = { date: wsTodayKey() };
+
+            // เริ่มงาน button
+            const startBtn = document.getElementById('wsBtnStart');
+            const startTime = document.getElementById('wsTimeStart');
+            if (startBtn && startTime) {
+                const done = !!workSession.startTime;
+                startBtn.classList.toggle('done', done);
+                startTime.textContent = done ? wsFormatTime(workSession.startTime) : '';
             }
-            if (workSession.status === WS_STATUS.STARTED) {
-                wsShowState(2);
-                wsEnableCheckin(true);
-                // Fill info
-                const startEl = document.getElementById('wsStartTimeDisplay');
-                if (startEl) startEl.textContent = wsFormatTime(workSession.startTime);
-                const addrEl = document.getElementById('wsStartAddrDisplay');
-                if (addrEl) addrEl.textContent = workSession.startLocation.address || 'ไม่พบที่อยู่';
-                // Start timer
-                wsStartTimer('wsWorkTimer', workSession.startTime);
-                return;
+            // เลิกงาน button
+            const lastBtn = document.getElementById('wsBtnLastJob');
+            const lastTime = document.getElementById('wsTimeLastJob');
+            if (lastBtn && lastTime) {
+                const done = !!workSession.lastJobTime;
+                lastBtn.classList.toggle('done', done);
+                lastTime.textContent = done ? wsFormatTime(workSession.lastJobTime) : '';
             }
-            if (workSession.status === WS_STATUS.LAST_DONE) {
-                wsShowState(3);
-                wsEnableCheckin(true);
-                const el = document.getElementById('wsLastJobTimeDisplay');
-                if (el) el.textContent = wsFormatTime(workSession.lastJobTime);
-                const addrEl = document.getElementById('wsLastJobAddrDisplay');
-                if (addrEl) addrEl.textContent = workSession.lastJobLocation.address || 'ไม่พบที่อยู่';
-                // Travel timer
-                wsStartTimer('wsTravelTimer', workSession.lastJobTime);
-                return;
+            // ถึงที่พัก button
+            const arrBtn = document.getElementById('wsBtnArrival');
+            const arrTime = document.getElementById('wsTimeArrival');
+            if (arrBtn && arrTime) {
+                const done = !!workSession.arrivalTime;
+                arrBtn.classList.toggle('done', done);
+                arrTime.textContent = done ? wsFormatTime(workSession.arrivalTime) : '';
             }
-            if (workSession.status === WS_STATUS.ARRIVED) {
-                wsShowState(4);
-                wsEnableCheckin(true);
-                wsStopTimer();
-                // Fill summary
-                const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-                setEl('wsSumStart', wsFormatTime(workSession.startTime));
-                setEl('wsSumLastJob', wsFormatTime(workSession.lastJobTime));
-                setEl('wsSumArrival', wsFormatTime(workSession.arrivalTime));
-                setEl('wsSumDuration', wsFormatDuration(workSession.startTime, workSession.lastJobTime));
-                // ก→ข: ออกจากที่พัก → งานสุดท้าย
-                const wDist = workSession.workDistanceKm;
-                const wMin  = workSession.workDurationMin;
-                setEl('wsSumWorkDist', wDist != null
-                    ? wDist.toFixed(1) + ' กม.' + (wMin != null ? ' / ' + wMin + ' น.' : '')
-                    : 'ไม่มีข้อมูล GPS');
-                // ข→ค: งานสุดท้าย → ที่พัก
-                const tMin = workSession.travelDurationMin;
-                if (tMin != null) {
-                    const h = Math.floor(tMin / 60), m = tMin % 60;
-                    setEl('wsSumTravelTime', (h > 0 ? h + ' ชม. ' : '') + m + ' นาที');
-                } else {
-                    setEl('wsSumTravelTime', wsFormatDuration(workSession.lastJobTime, workSession.arrivalTime));
-                }
-                const dist = workSession.travelDistanceKm;
-                setEl('wsSumDistance', dist != null ? dist.toFixed(1) + ' กม. (ตามถนน)' : 'ไม่มีข้อมูล GPS');
-                // Count today checkins
-                wsCountTodayCheckins();
-            }
+            // Check-in เปิดเสมอ
+            wsEnableCheckin(true);
+            // เคาน์ต์ Check-in
+            wsCountTodayCheckins();
         }
 
         async function wsCountTodayCheckins() {
@@ -3540,6 +3410,8 @@
                     .get();
                 const el = document.getElementById('wsSumCheckinNum');
                 if (el) el.textContent = snap.size;
+                const badge = document.getElementById('wsSumCheckinCount');
+                if (badge) badge.style.display = '';
             } catch (e) { /* silent */ }
         }
 
@@ -3593,32 +3465,34 @@
             showLoading(true);
             const loc = await wsGetLocation();
             const now = new Date();
-            workSession = {
-                status: WS_STATUS.STARTED,
-                date: wsTodayKey(),
-                startTime: now,
-                startLocation: loc,
-                lastJobTime: null, lastJobLocation: {},
-                arrivalTime: null, arrivalLocation: {},
-            };
-            await wsSaveToFirestore({ status: WS_STATUS.STARTED, startTime: firebase.firestore.Timestamp.fromDate(now), startLocation: loc });
+            if (!workSession) workSession = { date: wsTodayKey() };
+            workSession.startTime = now;
+            workSession.startLocation = loc;
+            if (!workSession.status || workSession.status === WS_STATUS.NONE) {
+                workSession.status = WS_STATUS.STARTED;
+            }
+            await wsSaveToFirestore({
+                status: workSession.status,
+                startTime: firebase.firestore.Timestamp.fromDate(now),
+                startLocation: loc
+            });
             wsSaveLocal();
             showLoading(false);
             wsRenderState();
-            showToast('success', '✅ เริ่มงานแล้ว! บันทึกจุดเริ่มต้นสำเร็จ');
+            showToast('success', '✅ บันทึกเวลาเริ่มงานแล้ว');
         }
 
         async function wsLastJob() {
             showLoading(true);
             const loc = await wsGetLocation();
             const now = new Date();
-            // คำนวณระยะทาง + เวลาขับตามถนน จากจุดเริ่มงาน (ก) → งานสุดท้าย (ข)
+            if (!workSession) workSession = { date: wsTodayKey() };
             const { distKm: workDistKm, durationMin: workDurationMin } = await wsRoadDistance(workSession.startLocation, loc);
-            workSession.status = WS_STATUS.LAST_DONE;
             workSession.lastJobTime = now;
             workSession.lastJobLocation = loc;
             workSession.workDistanceKm = workDistKm;
             workSession.workDurationMin = workDurationMin;
+            workSession.status = WS_STATUS.LAST_DONE;
             await wsSaveToFirestore({
                 status: WS_STATUS.LAST_DONE,
                 lastJobTime: firebase.firestore.Timestamp.fromDate(now),
@@ -3629,7 +3503,7 @@
             wsSaveLocal();
             showLoading(false);
             wsRenderState();
-            showToast('success', '🏁 บันทึกงานสุดท้ายแล้ว! กดถึงที่พักเมื่อกลับถึงบ้าน');
+            showToast('success', '🏁 บันทึกเวลาเลิกงานแล้ว');
         }
 
         async function wsRoadDistance(fromLoc, toLoc) {
@@ -3659,7 +3533,7 @@
             showLoading(true);
             const loc = await wsGetLocation();
             const now = new Date();
-            // คำนวณระยะทาง + เวลาขับตามถนน จากงานสุดท้าย → ที่พัก
+            if (!workSession) workSession = { date: wsTodayKey() };
             const { distKm, durationMin } = await wsRoadDistance(workSession.lastJobLocation, loc);
             workSession.status = WS_STATUS.ARRIVED;
             workSession.arrivalTime = now;
@@ -3673,12 +3547,11 @@
                 travelDistanceKm: distKm,
                 travelDurationMin: durationMin
             });
-            // Clear pending warning (session completed normally)
             localStorage.removeItem('ws_pending_warning_' + selectedTeam);
             wsSaveLocal();
             showLoading(false);
             wsRenderState();
-            showToast('success', '🏠 ถึงที่พักแล้ว! สรุปวันทำงานสำเร็จ');
+            showToast('success', '🏠 บันทึกถึงที่พักแล้ว');
         }
 
         async function wsCancelStart() {

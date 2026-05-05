@@ -138,79 +138,64 @@ test.describe('Work Session Feature', () => {
     console.log('✅ Work Session card อยู่ใน DOM');
   });
 
-  test('WS-2️⃣ State 1: start button visible, other buttons hidden', async ({ page }) => {
-    // Force state 1 via wsShowState
-    await page.evaluate(() => window.wsShowState && window.wsShowState(1));
+  test('WS-2️⃣ All 3 work session buttons are visible', async ({ page }) => {
     await expect(page.locator('[data-test="ws-start-btn"]')).toBeVisible();
-    await expect(page.locator('[data-test="ws-lastjob-btn"]')).toBeHidden();
-    await expect(page.locator('[data-test="ws-arrival-btn"]')).toBeHidden();
-    console.log('✅ State 1: ws-start-btn visible เท่านั้น');
+    await expect(page.locator('[data-test="ws-lastjob-btn"]')).toBeVisible();
+    await expect(page.locator('[data-test="ws-arrival-btn"]')).toBeVisible();
+    console.log('✅ ทั้ง 3 ปุ่มแสดงอยู่พร้อมกัน');
   });
 
-  test('WS-3️⃣ Check-in button enabled on State 1 (no ws-disabled)', async ({ page }) => {
-    await page.evaluate(() => window.wsShowState && window.wsShowState(1));
+  test('WS-3️⃣ Check-in button enabled (no ws-disabled)', async ({ page }) => {
     const cls = await page.locator('[data-test="checkin-btn"]').getAttribute('class');
     expect(cls).not.toContain('ws-disabled');
-    console.log('✅ Check-in button enabled ตั้งแต่ State 1');
+    console.log('✅ Check-in button enabled');
   });
 
-  test('WS-4️⃣ Warning message hidden on State 1', async ({ page }) => {
-    await page.evaluate(() => window.wsShowState && window.wsShowState(1));
+  test('WS-4️⃣ Warning message hidden by default', async ({ page }) => {
     const el = page.locator('#wsCheckinWarning');
-    // warning ซ่อนอยู่ (display:none หรือไม่มี class visible)
     const isHidden = await el.evaluate(node => node.style.display === 'none' || !node.classList.contains('visible'));
     expect(isHidden).toBe(true);
-    console.log('✅ Warning message ซ่อนอยู่ตอน State 1');
+    console.log('✅ Warning message ซ่อนอยู่');
   });
 
-  test('WS-5️⃣ State 2: lastjob button and cancel link visible', async ({ page }) => {
-    await page.evaluate(() => window.wsShowState && window.wsShowState(2));
-    await expect(page.locator('[data-test="ws-lastjob-btn"]')).toBeVisible();
-    await expect(page.locator('[data-test="ws-cancel-link"]')).toBeVisible();
-    await expect(page.locator('[data-test="ws-start-btn"]')).toBeHidden();
-    console.log('✅ State 2: lastjob btn + cancel visible');
+  test('WS-5️⃣ ws-start-btn gets done class after wsRenderState with startTime', async ({ page }) => {
+    await page.evaluate(() => {
+      if (window.wsDebugSetSession) window.wsDebugSetSession({ date: '01-01-2026', startTime: new Date(), status: 'started' });
+      if (window.wsRenderState) window.wsRenderState();
+    });
+    const cls = await page.locator('[data-test="ws-start-btn"]').getAttribute('class');
+    expect(cls).toContain('done');
+    console.log('✅ ws-start-btn ได้ class done เมื่อมี startTime');
   });
 
-  test('WS-6️⃣ State 3: arrival button visible', async ({ page }) => {
-    await page.evaluate(() => window.wsShowState && window.wsShowState(3));
+  test('WS-6️⃣ ws-arrival-btn always visible', async ({ page }) => {
     await expect(page.locator('[data-test="ws-arrival-btn"]')).toBeVisible();
-    await expect(page.locator('[data-test="ws-lastjob-btn"]')).toBeHidden();
-    console.log('✅ State 3: ws-arrival-btn visible');
+    console.log('✅ ws-arrival-btn visible เสมอ');
   });
 
-  test('WS-7️⃣ State 4: all 7 summary items present', async ({ page }) => {
+  test('WS-7️⃣ ws-lastjob-btn gets done class after wsRenderState with lastJobTime', async ({ page }) => {
     await page.evaluate(() => {
-      if (window.wsShowState) window.wsShowState(4);
-      // Fill summary elements so they are visible
-      const ids = ['wsSumStart','wsSumLastJob','wsSumArrival','wsSumDuration','wsSumWorkDist','wsSumTravelTime','wsSumDistance','wsSumCheckinNum'];
-      ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = '—';
-      });
+      if (window.wsDebugSetSession) window.wsDebugSetSession({ date: '01-01-2026', lastJobTime: new Date(), status: 'last_done' });
+      if (window.wsRenderState) window.wsRenderState();
     });
-    await expect(page.locator('#wsSumStart')).toBeAttached();
-    await expect(page.locator('#wsSumLastJob')).toBeAttached();
-    await expect(page.locator('#wsSumArrival')).toBeAttached();
-    await expect(page.locator('#wsSumDuration')).toBeAttached();
-    await expect(page.locator('#wsSumWorkDist')).toBeAttached();
-    await expect(page.locator('#wsSumTravelTime')).toBeAttached();
-    await expect(page.locator('#wsSumDistance')).toBeAttached();
-    console.log('✅ State 4: ครบ 7 summary items');
+    const cls = await page.locator('[data-test="ws-lastjob-btn"]').getAttribute('class');
+    expect(cls).toContain('done');
+    console.log('✅ ws-lastjob-btn ได้ class done เมื่อมี lastJobTime');
   });
 
-  test('WS-8️⃣ State 4: check-in button enabled (no ws-disabled)', async ({ page }) => {
+  test('WS-8️⃣ wsSumCheckinCount badge exists in DOM', async ({ page }) => {
+    await expect(page.locator('#wsSumCheckinCount')).toBeAttached();
+    await expect(page.locator('#wsSumCheckinNum')).toBeAttached();
+    console.log('✅ wsSumCheckinCount badge มีใน DOM');
+  });
+
+  test('WS-9️⃣ ws-arrival-btn gets done class after wsRenderState with arrivalTime', async ({ page }) => {
     await page.evaluate(() => {
-      if (window.wsShowState) window.wsShowState(4);
-      if (window.wsEnableCheckin) window.wsEnableCheckin(true);
+      if (window.wsDebugSetSession) window.wsDebugSetSession({ date: '01-01-2026', arrivalTime: new Date(), status: 'arrived' });
+      if (window.wsRenderState) window.wsRenderState();
     });
-    const cls = await page.locator('[data-test="checkin-btn"]').getAttribute('class');
-    expect(cls).not.toContain('ws-disabled');
-    console.log('✅ State 4: Check-in button enabled');
-  });
-
-  test('WS-9️⃣ State 4: cancel arrival link is present', async ({ page }) => {
-    await page.evaluate(() => window.wsShowState && window.wsShowState(4));
-    await expect(page.locator('[data-test="ws-cancel-arrival-link"]')).toBeAttached();
-    console.log('✅ State 4: cancel arrival link มีอยู่ใน DOM');
+    const cls = await page.locator('[data-test="ws-arrival-btn"]').getAttribute('class');
+    expect(cls).toContain('done');
+    console.log('✅ ws-arrival-btn ได้ class done เมื่อมี arrivalTime');
   });
 });
