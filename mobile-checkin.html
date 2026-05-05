@@ -1494,7 +1494,7 @@
         </div>
 
         <!-- History View -->
-        <div class="main-content history-view" id="historyView">
+        <div class="main-content history-view" id="historyView" style="display: none;">
             <h2 class="page-title"><i class="fas fa-history"></i> ประวัติ Check-in</h2>
             <div id="historyList">
                 <!-- ข้อมูลจะโหลดจาก localStorage/Firestore -->
@@ -1953,6 +1953,8 @@
             // Switch Views
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('appPage').style.display = 'flex';
+            // Show check-in view (hide all other views)
+            showView('checkin');
             // Init work session
             initWorkSession();
         }
@@ -3110,7 +3112,6 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
             initQuickSelectFeature();
-            loadScheduleData();
         });
 
         // ============== Schedule View Functions ==============
