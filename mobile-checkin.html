@@ -1459,7 +1459,7 @@
                         <i class="fas fa-check-double" style="margin-right:6px;"></i>
                         วันนี้ Check-in แล้ว <strong id="wsSumCheckinNum">0</strong> ครั้ง
                     </div>
-                    <p class="ws-edit-note"><i class="fas fa-circle-info" style="margin-right:4px;"></i>หากต้องการแก้ไข กรุณาติดต่อผู้ดูแลระบบ</p>
+                    <a class="ws-cancel-link" data-test="ws-cancel-arrival-link" onclick="wsCancelArrival()">ยกเลิก (กรณีกดผิด)</a>
                 </div>
 
             </div>
@@ -3689,6 +3689,32 @@
             wsStopTimer();
             wsRenderState();
             showToast('info', 'ยกเลิกการเริ่มงาน');
+        }
+
+        async function wsCancelArrival() {
+            if (!confirm('ยกเลิกการกด "ถึงที่พัก" หรือไม่?\nระบบจะกลับไปสถานะ "เสร็จงานสุดท้าย"')) return;
+            showLoading(true);
+            workSession.status = WS_STATUS.LAST_DONE;
+            workSession.arrivalTime = null;
+            workSession.arrivalLocation = {};
+            workSession.travelDistanceKm = null;
+            workSession.travelDurationMin = null;
+            if (workSession.docId) {
+                try {
+                    await db.collection('work_sessions').doc(workSession.docId).update({
+                        status: WS_STATUS.LAST_DONE,
+                        arrivalTime: firebase.firestore.FieldValue.delete(),
+                        arrivalLocation: firebase.firestore.FieldValue.delete(),
+                        travelDistanceKm: firebase.firestore.FieldValue.delete(),
+                        travelDurationMin: firebase.firestore.FieldValue.delete(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch (e) { console.warn('wsCancelArrival Firestore error:', e); }
+            }
+            wsSaveLocal();
+            showLoading(false);
+            wsRenderState();
+            showToast('info', '↩️ ยกเลิกแล้ว — กลับสู่สถานะเสร็จงานสุดท้าย');
         }
 
         async function wsCancelLastJob() {

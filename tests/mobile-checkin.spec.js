@@ -205,4 +205,10 @@ test.describe('Work Session Feature', () => {
     expect(cls).not.toContain('ws-disabled');
     console.log('✅ State 4: Check-in button enabled');
   });
+
+  test('WS-9️⃣ State 4: cancel arrival link is present', async ({ page }) => {
+    await page.evaluate(() => window.wsShowState && window.wsShowState(4));
+    await expect(page.locator('[data-test="ws-cancel-arrival-link"]')).toBeAttached();
+    console.log('✅ State 4: cancel arrival link มีอยู่ใน DOM');
+  });
 });
