@@ -91,6 +91,7 @@ Suggestions and feedback are welcome! Please feel free to open an **Issue** or s
 | Team Selection | รองรับ 16 ทีม (A-O, Z) |
 | History View | ดูรายการเช็คอินย้อนหลัง |
 | Visibility Toggle | ซ่อน/แสดงหมุดบนแผนที่ |
+| Work Session Card | 3 ปุ่มอิสระ (เริ่มงาน / เลิกงาน / ถึงที่พัก) + นับจำนวน Check-in วันนี้ |
 
 ### 🖥️ Desktop (Admin Dashboard)
 
@@ -226,7 +227,7 @@ This project was made possible with the help of AI Tools:
 | AI Tool | Usage / การใช้งาน |
 |---------|-------------------|
 | **Claude Opus 4.5** | Main development, architecture design / พัฒนาหลัก, ออกแบบโครงสร้าง |
-| **Claude Sonnet 4.5** | Code review, debugging / ตรวจสอบโค้ด, แก้บั๊ก |
+| **Claude Sonnet 4.6** | Code review, debugging, E2E testing / ตรวจสอบโค้ด, แก้บั๊ก, ทดสอบ |
 | **Claude Haiku 4.5** | Quick fixes, small tasks / แก้ไขเล็กน้อย, งานย่อย |
 | **GPT-5.1-Codex-Max** | Code generation, automation / สร้างโค้ด, ระบบอัตโนมัติ |
 | **GPT-5** | Research, problem-solving / ค้นคว้า, แก้ปัญหา |
@@ -253,5 +254,5 @@ This project is for educational and internal use.
 
 ---
 
-**Version:** 2.2.5  
-**Last Updated:** 05-02-2026
+**Version:** 2.5.0  
+**Last Updated:** 05-05-2026

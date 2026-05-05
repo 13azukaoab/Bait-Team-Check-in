@@ -6,7 +6,7 @@
 
 **🌐 Live URL:** [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
 
-### 🎯 สถานะล่าสุด (05-02-2026, 19:30 น.)
+### 🎯 สถานะล่าสุด (05-05-2026, 21:00 น.)
 
 | หมวด | สถานะ |
 |------|-------|
@@ -35,6 +35,7 @@
 - [X] **หน้าประวัติ**: ดูรายการเช็คอินย้อนหลัง
 - [X] **เมนูด้านล่าง (Bottom Nav)**: สำหรับเปลี่ยนหน้า
 - [X] **ระบบล็อกอิน (Login)**: เลือกทีมและจำการเข้าสู่ระบบ
+- [X] **Work Session Card**: 3 ปุ่มอิสระ (เริ่มงาน / เลิกงาน / ถึงที่พัก) กดได้อิสระโดยไม่บังคับลำดับ พร้อมแสดงเวลาและนับจำนวน Check-in วันนี้
 - [X] **รองรับมือถือ (Responsive)**: ล็อคความสูงหน้าจอ ไม่มี Scrollbar ซ้อนกัน
 - [X] **ตัดโหมดมืด (Dark Mode)**: ไม่มีโหมดมืดบนมือถือ ตามข้อกำหนด
 - [X] **ตัวเลื่อนคุณภาพรูป (Quality Slider)**: ปรับคุณภาพ JPEG 50–90% และเลือก Max Width 800/1200/1600
@@ -411,6 +412,6 @@ git push origin main
 - Filename: `workload_analysis_01-28_Feb_2026.csv`
 - **ต้องการ:** `googleMapsApiKey` ใน `src/config.js`
 
-**อัปเดตล่าสุด:** 04-03-2026, 10:30 น.
-**เวอร์ชัน:** V.2.3.0 (04-03-2026) - Workload Analysis Export Feature
-**สถานะ:** 🟡 IN PROGRESS - Phase 4 ✅ Complete, Phase 5 ✅ Complete, Phase 6 Pending (6/7 phases complete)
+**อัปเดตล่าสุด:** 05-05-2026, 21:00 น.
+**เวอร์ชัน:** V.2.5.0 (05-05-2026) - Work Session Card 4-button Redesign + 139 E2E tests passing
+**สถานะ:** 🟢 PRODUCTION - 139 tests passing, Work Session redesigned, deployed
