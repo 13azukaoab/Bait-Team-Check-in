@@ -2170,6 +2170,10 @@
                     <i class="fas fa-images"></i>
                     <span class="nav-text">Photo Gallery</span>
                 </div>
+                <div class="nav-item" data-page="worksessions" data-tooltip="Work Sessions" onclick="showPage('worksessions'); loadWorkSessions()">
+                    <i class="fas fa-briefcase-clock"></i>
+                    <span class="nav-text">Work Sessions</span>
+                </div>
             </nav>
         </aside>
 
@@ -3124,6 +3128,78 @@
                             <button class="btn btn-outline" style="padding: 8px 12px;">32</button>
                             <button class="btn btn-outline" style="padding: 8px 12px;"><i class="fas fa-chevron-right"></i></button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Work Sessions Page -->
+            <div class="page-content" id="page-worksessions" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                    <h2 style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-briefcase-clock" style="color: var(--primary);"></i> Work Sessions
+                    </h2>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                        <input type="date" id="wsDateFilter" data-test="ws-filter-date" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" onchange="loadWorkSessions()">
+                        <select id="wsTeamFilter" data-test="ws-filter-team" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" onchange="loadWorkSessions()">
+                            <option value="all">ทุกทีม</option>
+                            <option value="A">Team A</option>
+                            <option value="B">Team B</option>
+                            <option value="C">Team C</option>
+                            <option value="D">Team D</option>
+                            <option value="E">Team E</option>
+                        </select>
+                        <button onclick="wsExportCSV()" data-test="ws-export-csv" style="padding: 10px 18px; background: var(--success); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-family: 'Prompt', sans-serif; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px;" id="wsSummaryCards" data-test="ws-summary-cards">
+                    <div style="background: var(--bg-card); border-radius: 14px; padding: 18px; border: 1px solid var(--border); text-align: center;">
+                        <div style="font-size: 28px; font-weight: 700; color: var(--success)" id="wsStatTotal">-</div>
+                        <div style="font-size: 13px; color: #666;">ทีมที่บันทึก</div>
+                    </div>
+                    <div style="background: var(--bg-card); border-radius: 14px; padding: 18px; border: 1px solid var(--border); text-align: center;">
+                        <div style="font-size: 28px; font-weight: 700; color: var(--primary)" id="wsStatStarted">-</div>
+                        <div style="font-size: 13px; color: #666;">กำลังทำงาน</div>
+                    </div>
+                    <div style="background: var(--bg-card); border-radius: 14px; padding: 18px; border: 1px solid var(--border); text-align: center;">
+                        <div style="font-size: 28px; font-weight: 700; color: #8b5cf6" id="wsStatTraveling">-</div>
+                        <div style="font-size: 13px; color: #666;">กำลังเดินทาง</div>
+                    </div>
+                    <div style="background: var(--bg-card); border-radius: 14px; padding: 18px; border: 1px solid var(--border); text-align: center;">
+                        <div style="font-size: 28px; font-weight: 700; color: var(--warning)" id="wsStatDone">-</div>
+                        <div style="font-size: 13px; color: #666;">เสร็จสมบูรณ์</div>
+                    </div>
+                </div>
+
+                <!-- Sessions Table -->
+                <div style="background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border); overflow: hidden;">
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff;">
+                                    <th style="padding: 14px 16px; text-align: left;">ทีม</th>
+                                    <th style="padding: 14px 16px; text-align: left;">สถานะ</th>
+                                    <th style="padding: 14px 16px; text-align: left;">เริ่มงาน</th>
+                                    <th style="padding: 14px 16px; text-align: left;">งานสุดท้าย</th>
+                                    <th style="padding: 14px 16px; text-align: left;">ถึงที่พัก</th>
+                                    <th style="padding: 14px 16px; text-align: left;">รวมทำงาน</th>
+                                    <th style="padding: 14px 16px; text-align: left;">ก→ข (กม.)</th>
+                                    <th style="padding: 14px 16px; text-align: left;">ก→ข (นาที)</th>
+                                    <th style="padding: 14px 16px; text-align: left;">ข→ค (กม.)</th>
+                                    <th style="padding: 14px 16px; text-align: left;">ข→ค (นาที)</th>
+                                    <th style="padding: 14px 16px; text-align: left;">Check-in</th>
+                                    <th style="padding: 14px 16px; text-align: left;">🟢 จุดเริ่ม</th>
+                                    <th style="padding: 14px 16px; text-align: left;">🟠 งานสุดท้าย</th>
+                                    <th style="padding: 14px 16px; text-align: left;">🟣 ที่พัก</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wsTableBody" data-test="ws-table-body">
+                                <tr><td colspan="8" style="text-align:center; padding: 40px; color: #999;"><i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>กำลังโหลด...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -4935,6 +5011,161 @@
                 }
             });
         }
+
+        // ============================================================
+        // ===== WORK SESSIONS (Admin) =====
+        // ============================================================
+        let wsSessionsCache = [];
+
+        function wsAdminTodayKey() {
+            const now = new Date();
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            return `${dd}-${mm}-${now.getFullYear()}`;
+        }
+
+        function wsFmtAdminTime(ts) {
+            if (!ts) return '-';
+            const d = ts.toDate ? ts.toDate() : new Date(ts);
+            return d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
+        }
+
+        function wsDuration(startTs, endTs) {
+            if (!startTs || !endTs) return '-';
+            const s = startTs.toDate ? startTs.toDate() : new Date(startTs);
+            const e = endTs.toDate ? endTs.toDate() : new Date(endTs);
+            const diff = Math.max(0, e - s);
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            return (h > 0 ? h + ' ชม. ' : '') + m + ' น.';
+        }
+
+        function wsStatusBadge(status) {
+            const map = {
+                'started': '<span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:20px;font-size:12px;">🟢 กำลังทำงาน</span>',
+                'last_done': '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:12px;">🟠 เดินทางกลับ</span>',
+                'arrived': '<span style="background:#f3e8ff;color:#7c3aed;padding:3px 10px;border-radius:20px;font-size:12px;">✅ เสร็จแล้ว</span>',
+            };
+            return map[status] || '<span style="color:#999;">-</span>';
+        }
+
+        function wsGpsLink(loc) {
+            if (!loc || !loc.lat) return '-';
+            return `<a href="https://maps.google.com/?q=${loc.lat},${loc.lng}" target="_blank" title="${loc.address || ''}" style="color:var(--primary);"><i class="fas fa-map-marker-alt"></i> แผนที่</a>`;
+        }
+
+        async function loadWorkSessions() {
+            const tbody = document.getElementById('wsTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:#999;"><i class="fas fa-spinner fa-spin"></i> กำลังโหลด...</td></tr>';
+
+            // Set date filter default to today
+            const dateInput = document.getElementById('wsDateFilter');
+            if (dateInput && !dateInput.value) {
+                const now = new Date();
+                dateInput.value = now.toISOString().slice(0, 10); // YYYY-MM-DD for input[type=date]
+            }
+
+            // Convert YYYY-MM-DD → DD-MM-YYYY for Firestore
+            let firestoreDate = wsAdminTodayKey();
+            if (dateInput && dateInput.value) {
+                const [y, m, d] = dateInput.value.split('-');
+                firestoreDate = `${d}-${m}-${y}`;
+            }
+
+            const teamFilter = document.getElementById('wsTeamFilter')?.value || 'all';
+
+            try {
+                let q = db.collection('work_sessions').where('date', '==', firestoreDate);
+                if (teamFilter !== 'all') q = q.where('team', '==', teamFilter);
+                const snap = await q.orderBy('team').get();
+
+                wsSessionsCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                // Stats
+                const total = wsSessionsCache.length;
+                const started = wsSessionsCache.filter(s => s.status === 'started').length;
+                const traveling = wsSessionsCache.filter(s => s.status === 'last_done').length;
+                const done = wsSessionsCache.filter(s => s.status === 'arrived').length;
+                const setEl = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+                setEl('wsStatTotal', total);
+                setEl('wsStatStarted', started);
+                setEl('wsStatTraveling', traveling);
+                setEl('wsStatDone', done);
+
+                if (wsSessionsCache.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">ไม่มีข้อมูล Work Session วันที่เลือก</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = wsSessionsCache.map((s, i) => `
+                    <tr style="border-bottom: 1px solid var(--border); ${i % 2 === 0 ? 'background: rgba(14,165,233,0.03);' : ''}">
+                        <td style="padding: 12px 16px;"><strong>Team ${s.team}</strong></td>
+                        <td style="padding: 12px 16px;">${wsStatusBadge(s.status)}</td>
+                        <td style="padding: 12px 16px;">${wsFmtAdminTime(s.startTime)}</td>
+                        <td style="padding: 12px 16px;">${wsFmtAdminTime(s.lastJobTime)}</td>
+                        <td style="padding: 12px 16px;">${wsFmtAdminTime(s.arrivalTime)}</td>
+                        <td style="padding: 12px 16px;">${wsDuration(s.startTime, s.lastJobTime)}</td>
+                        <td style="padding: 12px 16px; font-weight:600; color:#0ea5e9;">${s.workDistanceKm != null ? s.workDistanceKm.toFixed(1) + ' กม.' : '-'}</td>
+                        <td style="padding: 12px 16px;">${s.workDurationMin != null ? s.workDurationMin + ' น.' : '-'}</td>
+                        <td style="padding: 12px 16px; font-weight:600; color:#7c3aed;">${s.travelDistanceKm != null ? s.travelDistanceKm.toFixed(1) + ' กม.' : '-'}</td>
+                        <td style="padding: 12px 16px;">${s.travelDurationMin != null ? s.travelDurationMin + ' น.' : '-'}</td>
+                        <td style="padding: 12px 16px; text-align: center;">${s.checkinCount ?? '-'}</td>
+                        <td style="padding: 12px 16px;">${wsGpsLink(s.startLocation)}</td>
+                        <td style="padding: 12px 16px;">${wsGpsLink(s.lastJobLocation)}</td>
+                        <td style="padding: 12px 16px;">${wsGpsLink(s.arrivalLocation)}</td>
+                    </tr>
+                `).join('');
+
+            } catch (e) {
+                console.error('loadWorkSessions error:', e);
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:#e74c3c;">เกิดข้อผิดพลาด: ' + e.message + '</td></tr>';
+            }
+        }
+
+        function wsExportCSV() {
+            if (!wsSessionsCache || wsSessionsCache.length === 0) {
+                alert('ไม่มีข้อมูลที่จะ Export'); return;
+            }
+            const dateInput = document.getElementById('wsDateFilter');
+            const dateLabel = dateInput?.value || wsAdminTodayKey();
+            const rows = [['ทีม', 'วันที่', 'สถานะ', 'เริ่มงาน', 'งานสุดท้าย', 'ถึงที่พัก', 'รวมทำงาน (นาที)', 'ก→ข กม.', 'ก→ข นาที', 'ข→ค กม.', 'ข→ค นาที', 'Check-in', 'จุดเริ่ม lat', 'จุดเริ่ม lng', 'งานสุดท้าย lat', 'งานสุดท้าย lng', 'ที่พัก lat', 'ที่พัก lng']];
+            wsSessionsCache.forEach(s => {
+                const fmtTs = ts => {
+                    if (!ts) return '';
+                    const d = ts.toDate ? ts.toDate() : new Date(ts);
+                    return d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+                };
+                const durMin = () => {
+                    if (!s.startTime || !s.lastJobTime) return '';
+                    const start = s.startTime.toDate ? s.startTime.toDate() : new Date(s.startTime);
+                    const end = s.lastJobTime.toDate ? s.lastJobTime.toDate() : new Date(s.lastJobTime);
+                    return Math.round((end - start) / 60000);
+                };
+                rows.push([
+                    s.team, s.date, s.status,
+                    fmtTs(s.startTime), fmtTs(s.lastJobTime), fmtTs(s.arrivalTime),
+                    durMin(),
+                    s.workDistanceKm != null ? s.workDistanceKm.toFixed(1) : '',
+                    s.workDurationMin ?? '',
+                    s.travelDistanceKm != null ? s.travelDistanceKm.toFixed(1) : '',
+                    s.travelDurationMin ?? '',
+                    s.checkinCount ?? 0,
+                    s.startLocation?.lat ?? '', s.startLocation?.lng ?? '',
+                    s.lastJobLocation?.lat ?? '', s.lastJobLocation?.lng ?? '',
+                    s.arrivalLocation?.lat ?? '', s.arrivalLocation?.lng ?? ''
+                ]);
+            });
+            const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `work-sessions-${dateLabel}.csv`;
+            a.click(); URL.revokeObjectURL(url);
+        }
+        // ============================================================
+        // ===== /WORK SESSIONS (Admin) =====
+        // ============================================================
 
         // Apply Filters - กรองข้อมูลจริงจาก Firestore
         function applyFilters() {

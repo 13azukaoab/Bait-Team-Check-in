@@ -117,3 +117,92 @@ test.describe('Mobile Check-in Page', () => {
     console.log('✅ ทำงานบน iPad viewport');
   });
 });
+
+// =============================================
+// 🔄 Work Session Feature Tests
+// =============================================
+
+test.describe('Work Session Feature', () => {
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/mobile-checkin.html');
+    // Simulate logged-in state: show appPage, set selectedTeam
+    await page.evaluate(() => {
+      window.selectedTeam = 'A';
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('appPage').style.display = 'flex';
+    });
+  });
+
+  test('WS-1️⃣ Work Session card is present in DOM', async ({ page }) => {
+    await expect(page.locator('[data-test="work-session-card"]')).toBeAttached();
+    console.log('✅ Work Session card อยู่ใน DOM');
+  });
+
+  test('WS-2️⃣ State 1: start button visible, other buttons hidden', async ({ page }) => {
+    // Force state 1 via wsShowState
+    await page.evaluate(() => window.wsShowState && window.wsShowState(1));
+    await expect(page.locator('[data-test="ws-start-btn"]')).toBeVisible();
+    await expect(page.locator('[data-test="ws-lastjob-btn"]')).toBeHidden();
+    await expect(page.locator('[data-test="ws-arrival-btn"]')).toBeHidden();
+    console.log('✅ State 1: ws-start-btn visible เท่านั้น');
+  });
+
+  test('WS-3️⃣ Check-in button has ws-disabled class on State 1', async ({ page }) => {
+    await page.evaluate(() => window.wsShowState && window.wsShowState(1));
+    const cls = await page.locator('[data-test="checkin-btn"]').getAttribute('class');
+    expect(cls).toContain('ws-disabled');
+    console.log('✅ Check-in button disabled ตอน State 1');
+  });
+
+  test('WS-4️⃣ Warning message visible on State 1', async ({ page }) => {
+    await page.evaluate(() => window.wsShowState && window.wsShowState(1));
+    await expect(page.locator('#wsCheckinWarning')).toBeVisible();
+    console.log('✅ Warning message แสดงผลตอน State 1');
+  });
+
+  test('WS-5️⃣ State 2: lastjob button and cancel link visible', async ({ page }) => {
+    await page.evaluate(() => window.wsShowState && window.wsShowState(2));
+    await expect(page.locator('[data-test="ws-lastjob-btn"]')).toBeVisible();
+    await expect(page.locator('[data-test="ws-cancel-link"]')).toBeVisible();
+    await expect(page.locator('[data-test="ws-start-btn"]')).toBeHidden();
+    console.log('✅ State 2: lastjob btn + cancel visible');
+  });
+
+  test('WS-6️⃣ State 3: arrival button visible', async ({ page }) => {
+    await page.evaluate(() => window.wsShowState && window.wsShowState(3));
+    await expect(page.locator('[data-test="ws-arrival-btn"]')).toBeVisible();
+    await expect(page.locator('[data-test="ws-lastjob-btn"]')).toBeHidden();
+    console.log('✅ State 3: ws-arrival-btn visible');
+  });
+
+  test('WS-7️⃣ State 4: all 7 summary items present', async ({ page }) => {
+    await page.evaluate(() => {
+      if (window.wsShowState) window.wsShowState(4);
+      // Fill summary elements so they are visible
+      const ids = ['wsSumStart','wsSumLastJob','wsSumArrival','wsSumDuration','wsSumWorkDist','wsSumTravelTime','wsSumDistance','wsSumCheckinNum'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '—';
+      });
+    });
+    await expect(page.locator('#wsSumStart')).toBeAttached();
+    await expect(page.locator('#wsSumLastJob')).toBeAttached();
+    await expect(page.locator('#wsSumArrival')).toBeAttached();
+    await expect(page.locator('#wsSumDuration')).toBeAttached();
+    await expect(page.locator('#wsSumWorkDist')).toBeAttached();
+    await expect(page.locator('#wsSumTravelTime')).toBeAttached();
+    await expect(page.locator('#wsSumDistance')).toBeAttached();
+    console.log('✅ State 4: ครบ 7 summary items');
+  });
+
+  test('WS-8️⃣ State 4: check-in button enabled (no ws-disabled)', async ({ page }) => {
+    await page.evaluate(() => {
+      if (window.wsShowState) window.wsShowState(4);
+      if (window.wsEnableCheckin) window.wsEnableCheckin(true);
+    });
+    const cls = await page.locator('[data-test="checkin-btn"]').getAttribute('class');
+    expect(cls).not.toContain('ws-disabled');
+    console.log('✅ State 4: Check-in button enabled');
+  });
+});

@@ -16,15 +16,17 @@
 **AI ต้องสร้างไฟล์ต่อไปนี้ให้อัตโนมัติ:**
 
 1. **`deploy.ps1`** - สคริปต์ Deploy สำหรับ PowerShell
+
    - รองรับ flags: `-HostingOnly`, `-RulesOnly`, `-FunctionsOnly`, `-All`
    - แสดง timestamp, branch, commit ก่อน deploy
    - บันทึก log อัตโนมัติลง `deploy-history.log`
-
 2. **`deploy-history.log`** - ประวัติการ Deploy
+
    - Format: `TIMESTAMP | BRANCH | COMMIT | STATUS | MESSAGE | BY | TYPE | DETAILS`
    - บันทึกทุกครั้งที่ deploy (SUCCESS/FAILED)
 
 **ตัวอย่างการใช้งาน:**
+
 ```powershell
 .\deploy.ps1                    # Hosting only (default)
 .\deploy.ps1 -HostingOnly       # Hosting only
@@ -55,6 +57,7 @@
 - ✅ ระบุเวอร์ชันหากมีการเปลี่ยนแปลงสำคัญ
 
 **ตัวอย่าง:**
+
 ```
 อัปเดตล่าสุด: 26-01-2026, 11:55 น.
 เวอร์ชัน: V.1.1.0
@@ -66,15 +69,15 @@
 
 **7 เขต, 24 สาขา:**
 
-| เขต       | สาขา                                      |
-| --------- | ----------------------------------------- |
-| **เขต 1** | พุทธมณฑล, นครปฐม, หัวหิน, พระราม 2        |
-| **เขต 2** | สาทร, ปทุมวัน, พระราม 4, นนทบุรี          |
-| **เขต 3** | ปทุมธานี, รามอินทรา, อยุธยา               |
+| เขต             | สาขา                                                                     |
+| ------------------ | ---------------------------------------------------------------------------- |
+| **เขต 1** | พุทธมณฑล, นครปฐม, หัวหิน, พระราม 2                 |
+| **เขต 2** | สาทร, ปทุมวัน, พระราม 4, นนทบุรี                     |
+| **เขต 3** | ปทุมธานี, รามอินทรา, อยุธยา                           |
 | **เขต 4** | ลาดพร้าว, พัฒนาการ, สุวินทวงศ์, ประชาชื่น |
-| **เขต 5** | ปราจีนบุรี, สมุทรปราการ, พัทยา, ระยอง     |
-| **เขต 6** | สุขุมวิท, ปากน้ำ, ชลบุรี                  |
-| **เขต 7** | ปากช่อง, สระบุรี                          |
+| **เขต 5** | ปราจีนบุรี, สมุทรปราการ, พัทยา, ระยอง         |
+| **เขต 6** | สุขุมวิท, ปากน้ำ, ชลบุรี                                 |
+| **เขต 7** | ปากช่อง, สระบุรี                                               |
 
 ### อ้างอิง JavaScript:
 
@@ -86,7 +89,7 @@ const ZONE_BRANCH_MAPPING = {
   "เขต 4": ["ลาดพร้าว", "พัฒนาการ", "สุวินทวงศ์", "ประชาชื่น"],
   "เขต 5": ["ปราจีนบุรี", "สมุทรปราการ", "พัทยา", "ระยอง"],
   "เขต 6": ["สุขุมวิท", "ปากน้ำ", "ชลบุรี"],
-  "เขต 7": ["ปากช่อง", "สระบุรี"],
+  "เขต 9": ["ปากช่อง", "สระบุรี"],
 };
 
 // หาเขตจากชื่อสาขา
@@ -199,13 +202,13 @@ L.polyline(
 
 ### ตัวกรองที่จำเป็น:
 
-| ตัวกรอง       | ตัวเลือก            | ค่าเริ่มต้น |
-| ------------- | ------------------- | ----------- |
-| **ทีม**       | ทั้งหมด, A-O, Z     | ทั้งหมด     |
-| **เขต**       | ทั้งหมด, เขต 1-7    | ทั้งหมด     |
-| **สาขา**      | ทั้งหมด, 24 สาขา    | ทั้งหมด     |
-| **วันที่**    | เลือกช่วงวันที่     | วันนี้      |
-| **การแสดงผล** | ทั้งหมด, แสดง, ซ่อน | ทั้งหมด     |
+| ตัวกรอง               | ตัวเลือก                   | ค่าเริ่มต้น |
+| ---------------------------- | ---------------------------------- | ---------------------- |
+| **ทีม**             | ทั้งหมด, A-O, Z             | ทั้งหมด         |
+| **เขต**             | ทั้งหมด, เขต 1-7         | ทั้งหมด         |
+| **สาขา**           | ทั้งหมด, 24 สาขา        | ทั้งหมด         |
+| **วันที่**       | เลือกช่วงวันที่     | วันนี้           |
+| **การแสดงผล** | ทั้งหมด, แสดง, ซ่อน | ทั้งหมด         |
 
 ### ตัวอย่าง Query:
 
@@ -240,10 +243,10 @@ if (dateFilter) {
 <input type="file" accept="image/jpeg,image/png" capture="environment">
 ```
 
-| Attribute | ค่า | คำอธิบาย |
-|-----------|-----|----------|
-| `accept` | `image/jpeg,image/png` | รับเฉพาะ JPEG/PNG (ไม่รับ HEIC) |
-| `capture` | `environment` | ใช้กล้องหลัง (ถ่ายหน้าบ้าน, เลขสัญญา) |
+| Attribute   | ค่า                   | คำอธิบาย                                                      |
+| ----------- | ------------------------ | --------------------------------------------------------------------- |
+| `accept`  | `image/jpeg,image/png` | รับเฉพาะ JPEG/PNG (ไม่รับ HEIC)                         |
+| `capture` | `environment`          | ใช้กล้องหลัง (ถ่ายหน้าบ้าน, เลขสัญญา) |
 
 **หมายเหตุ**: เมื่อใช้ `capture` บน iPhone/Android Browser จะแปลงเป็น JPEG อัตโนมัติ ไม่มีปัญหา HEIC
 
@@ -284,12 +287,12 @@ checkins/{year}/{month}/{checkinId}/contract.jpg
 
 **ขีดจำกัดแบบใช้ฟรี (Free Tier):**
 
-| ทรัพยากร  | ขีดจำกัด    | การใช้งานที่ปลอดภัย |
-| --------- | ----------- | ------------------- |
-| Storage   | 10 GB       | 1 GB/เดือน          |
-| Writes    | 20K/วัน     | 500/วัน             |
-| Reads     | 50K/วัน     | 5K/วัน              |
-| Downloads | 10 GB/เดือน | 5 GB/เดือน          |
+| ทรัพยากร | ขีดจำกัด | การใช้งานที่ปลอดภัย |
+| ---------------- | ---------------- | -------------------------------------- |
+| Storage          | 10 GB            | 1 GB/เดือน                        |
+| Writes           | 20K/วัน       | 500/วัน                             |
+| Reads            | 50K/วัน       | 5K/วัน                              |
+| Downloads        | 10 GB/เดือน | 5 GB/เดือน                        |
 
 ### สำหรับการ Check-in 2,500 ครั้ง/เดือน (~83 ครั้ง/วัน):
 
@@ -308,11 +311,11 @@ checkins/{year}/{month}/{checkinId}/contract.jpg
 
 ## 🔐 กฎข้อที่ 9: บทบาทผู้ใช้ (User Roles)
 
-| บทบาท     | การเข้าถึง     | สิทธิ์การใช้งาน                              |
-| --------- | -------------- | -------------------------------------------- |
-| **TEAM**  | มือถือเท่านั้น | Check-in, ดูประวัติของตัวเอง                 |
-| **ADMIN** | คอมพิวเตอร์    | ดูทั้งหมด, กรองข้อมูล, Export, ซ่อน/แสดงหมุด |
-| **OWNER** | เต็มรูปแบบ     | ทำได้ทุกอย่าง + ตั้งค่าระบบ, ลบข้อมูล        |
+| บทบาท      | การเข้าถึง         | สิทธิ์การใช้งาน                                              |
+| --------------- | ---------------------------- | --------------------------------------------------------------------------- |
+| **TEAM**  | มือถือเท่านั้น | Check-in, ดูประวัติของตัวเอง                              |
+| **ADMIN** | คอมพิวเตอร์       | ดูทั้งหมด, กรองข้อมูล, Export, ซ่อน/แสดงหมุด |
+| **OWNER** | เต็มรูปแบบ         | ทำได้ทุกอย่าง + ตั้งค่าระบบ, ลบข้อมูล       |
 
 ---
 
@@ -320,12 +323,12 @@ checkins/{year}/{month}/{checkinId}/contract.jpg
 
 **เป้าหมาย: ทีมภาคสนามใช้งานบนมือถือ (Android/iOS)**
 
-| รายละเอียด           | ค่าที่กำหนด  |
-| -------------------- | ------------ |
-| ขนาดจุดสัมผัสขั้นต่ำ | 44x44px      |
-| ขนาดตัวอักษร         | 14-18px      |
-| ความสูงปุ่ม          | ขั้นต่ำ 48px |
-| ระยะห่าง (Padding)   | 12-16px      |
+| รายละเอียด                     | ค่าที่กำหนด |
+| ---------------------------------------- | ---------------------- |
+| ขนาดจุดสัมผัสขั้นต่ำ | 44x44px                |
+| ขนาดตัวอักษร                 | 14-18px                |
+| ความสูงปุ่ม                   | ขั้นต่ำ 48px    |
+| ระยะห่าง (Padding)               | 12-16px                |
 
 ### ฟีเจอร์ที่จำเป็น:
 
@@ -425,16 +428,16 @@ Bait Check-In Webapp/
 
 **หลักการจัดเก็บไฟล์:**
 
-| ประเภท | ที่เก็บ | หมายเหตุ |
-|--------|---------|----------|
-| หน้าหลัก (Main Pages) | `/` (root) | index, mobile, desktop |
-| หน้าเสริม | `/pages/` | logo-showcase, etc. |
-| หน้าทดสอบ | `/pages/test/` | test-*, compress-* |
-| โค้ด JavaScript | `/src/` | firebase-config, shared code |
-| Firebase Rules | `/firebase/` | firestore.rules, storage.rules |
-| เอกสาร | `/docs/` | diagrams, guides |
-| รูปภาพ | `/image/` | screenshots, assets |
-| ไฟล์ลับ | `/secrets/` | API keys (ห้าม commit) |
+| ประเภท                  | ที่เก็บ   | หมายเหตุ               |
+| ----------------------------- | ---------------- | ------------------------------ |
+| หน้าหลัก (Main Pages) | `/` (root)     | index, mobile, desktop         |
+| หน้าเสริม            | `/pages/`      | logo-showcase, etc.            |
+| หน้าทดสอบ            | `/pages/test/` | test-*, compress-*           |
+| โค้ด JavaScript           | `/src/`        | firebase-config, shared code   |
+| Firebase Rules                | `/firebase/`   | firestore.rules, storage.rules |
+| เอกสาร                  | `/docs/`       | diagrams, guides               |
+| รูปภาพ                  | `/image/`      | screenshots, assets            |
+| ไฟล์ลับ                | `/secrets/`    | API keys (ห้าม commit)     |
 
 **กฎการตั้งชื่อไฟล์:**
 
@@ -499,11 +502,13 @@ formatThaiDate(timestamp); // Returns "22-01-2026"
 ```markdown
 ✅ ```javascript
    const x = 5;
-   ```
+```
 
 ❌ ```
    const x = 5;
-   ```
+
+```
+
 ```
 
 ### ✅ Blank Lines รอบ Items
@@ -558,17 +563,18 @@ Paragraph 2 (มี 1 บรรทัดว่าง)
 ### 🔧 วิธีตรวจสอบ Markdown Errors
 
 1. **ใช้ Markdownlint Extension ใน VS Code**
+
    - ติดตั้ง "markdownlint" extension
    - จะแสดง errors สีแดง ขณะพิมพ์
-
 2. **รัน Check ด้วย Terminal**
+
    ```bash
    npm install -g markdownlint-cli
    markdownlint "*.md"
    markdownlint "docs/*.md"
    ```
-
 3. **ก่อน Commit ต้อง Check**
+
    - ดูแถบ "Problems" ใน VS Code
    - Fix ทั้งหมด ก่อน commit
 
@@ -602,7 +608,7 @@ test.describe('Feature Name', () => {
   test('should do X', async ({ page }) => {
     // Action
     await page.locator('[data-test="btn"]').click();
-    
+  
     // Assertion
     await expect(page.locator('[data-test="result"]')).toBeVisible();
   });
@@ -682,13 +688,13 @@ expect: {
 
 ### 🚫 Common Mistakes to Avoid
 
-| ❌ ผิด | ✅ ถูก | เหตุผล |
-| --- | --- | --- |
-| `page.locator('.btn').click()` | `page.locator('[data-test="btn"]').click()` | Class อาจเปลี่ยน |
-| `page.waitForTimeout(5000)` | `await expect(page.locator('[data-test="result"]')).toBeVisible()` | รอ element ไม่ใช่เวลา |
-| `test('test', () => {})` | `test('should do X', () => {})` | ชื่อต้องเป็นประโยค |
-| Tests ต่อเนื่อง | Tests อิสระ | แต่ละ test ต้องรันได้เฉพาะตัว |
-| ไม่มี assertions | มี assertions | ต้องตรวจสอบผลลัพธ์ |
+| ❌ ผิด                        | ✅ ถูก                                                            | เหตุผล                                         |
+| -------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------- |
+| `page.locator('.btn').click()` | `page.locator('[data-test="btn"]').click()`                        | Class อาจเปลี่ยน                           |
+| `page.waitForTimeout(5000)`    | `await expect(page.locator('[data-test="result"]')).toBeVisible()` | รอ element ไม่ใช่เวลา                    |
+| `test('test', () => {})`       | `test('should do X', () => {})`                                    | ชื่อต้องเป็นประโยค                 |
+| Tests ต่อเนื่อง         | Tests อิสระ                                                     | แต่ละ test ต้องรันได้เฉพาะตัว |
+| ไม่มี assertions            | มี assertions                                                      | ต้องตรวจสอบผลลัพธ์                 |
 
 ---
 
@@ -708,11 +714,11 @@ playwright.config.js          # Configuration
 
 **2. ไฟล์ที่ต้องสร้าง:**
 
-| ไฟล์ | เมื่อไหร่ | หมายเหตุ |
-| --- | --- | --- |
-| `playwright.config.js` | ถ้ายังไม่มี | ตั้งค่า Playwright |
-| `package.json` | ถ้ายังไม่มี | เพิ่ม scripts & deps |
-| `tests/*.spec.js` | ทุกครั้ง | Tests สำหรับ feature |
+| ไฟล์                 | เมื่อไหร่     | หมายเหตุ           |
+| ------------------------ | ---------------------- | -------------------------- |
+| `playwright.config.js` | ถ้ายังไม่มี | ตั้งค่า Playwright  |
+| `package.json`         | ถ้ายังไม่มี | เพิ่ม scripts & deps  |
+| `tests/*.spec.js`      | ทุกครั้ง       | Tests สำหรับ feature |
 
 **3. playwright.config.js Template:**
 
@@ -766,15 +772,15 @@ module.exports = defineConfig({
 
 **Naming Convention สำหรับ data-test:**
 
-| ประเภท | รูปแบบ | ตัวอย่าง |
-| --- | --- | --- |
-| Button | `{action}-btn` | `submit-btn`, `cancel-btn` |
-| Input | `{field}-input` | `email-input`, `name-input` |
-| Select | `{field}-select` | `team-select`, `branch-select` |
-| Container | `{name}-container` | `map-container`, `form-container` |
-| Table | `{name}-table` | `checkin-table`, `data-table` |
-| Modal | `{name}-modal` | `confirm-modal`, `team-modal` |
-| Message | `{type}-msg` | `success-msg`, `error-msg` |
+| ประเภท | รูปแบบ         | ตัวอย่าง                      |
+| ------------ | -------------------- | ------------------------------------- |
+| Button       | `{action}-btn`     | `submit-btn`, `cancel-btn`        |
+| Input        | `{field}-input`    | `email-input`, `name-input`       |
+| Select       | `{field}-select`   | `team-select`, `branch-select`    |
+| Container    | `{name}-container` | `map-container`, `form-container` |
+| Table        | `{name}-table`     | `checkin-table`, `data-table`     |
+| Modal        | `{name}-modal`     | `confirm-modal`, `team-modal`     |
+| Message      | `{type}-msg`       | `success-msg`, `error-msg`        |
 
 ### ✅ เมื่อสร้าง Test File ใหม่
 
@@ -809,11 +815,11 @@ test.describe('Feature Name', () => {
 
 ### 🚫 สิ่งที่ต้องหลีกเลี่ยง
 
-| ❌ ห้ามทำ | ✅ ทำแทน |
-| --- | --- |
+| ❌ ห้ามทำ                            | ✅ ทำแทน                                   |
+| ------------------------------------------ | ----------------------------------------------- |
 | สร้าง HTML โดยไม่มี data-test | เพิ่ม data-test ทุก interactive element |
-| ใช้ class/id เป็น selectors | ใช้ data-test attributes |
-| สร้าง feature โดยไม่มี tests | เขียน tests ควบคู่กับ feature |
+| ใช้ class/id เป็น selectors         | ใช้ data-test attributes                     |
+| สร้าง feature โดยไม่มี tests  | เขียน tests ควบคู่กับ feature     |
 
 ---
 
@@ -859,11 +865,11 @@ npm run lint:md
 
 ### Summary Table
 
-| ปัญหา | วิธีป้องกัน | ไฟล์ที่เกี่ยวข้อง |
-| --- | --- | --- |
-| Markdown errors | ตรวจสอบก่อน commit | *.md files |
-| Missing selectors | เพิ่ม data-test | *.html files |
-| Test failures | เขียน tests ครบ | tests/*.spec.js |
+| ปัญหา        | วิธีป้องกัน        | ไฟล์ที่เกี่ยวข้อง |
+| ----------------- | ----------------------------- | ---------------------------------- |
+| Markdown errors   | ตรวจสอบก่อน commit | *.md files                         |
+| Missing selectors | เพิ่ม data-test          | *.html files                       |
+| Test failures     | เขียน tests ครบ       | tests/*.spec.js                    |
 
 ---
 
@@ -942,13 +948,13 @@ npm run lint:md
 
 ### ✅ เมื่อต้องสร้าง/อัพเดทรายงาน
 
-| สถานการณ์ | Action |
-| --- | --- |
-| รัน Playwright ครั้งแรก | สร้างไฟล์ `Test report by Playwright.md` |
-| พบปัญหาใหม่ | เพิ่ม Issue ใหม่ในรายงาน |
-| แก้ไขปัญหาสำเร็จ | อัพเดท สถานะ → ✅ แก้ไขแล้ว |
-| ปัญหาทั้งหมดแก้แล้ว | ย้ายไป section "Resolved" |
-| รันทดสอบซ้ำ | อัพเดท Test Run History |
+| สถานการณ์                     | Action                                             |
+| -------------------------------------- | -------------------------------------------------- |
+| รัน Playwright ครั้งแรก     | สร้างไฟล์`Test report by Playwright.md` |
+| พบปัญหาใหม่                 | เพิ่ม Issue ใหม่ในรายงาน          |
+| แก้ไขปัญหาสำเร็จ       | อัพเดท สถานะ → ✅ แก้ไขแล้ว   |
+| ปัญหาทั้งหมดแก้แล้ว | ย้ายไป section "Resolved"                    |
+| รันทดสอบซ้ำ                 | อัพเดท Test Run History                      |
 
 ### ✅ ข้อมูลที่ต้องบันทึก
 
@@ -975,12 +981,12 @@ npm run lint:md
 
 ### 🚫 สิ่งที่ห้ามทำ
 
-| ❌ ห้าม | ✅ ทำแทน |
-| --- | --- |
-| ไม่บันทึกปัญหา | สร้างรายงานทุกครั้งที่พบปัญหา |
-| ลืมอัพเดทสถานะ | อัพเดททันทีเมื่อแก้ไขเสร็จ |
-| ไม่ระบุวันที่ | ใส่วันที่ทุกครั้ง (DD-MM-YYYY) |
-| ไม่อธิบายสาเหตุ | อธิบายสาเหตุและวิธีแก้ชัดเจน |
+| ❌ ห้าม                    | ✅ ทำแทน                                              |
+| ------------------------------ | ---------------------------------------------------------- |
+| ไม่บันทึกปัญหา   | สร้างรายงานทุกครั้งที่พบปัญหา |
+| ลืมอัพเดทสถานะ   | อัพเดททันทีเมื่อแก้ไขเสร็จ       |
+| ไม่ระบุวันที่     | ใส่วันที่ทุกครั้ง (DD-MM-YYYY)            |
+| ไม่อธิบายสาเหตุ | อธิบายสาเหตุและวิธีแก้ชัดเจน   |
 
 ---
 
@@ -990,13 +996,13 @@ npm run lint:md
 
 ### 🚨 สิ่งที่ห้ามทำ (NEVER DO)
 
-| ❌ ห้ามเด็ดขาด | ⚠️ ความเสี่ยง |
-| --- | --- |
-| Hardcode API Keys ใน HTML/JS | Key รั่วไหล ถูกใช้งานโดยผู้ไม่หวังดี |
-| Commit ไฟล์ `src/config.js` | Firebase/Longdo API exposed |
-| แสดง Production URLs ใน code | ถูก scrape หรือโจมตี |
-| Commit ไฟล์ใน `secrets/` | ข้อมูลลับรั่วไหล |
-| เขียน credentials ใน comments | Git history เก็บตลอดไป |
+| ❌ ห้ามเด็ดขาด            | ⚠️ ความเสี่ยง                                           |
+| ------------------------------------ | ------------------------------------------------------------------- |
+| Hardcode API Keys ใน HTML/JS       | Key รั่วไหล ถูกใช้งานโดยผู้ไม่หวังดี |
+| Commit ไฟล์`src/config.js`     | Firebase/Longdo API exposed                                         |
+| แสดง Production URLs ใน code   | ถูก scrape หรือโจมตี                                    |
+| Commit ไฟล์ใน `secrets/`     | ข้อมูลลับรั่วไหล                                    |
+| เขียน credentials ใน comments | Git history เก็บตลอดไป                                    |
 
 ### ✅ สิ่งที่ต้องทำเสมอ
 
@@ -1041,12 +1047,12 @@ deploy-history.log
 
 ### 📁 ไฟล์ที่ต้อง Protect
 
-| ไฟล์/โฟลเดอร์ | เหตุผล | สถานะ |
-| --- | --- | --- |
-| `src/config.js` | API Keys ทั้งหมด | 🔒 gitignored |
-| `secrets/` | Firebase SDK, API Keys | 🔒 gitignored |
-| `deploy-history.log` | Production info | 🔒 gitignored |
-| `.env` | Environment variables | 🔒 gitignored |
+| ไฟล์/โฟลเดอร์ | เหตุผล            | สถานะ    |
+| ------------------------- | ----------------------- | ------------- |
+| `src/config.js`         | API Keys ทั้งหมด | 🔒 gitignored |
+| `secrets/`              | Firebase SDK, API Keys  | 🔒 gitignored |
+| `deploy-history.log`    | Production info         | 🔒 gitignored |
+| `.env`                  | Environment variables   | 🔒 gitignored |
 
 ### 🚀 เมื่อต้องเพิ่ม API Key ใหม่
 
@@ -1108,14 +1114,14 @@ Bait Check-In Webapp/
 
 ### 🗑️ ไฟล์ที่ต้องลบ/ไม่ควรมี
 
-| ไฟล์ | เหตุผล |
-| --- | --- |
-| `*.log` (ยกเว้น gitignored) | ไม่ควร commit logs |
-| `Test report by Cypress.md` | ใช้ Playwright แล้ว |
-| `docs/cypress-guide.md` | ไม่ใช้ Cypress แล้ว |
-| `docs/CYPRESS-QUICKSTART.md` | ไม่ใช้ Cypress แล้ว |
-| `desktop.ini` | Windows system file |
-| `bughunt-user-review.md` | ไฟล์ชั่วคราว |
+| ไฟล์                            | เหตุผล                  |
+| ----------------------------------- | ----------------------------- |
+| `*.log` (ยกเว้น gitignored) | ไม่ควร commit logs      |
+| `Test report by Cypress.md`       | ใช้ Playwright แล้ว    |
+| `docs/cypress-guide.md`           | ไม่ใช้ Cypress แล้ว |
+| `docs/CYPRESS-QUICKSTART.md`      | ไม่ใช้ Cypress แล้ว |
+| `desktop.ini`                     | Windows system file           |
+| `bughunt-user-review.md`          | ไฟล์ชั่วคราว      |
 
 ### ✅ การจัดระเบียบ
 
@@ -1153,4 +1159,3 @@ Bait Check-In Webapp/
 
 **อัปเดตล่าสุด:** 01-02-2026, 19:00 น.
 **เวอร์ชัน:** V.1.9.0 (01-02-2026) - เพิ่มกฎ Security และ File Organization
-

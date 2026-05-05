@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "firebase-firestore": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-firestore/SKILL.md",
+      "computedHash": "49c006657db7ef1cbf6af6eb8d49c16a5a3ca7806c52e894ce0b3918d4a58ea3"
+    },
+    "pwa-development": {
+      "source": "jwynia/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/tech/frontend/pwa/pwa-development/SKILL.md",
+      "computedHash": "c4de3b66fce25c77649a4bbe4b2713869521877aa19a0dc3d9f40b4eb552e7db"
+    }
+  }
+}

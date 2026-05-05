@@ -1087,6 +1087,178 @@
         .toast.info { border-left-color: var(--accent); }
         .toast i { color: var(--text-secondary); }
         .toast .msg { flex: 1; font-size: 0.9rem; }
+
+        /* ===== Work Session Card ===== */
+        .work-session-card {
+            background: rgba(255,255,255,0.97);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(14,165,233,0.12);
+            margin-bottom: 18px;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        .work-session-card.ws-working {
+            border-left: 4px solid var(--success);
+            background: rgba(240,253,244,0.97);
+        }
+        .work-session-card.ws-traveling {
+            border-left: 4px solid #8b5cf6;
+            background: rgba(245,243,255,0.97);
+        }
+        .work-session-card.ws-done {
+            border-left: 4px solid #94a3b8;
+        }
+        .ws-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 8px;
+        }
+        .ws-title-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .ws-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+        .ws-icon.blue  { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+        .ws-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .ws-icon.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .ws-icon.gray  { background: linear-gradient(135deg, #94a3b8, #64748b); }
+        .ws-title-text { font-size: 15px; font-weight: 600; color: #1e293b; line-height: 1.2; }
+        .ws-title-date { font-size: 11px; color: #64748b; margin-top: 2px; }
+        .ws-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        .ws-chip.gray  { background: #f1f5f9; color: #64748b; }
+        .ws-chip.green { background: #dcfce7; color: #15803d; }
+        .ws-chip.purple { background: #ede9fe; color: #7c3aed; }
+        .ws-chip.done  { background: #f1f5f9; color: #64748b; }
+        .ws-pulse {
+            width: 8px; height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: wsPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes wsPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.55; transform: scale(1.35); }
+        }
+        .ws-info-rows { margin: 10px 0 4px; display: flex; flex-direction: column; gap: 7px; }
+        .ws-info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #475569;
+        }
+        .ws-info-icon { color: var(--primary); width: 16px; flex-shrink: 0; margin-top: 2px; font-size: 13px; }
+        .ws-timer-box {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            text-align: center;
+        }
+        .ws-timer-label { font-size: 10px; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+        .ws-timer-value {
+            font-size: 38px;
+            font-weight: 700;
+            color: #10b981;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+            line-height: 1;
+        }
+        .ws-timer-value.traveling { color: #a78bfa; }
+        .ws-sep { height: 1px; background: #e2e8f0; margin: 14px 0; }
+        .ws-btn-start {
+            width: 100%; height: 58px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none; border-radius: 16px;
+            color: white; font-family: 'Prompt', sans-serif;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
+            margin-top: 14px;
+            box-shadow: 0 6px 20px rgba(16,185,129,0.38);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .ws-btn-start:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(16,185,129,0.44); }
+        .ws-btn-start:active { transform: translateY(0); }
+        .ws-btn-lastjob {
+            width: 100%; height: 58px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none; border-radius: 16px;
+            color: white; font-family: 'Prompt', sans-serif;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 6px 20px rgba(245,158,11,0.38);
+            transition: transform 0.15s;
+        }
+        .ws-btn-lastjob:hover { transform: translateY(-2px); }
+        .ws-btn-arrival {
+            width: 100%; height: 58px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border: none; border-radius: 16px;
+            color: white; font-family: 'Prompt', sans-serif;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 6px 20px rgba(139,92,246,0.38);
+            transition: transform 0.15s;
+        }
+        .ws-btn-arrival:hover { transform: translateY(-2px); }
+        .ws-btn-icon { font-size: 22px; }
+        .ws-btn-text { display: flex; flex-direction: column; align-items: flex-start; }
+        .ws-btn-main { font-size: 16px; font-weight: 600; line-height: 1.2; }
+        .ws-btn-sub  { font-size: 11px; font-weight: 400; opacity: 0.85; }
+        .ws-hint { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 10px; }
+        .ws-cancel-link { display: block; text-align: center; margin-top: 10px; font-size: 12px; color: #94a3b8; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+        .ws-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+        .ws-sum-item { background: #f8fafc; border-radius: 12px; padding: 10px 12px; }
+        .ws-sum-emoji { font-size: 15px; margin-bottom: 3px; }
+        .ws-sum-label { font-size: 10.5px; color: #94a3b8; margin-bottom: 2px; }
+        .ws-sum-value { font-size: 13px; font-weight: 600; color: #1e293b; }
+        .ws-count-badge {
+            background: #eff6ff; border: 1px solid #bfdbfe;
+            border-radius: 12px; padding: 9px 14px;
+            font-size: 13px; color: #1d4ed8; font-weight: 500;
+            text-align: center; margin-bottom: 12px;
+        }
+        .ws-edit-note { font-size: 11px; color: #94a3b8; font-style: italic; text-align: center; }
+        /* Checkin button disabled state */
+        .checkin-btn.ws-disabled {
+            background: #e2e8f0 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
+            pointer-events: none;
+        }
+        .ws-checkin-warning {
+            display: none;
+            margin-top: 12px;
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: #92400e;
+            text-align: center;
+        }
+        .ws-checkin-warning.visible { display: flex; align-items: center; justify-content: center; gap: 6px; }
     </style>
 </head>
 <body>
@@ -1135,6 +1307,164 @@
             <div class="main-content" id="checkinView">
                 <!-- Removed Team Selector (Moved to Login) -->
 
+            <!-- ===== Work Session Card ===== -->
+            <div id="workSessionCard" class="work-session-card" data-test="work-session-card">
+
+                <!-- STATE 1: ยังไม่เริ่มงาน -->
+                <div id="wsState1">
+                    <div class="ws-title-row">
+                        <div class="ws-title-left">
+                            <div class="ws-icon blue"><i class="fas fa-briefcase"></i></div>
+                            <div>
+                                <div class="ws-title-text">วันทำงานวันนี้</div>
+                                <div class="ws-title-date" id="wsTitleDate">05-05-2026</div>
+                            </div>
+                        </div>
+                        <span class="ws-chip gray"><i class="far fa-circle" style="font-size:9px;"></i> ยังไม่เริ่ม</span>
+                    </div>
+                    <button class="ws-btn-start" data-test="ws-start-btn" onclick="wsStartWork()">
+                        <span class="ws-btn-icon"><i class="fas fa-play-circle"></i></span>
+                        <div class="ws-btn-text">
+                            <span class="ws-btn-main">เริ่มงาน</span>
+                            <span class="ws-btn-sub">บันทึกจุดเริ่มต้นของวัน</span>
+                        </div>
+                    </button>
+                    <p class="ws-hint"><i class="fas fa-circle-info" style="color:#38bdf8;margin-right:4px;"></i>กดเริ่มงานก่อนออกปฏิบัติงาน</p>
+                </div>
+
+                <!-- STATE 2: กำลังทำงาน -->
+                <div id="wsState2" style="display:none;">
+                    <div class="ws-title-row">
+                        <div class="ws-title-left">
+                            <div class="ws-icon green"><i class="fas fa-person-walking"></i></div>
+                            <div>
+                                <div class="ws-title-text">วันทำงานวันนี้</div>
+                                <div class="ws-title-date" id="wsTitleDate2"></div>
+                            </div>
+                        </div>
+                        <span class="ws-chip green"><span class="ws-pulse"></span> กำลังทำงาน</span>
+                    </div>
+                    <div class="ws-info-rows">
+                        <div class="ws-info-row">
+                            <i class="far fa-clock ws-info-icon"></i>
+                            <span><strong>เริ่มงาน:</strong> <span id="wsStartTimeDisplay">--:-- น.</span></span>
+                        </div>
+                        <div class="ws-info-row">
+                            <i class="fas fa-location-dot ws-info-icon"></i>
+                            <span id="wsStartAddrDisplay" style="font-size:12px;">กำลังรอพิกัด...</span>
+                        </div>
+                    </div>
+                    <div class="ws-timer-box">
+                        <div class="ws-timer-label">⏱ เวลาทำงานสะสม</div>
+                        <div class="ws-timer-value" id="wsWorkTimer">00:00:00</div>
+                    </div>
+                    <div class="ws-sep"></div>
+                    <button class="ws-btn-lastjob" data-test="ws-lastjob-btn" onclick="wsLastJob()">
+                        <span class="ws-btn-icon"><i class="fas fa-flag-checkered"></i></span>
+                        <div class="ws-btn-text">
+                            <span class="ws-btn-main">เสร็จงานสุดท้าย</span>
+                            <span class="ws-btn-sub">บันทึกจุดสิ้นสุดงานล่าสุด</span>
+                        </div>
+                    </button>
+                    <a class="ws-cancel-link" data-test="ws-cancel-link" onclick="wsCancelStart()">ยกเลิก (กรณีกดผิด)</a>
+                </div>
+
+                <!-- STATE 3: กำลังเดินทางกลับ -->
+                <div id="wsState3" style="display:none;">
+                    <div class="ws-title-row">
+                        <div class="ws-title-left">
+                            <div class="ws-icon purple"><i class="fas fa-car-side"></i></div>
+                            <div>
+                                <div class="ws-title-text">กำลังเดินทางกลับ</div>
+                                <div class="ws-title-date" id="wsTitleDate3"></div>
+                            </div>
+                        </div>
+                        <span class="ws-chip purple"><span class="ws-pulse" style="background:#8b5cf6;"></span> เดินทาง</span>
+                    </div>
+                    <div class="ws-info-rows">
+                        <div class="ws-info-row">
+                            <i class="fas fa-flag-checkered ws-info-icon" style="color:#f59e0b;"></i>
+                            <span><strong>งานสุดท้าย:</strong> <span id="wsLastJobTimeDisplay">--:-- น.</span></span>
+                        </div>
+                        <div class="ws-info-row">
+                            <i class="fas fa-location-dot ws-info-icon" style="color:#f59e0b;"></i>
+                            <span id="wsLastJobAddrDisplay" style="font-size:12px;">กำลังรอพิกัด...</span>
+                        </div>
+                    </div>
+                    <div class="ws-timer-box">
+                        <div class="ws-timer-label">🚗 เวลาเดินทางกลับ</div>
+                        <div class="ws-timer-value traveling" id="wsTravelTimer">00:00:00</div>
+                    </div>
+                    <div class="ws-sep"></div>
+                    <button class="ws-btn-arrival" data-test="ws-arrival-btn" onclick="wsArrived()">
+                        <span class="ws-btn-icon"><i class="fas fa-house-chimney-crack"></i></span>
+                        <div class="ws-btn-text">
+                            <span class="ws-btn-main">ถึงที่พัก</span>
+                            <span class="ws-btn-sub">บันทึกจุดสิ้นสุดของวัน</span>
+                        </div>
+                    </button>
+                    <a class="ws-cancel-link" data-test="ws-cancel-lastjob-link" onclick="wsCancelLastJob()">ยกเลิก (กรณีกดผิด)</a>
+                </div>
+
+                <!-- STATE 4: เสร็จสมบูรณ์ -->
+                <div id="wsState4" style="display:none;">
+                    <div class="ws-title-row">
+                        <div class="ws-title-left">
+                            <div class="ws-icon gray"><i class="fas fa-circle-check"></i></div>
+                            <div>
+                                <div class="ws-title-text">สรุปวันทำงาน</div>
+                                <div class="ws-title-date" id="wsTitleDate4"></div>
+                            </div>
+                        </div>
+                        <span class="ws-chip done"><i class="fas fa-circle-check" style="font-size:9px;color:#10b981;"></i> เสร็จแล้ว</span>
+                    </div>
+                    <div class="ws-summary-grid">
+                        <div class="ws-sum-item">
+                            <div class="ws-sum-emoji">🟢</div>
+                            <div class="ws-sum-label">เริ่มงาน</div>
+                            <div class="ws-sum-value" id="wsSumStart">--:--</div>
+                        </div>
+                        <div class="ws-sum-item">
+                            <div class="ws-sum-emoji">🟠</div>
+                            <div class="ws-sum-label">งานสุดท้าย</div>
+                            <div class="ws-sum-value" id="wsSumLastJob">--:--</div>
+                        </div>
+                        <div class="ws-sum-item">
+                            <div class="ws-sum-emoji">🟣</div>
+                            <div class="ws-sum-label">ถึงที่พัก</div>
+                            <div class="ws-sum-value" id="wsSumArrival">--:--</div>
+                        </div>
+                        <div class="ws-sum-item">
+                            <div class="ws-sum-emoji">⏱</div>
+                            <div class="ws-sum-label">รวมทำงาน</div>
+                            <div class="ws-sum-value" id="wsSumDuration">--</div>
+                        </div>
+                        <div class="ws-sum-item">
+                            <div class="ws-sum-emoji">�</div>
+                            <div class="ws-sum-label">ก→ข (ออก→งาน)</div>
+                            <div class="ws-sum-value" id="wsSumWorkDist">-- กม.</div>
+                        </div>
+                        <div class="ws-sum-item">
+                            <div class="ws-sum-emoji">🚗</div>
+                            <div class="ws-sum-label">ข→ค (งาน→บ้าน)</div>
+                            <div class="ws-sum-value" id="wsSumTravelTime">--</div>
+                        </div>
+                        <div class="ws-sum-item" style="grid-column: 1 / -1;">
+                            <div class="ws-sum-emoji">🛣️</div>
+                            <div class="ws-sum-label">ระยะทางกลับบ้าน</div>
+                            <div class="ws-sum-value" id="wsSumDistance">-- กม.</div>
+                        </div>
+                    </div>
+                    <div class="ws-count-badge" id="wsSumCheckinCount">
+                        <i class="fas fa-check-double" style="margin-right:6px;"></i>
+                        วันนี้ Check-in แล้ว <strong id="wsSumCheckinNum">0</strong> ครั้ง
+                    </div>
+                    <p class="ws-edit-note"><i class="fas fa-circle-info" style="margin-right:4px;"></i>หากต้องการแก้ไข กรุณาติดต่อผู้ดูแลระบบ</p>
+                </div>
+
+            </div>
+            <!-- ===== /Work Session Card ===== -->
+
             <!-- Quick Select Alert (Pre-Schedule Feature - Mockup) -->
             <div id="quickSelectAlert" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; margin-bottom: 15px; border-radius: 12px; margin: 10px 15px 15px 15px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
@@ -1160,8 +1490,6 @@
                         <label><i class="fas fa-file-contract"></i> เลขที่สัญญา <span class="required">*</span></label>
                         <div style="display: flex; gap: 6px;">
                             <select id="contractPrefix" data-test="contract-prefix" style="cursor: pointer; flex: 0 0 auto; width: 80px; padding: 14px 8px;">
-                                <option value="CT21-">CT21-</option>
-                                <option value="CT22-">CT22-</option>
                                 <option value="CT23-">CT23-</option>
                                 <option value="CT24-">CT24-</option>
                                 <option value="CT25-">CT25-</option>
@@ -1240,11 +1568,14 @@
 
                 <!-- Check-in Button (Moved below inputs) -->
                 <div class="checkin-section">
-                    <button class="checkin-btn" id="checkinBtn" data-test="checkin-btn" onclick="toggleCheckin()">
+                    <button class="checkin-btn ws-disabled" id="checkinBtn" data-test="checkin-btn" onclick="toggleCheckin()">
                         <i class="fas fa-map-pin"></i>
                         <span id="btnText">CHECK IN</span>
                     </button>
-                    <div class="status-badge pending" id="statusBadge" data-test="status-badge">
+                    <div class="ws-checkin-warning visible" id="wsCheckinWarning">
+                        <i class="fas fa-triangle-exclamation"></i> กรุณาเริ่มงานก่อน Check-in
+                    </div>
+                    <div class="status-badge pending" id="statusBadge" data-test="status-badge" style="display:none;">
                         <i class="fas fa-clock"></i>
                         <span>ยังไม่ได้ Check-in</span>
                     </div>
@@ -1727,6 +2058,8 @@
             // Switch Views
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('appPage').style.display = 'flex';
+            // Init work session
+            initWorkSession();
         }
 
         function confirmLogout() {
@@ -2968,6 +3301,435 @@
                 toast.remove();
             }, 3000);
         }
+
+        // ============================================================
+        // ===== WORK SESSION SYSTEM =====
+        // ============================================================
+
+        // State: null | { status, startTime, startLocation, lastJobTime, lastJobLocation, arrivalTime, arrivalLocation, docId }
+        let workSession = null;
+        let wsTimerHandle = null;
+
+        const WS_STATUS = { NONE: 'none', STARTED: 'started', LAST_DONE: 'last_done', ARRIVED: 'arrived' };
+
+        function wsTodayKey() {
+            const now = new Date();
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const yyyy = now.getFullYear();
+            return `${dd}-${mm}-${yyyy}`;
+        }
+
+        function wsFormatTime(date) {
+            if (!date) return '--:--';
+            const d = date instanceof Date ? date : new Date(date);
+            return d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
+        }
+
+        function wsFormatDuration(startDate, endDate) {
+            if (!startDate || !endDate) return '--';
+            const diffMs = endDate - startDate;
+            const h = Math.floor(diffMs / 3600000);
+            const m = Math.floor((diffMs % 3600000) / 60000);
+            return (h > 0 ? h + ' ชม. ' : '') + m + ' นาที';
+        }
+
+        function wsPad2(n) { return String(n).padStart(2, '0'); }
+
+        function wsElapsedStr(fromDate) {
+            const diff = Math.floor((Date.now() - fromDate) / 1000);
+            return wsPad2(Math.floor(diff / 3600)) + ':' + wsPad2(Math.floor((diff % 3600) / 60)) + ':' + wsPad2(diff % 60);
+        }
+
+        function wsStopTimer() {
+            if (wsTimerHandle) { clearInterval(wsTimerHandle); wsTimerHandle = null; }
+        }
+
+        function wsStartTimer(elId, fromDate) {
+            wsStopTimer();
+            wsTimerHandle = setInterval(() => {
+                const el = document.getElementById(elId);
+                if (el) el.textContent = wsElapsedStr(fromDate);
+            }, 1000);
+        }
+
+        function wsShowState(n) {
+            [1, 2, 3, 4].forEach(i => {
+                const el = document.getElementById('wsState' + i);
+                if (el) el.style.display = (i === n) ? 'block' : 'none';
+            });
+            const card = document.getElementById('workSessionCard');
+            if (card) {
+                card.className = 'work-session-card';
+                if (n === 2) card.classList.add('ws-working');
+                if (n === 3) card.classList.add('ws-traveling');
+                if (n === 4) card.classList.add('ws-done');
+            }
+        }
+
+        function wsEnableCheckin(enabled) {
+            const btn = document.getElementById('checkinBtn');
+            const warning = document.getElementById('wsCheckinWarning');
+            const badge = document.getElementById('statusBadge');
+            if (!btn) return;
+            if (enabled) {
+                btn.classList.remove('ws-disabled');
+                if (warning) warning.classList.remove('visible');
+                if (badge) badge.style.display = '';
+            } else {
+                btn.classList.add('ws-disabled');
+                if (warning) warning.classList.add('visible');
+                if (badge) badge.style.display = 'none';
+            }
+        }
+
+        async function wsGetLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) { resolve({ lat: null, lng: null, address: '' }); return; }
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy: pos.coords.accuracy, address: currentLocation.address || '' }),
+                    () => resolve({ lat: currentLocation.lat, lng: currentLocation.lng, address: currentLocation.address || '' }),
+                    { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+                );
+            });
+        }
+
+        async function wsSaveToFirestore(data) {
+            try {
+                if (workSession && workSession.docId) {
+                    await db.collection('work_sessions').doc(workSession.docId).update({
+                        ...data,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } else {
+                    const ref = await db.collection('work_sessions').add({
+                        ...data,
+                        team: selectedTeam,
+                        date: wsTodayKey(),
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    if (!workSession) workSession = {};
+                    workSession.docId = ref.id;
+                }
+            } catch (e) {
+                console.error('Work session save error:', e);
+            }
+        }
+
+        function wsSaveLocal() {
+            if (workSession) localStorage.setItem('ws_session_' + selectedTeam, JSON.stringify(workSession));
+        }
+
+        function wsLoadLocal() {
+            try {
+                const raw = localStorage.getItem('ws_session_' + selectedTeam);
+                if (!raw) return null;
+                const s = JSON.parse(raw);
+                // Revive dates
+                ['startTime', 'lastJobTime', 'arrivalTime'].forEach(k => { if (s[k]) s[k] = new Date(s[k]); });
+                // Check if it's today
+                if (s.date !== wsTodayKey()) return null;
+                return s;
+            } catch (e) { return null; }
+        }
+
+        async function wsLoadFromFirestore() {
+            try {
+                const snap = await db.collection('work_sessions')
+                    .where('team', '==', selectedTeam)
+                    .where('date', '==', wsTodayKey())
+                    .limit(1).get();
+                if (snap.empty) return null;
+                const d = snap.docs[0].data();
+                return {
+                    docId: snap.docs[0].id,
+                    status: d.status || WS_STATUS.NONE,
+                    date: d.date,
+                    startTime: d.startTime ? new Date(d.startTime.seconds * 1000) : null,
+                    startLocation: d.startLocation || {},
+                    lastJobTime: d.lastJobTime ? new Date(d.lastJobTime.seconds * 1000) : null,
+                    lastJobLocation: d.lastJobLocation || {},
+                    arrivalTime: d.arrivalTime ? new Date(d.arrivalTime.seconds * 1000) : null,
+                    arrivalLocation: d.arrivalLocation || {},
+                };
+            } catch (e) { console.error('WS load error:', e); return null; }
+        }
+
+        function wsUpdateDateLabel() {
+            const label = wsTodayKey();
+            ['wsTitleDate', 'wsTitleDate2', 'wsTitleDate3', 'wsTitleDate4'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = label;
+            });
+        }
+
+        function wsRenderState() {
+            wsUpdateDateLabel();
+            if (!workSession || workSession.status === WS_STATUS.NONE) {
+                wsStopTimer();
+                wsShowState(1);
+                wsEnableCheckin(false);
+                return;
+            }
+            if (workSession.status === WS_STATUS.STARTED) {
+                wsShowState(2);
+                wsEnableCheckin(true);
+                // Fill info
+                const startEl = document.getElementById('wsStartTimeDisplay');
+                if (startEl) startEl.textContent = wsFormatTime(workSession.startTime);
+                const addrEl = document.getElementById('wsStartAddrDisplay');
+                if (addrEl) addrEl.textContent = workSession.startLocation.address || 'ไม่พบที่อยู่';
+                // Start timer
+                wsStartTimer('wsWorkTimer', workSession.startTime);
+                return;
+            }
+            if (workSession.status === WS_STATUS.LAST_DONE) {
+                wsShowState(3);
+                wsEnableCheckin(true);
+                const el = document.getElementById('wsLastJobTimeDisplay');
+                if (el) el.textContent = wsFormatTime(workSession.lastJobTime);
+                const addrEl = document.getElementById('wsLastJobAddrDisplay');
+                if (addrEl) addrEl.textContent = workSession.lastJobLocation.address || 'ไม่พบที่อยู่';
+                // Travel timer
+                wsStartTimer('wsTravelTimer', workSession.lastJobTime);
+                return;
+            }
+            if (workSession.status === WS_STATUS.ARRIVED) {
+                wsShowState(4);
+                wsEnableCheckin(true);
+                wsStopTimer();
+                // Fill summary
+                const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+                setEl('wsSumStart', wsFormatTime(workSession.startTime));
+                setEl('wsSumLastJob', wsFormatTime(workSession.lastJobTime));
+                setEl('wsSumArrival', wsFormatTime(workSession.arrivalTime));
+                setEl('wsSumDuration', wsFormatDuration(workSession.startTime, workSession.lastJobTime));
+                // ก→ข: ออกจากที่พัก → งานสุดท้าย
+                const wDist = workSession.workDistanceKm;
+                const wMin  = workSession.workDurationMin;
+                setEl('wsSumWorkDist', wDist != null
+                    ? wDist.toFixed(1) + ' กม.' + (wMin != null ? ' / ' + wMin + ' น.' : '')
+                    : 'ไม่มีข้อมูล GPS');
+                // ข→ค: งานสุดท้าย → ที่พัก
+                const tMin = workSession.travelDurationMin;
+                if (tMin != null) {
+                    const h = Math.floor(tMin / 60), m = tMin % 60;
+                    setEl('wsSumTravelTime', (h > 0 ? h + ' ชม. ' : '') + m + ' นาที');
+                } else {
+                    setEl('wsSumTravelTime', wsFormatDuration(workSession.lastJobTime, workSession.arrivalTime));
+                }
+                const dist = workSession.travelDistanceKm;
+                setEl('wsSumDistance', dist != null ? dist.toFixed(1) + ' กม. (ตามถนน)' : 'ไม่มีข้อมูล GPS');
+                // Count today checkins
+                wsCountTodayCheckins();
+            }
+        }
+
+        async function wsCountTodayCheckins() {
+            try {
+                const today = new Date();
+                const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+                const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+                const snap = await db.collection('checkins')
+                    .where('team', '==', selectedTeam)
+                    .where('checkinTime', '>=', firebase.firestore.Timestamp.fromDate(startOfDay))
+                    .where('checkinTime', '<=', firebase.firestore.Timestamp.fromDate(endOfDay))
+                    .get();
+                const el = document.getElementById('wsSumCheckinNum');
+                if (el) el.textContent = snap.size;
+            } catch (e) { /* silent */ }
+        }
+
+        function wsYesterdayKey() {
+            const y = new Date();
+            y.setDate(y.getDate() - 1);
+            const dd = String(y.getDate()).padStart(2, '0');
+            const mm = String(y.getMonth() + 1).padStart(2, '0');
+            return `${dd}-${mm}-${y.getFullYear()}`;
+        }
+
+        async function wsAutoCloseYesterday() {
+            // ถ้า session เมื่อวายังไม่กด "ถึงที่พัก" → ปิดอัตโนมัติ 23:59 น.
+            try {
+                const snap = await db.collection('work_sessions')
+                    .where('team', '==', selectedTeam)
+                    .where('date', '==', wsYesterdayKey())
+                    .limit(1).get();
+                if (snap.empty) return;
+                const doc = snap.docs[0];
+                const data = doc.data();
+                if (data.status === WS_STATUS.ARRIVED) return; // ปิดแล้ว ไม่ต้องทำอะไร
+                // สร้างเวลา 23:59:00 ของเมื่อวาน
+                const prevDate = new Date();
+                prevDate.setDate(prevDate.getDate() - 1);
+                const autoClose = new Date(prevDate.getFullYear(), prevDate.getMonth(), prevDate.getDate(), 23, 59, 0);
+                await doc.ref.update({
+                    status: WS_STATUS.ARRIVED,
+                    arrivalTime: firebase.firestore.Timestamp.fromDate(autoClose),
+                    arrivalLocation: { address: '(ระบบปิดอัตโนมัติ 23:59 น.)', lat: null, lng: null },
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showToast('info', '⏰ ระบบปิดเวรเมื่อวาน (23:59 น.) ให้อัตโนมัติเรียบร้อยแล้ว');
+            } catch (e) {
+                console.error('wsAutoCloseYesterday error:', e);
+            }
+        }
+
+        async function initWorkSession() {
+            // ปิดเวรเมื่อวานอัตโนมัติก่อน (ถ้ายังค้างอยู่)
+            await wsAutoCloseYesterday();
+            // โหลด session วันนี้: Firestore first, fallback localStorage
+            let session = null;
+            try { session = await wsLoadFromFirestore(); } catch (e) { /* ignore */ }
+            if (!session) session = wsLoadLocal();
+            workSession = session || { status: WS_STATUS.NONE, date: wsTodayKey() };
+            wsRenderState();
+        }
+
+        async function wsStartWork() {
+            showLoading(true);
+            const loc = await wsGetLocation();
+            const now = new Date();
+            workSession = {
+                status: WS_STATUS.STARTED,
+                date: wsTodayKey(),
+                startTime: now,
+                startLocation: loc,
+                lastJobTime: null, lastJobLocation: {},
+                arrivalTime: null, arrivalLocation: {},
+            };
+            await wsSaveToFirestore({ status: WS_STATUS.STARTED, startTime: firebase.firestore.Timestamp.fromDate(now), startLocation: loc });
+            wsSaveLocal();
+            showLoading(false);
+            wsRenderState();
+            showToast('success', '✅ เริ่มงานแล้ว! บันทึกจุดเริ่มต้นสำเร็จ');
+        }
+
+        async function wsLastJob() {
+            showLoading(true);
+            const loc = await wsGetLocation();
+            const now = new Date();
+            // คำนวณระยะทาง + เวลาขับตามถนน จากจุดเริ่มงาน (ก) → งานสุดท้าย (ข)
+            const { distKm: workDistKm, durationMin: workDurationMin } = await wsRoadDistance(workSession.startLocation, loc);
+            workSession.status = WS_STATUS.LAST_DONE;
+            workSession.lastJobTime = now;
+            workSession.lastJobLocation = loc;
+            workSession.workDistanceKm = workDistKm;
+            workSession.workDurationMin = workDurationMin;
+            await wsSaveToFirestore({
+                status: WS_STATUS.LAST_DONE,
+                lastJobTime: firebase.firestore.Timestamp.fromDate(now),
+                lastJobLocation: loc,
+                workDistanceKm: workDistKm,
+                workDurationMin: workDurationMin
+            });
+            wsSaveLocal();
+            showLoading(false);
+            wsRenderState();
+            showToast('success', '🏁 บันทึกงานสุดท้ายแล้ว! กดถึงที่พักเมื่อกลับถึงบ้าน');
+        }
+
+        async function wsRoadDistance(fromLoc, toLoc) {
+            // Google Maps Distance Matrix API — ระยะทางตามถนน + เวลาขับจริง
+            try {
+                const key = APP_CONFIG.googleMapsApiKey;
+                if (!fromLoc?.lat || !toLoc?.lat || !key) return { distKm: null, durationMin: null };
+                const origin = `${fromLoc.lat},${fromLoc.lng}`;
+                const dest   = `${toLoc.lat},${toLoc.lng}`;
+                const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${dest}&mode=driving&language=th&key=${key}`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                const el = data?.rows?.[0]?.elements?.[0];
+                if (!el || el.status !== 'OK') return { distKm: null, durationMin: null };
+                return {
+                    distKm: el.distance.value / 1000,          // เมตร → กม.
+                    durationMin: Math.round(el.duration.value / 60) // วินาที → นาที
+                };
+            } catch (e) {
+                console.warn('wsRoadDistance error:', e);
+                return { distKm: null, durationMin: null };
+            }
+        }
+
+        async function wsArrived() {
+            showLoading(true);
+            const loc = await wsGetLocation();
+            const now = new Date();
+            // คำนวณระยะทาง + เวลาขับตามถนน จากงานสุดท้าย → ที่พัก
+            const { distKm, durationMin } = await wsRoadDistance(workSession.lastJobLocation, loc);
+            workSession.status = WS_STATUS.ARRIVED;
+            workSession.arrivalTime = now;
+            workSession.arrivalLocation = loc;
+            workSession.travelDistanceKm = distKm;
+            workSession.travelDurationMin = durationMin;
+            await wsSaveToFirestore({
+                status: WS_STATUS.ARRIVED,
+                arrivalTime: firebase.firestore.Timestamp.fromDate(now),
+                arrivalLocation: loc,
+                travelDistanceKm: distKm,
+                travelDurationMin: durationMin
+            });
+            // Clear pending warning (session completed normally)
+            localStorage.removeItem('ws_pending_warning_' + selectedTeam);
+            wsSaveLocal();
+            showLoading(false);
+            wsRenderState();
+            showToast('success', '🏠 ถึงที่พักแล้ว! สรุปวันทำงานสำเร็จ');
+        }
+
+        async function wsCancelStart() {
+            if (!confirm('ต้องการยกเลิกการเริ่มงาน? ข้อมูลจะถูกลบ')) return;
+            if (workSession && workSession.docId) {
+                try { await db.collection('work_sessions').doc(workSession.docId).delete(); } catch (e) { /* ignore */ }
+            }
+            localStorage.removeItem('ws_session_' + selectedTeam);
+            workSession = { status: WS_STATUS.NONE, date: wsTodayKey() };
+            wsStopTimer();
+            wsRenderState();
+            showToast('info', 'ยกเลิกการเริ่มงาน');
+        }
+
+        async function wsCancelLastJob() {
+            if (!confirm('ยกเลิกการกด "เสร็จงานสุดท้าย" หรือไม่?\nระบบจะกลับไปสถานะ "กำลังทำงาน"')) return;
+            showLoading(true);
+            workSession.status = WS_STATUS.STARTED;
+            workSession.lastJobTime = null;
+            workSession.lastJobLocation = {};
+            workSession.workDistanceKm = null;
+            workSession.workDurationMin = null;
+            if (workSession.docId) {
+                try {
+                    await db.collection('work_sessions').doc(workSession.docId).update({
+                        status: WS_STATUS.STARTED,
+                        lastJobTime: firebase.firestore.FieldValue.delete(),
+                        lastJobLocation: firebase.firestore.FieldValue.delete(),
+                        workDistanceKm: firebase.firestore.FieldValue.delete(),
+                        workDurationMin: firebase.firestore.FieldValue.delete(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch (e) { console.warn('wsCancelLastJob Firestore error:', e); }
+            }
+            wsSaveLocal();
+            showLoading(false);
+            wsRenderState();
+            showToast('info', '↩️ ยกเลิกแล้ว — กลับสู่สถานะกำลังทำงาน');
+        }
+
+        // Save pending warning before page unload (if session not completed)
+        window.addEventListener('beforeunload', () => {
+            if (workSession && (workSession.status === WS_STATUS.STARTED || workSession.status === WS_STATUS.LAST_DONE)) {
+                const todayKey = wsTodayKey();
+                const savedDate = workSession.date;
+                if (savedDate && savedDate !== todayKey) {
+                    localStorage.setItem('ws_pending_warning_' + selectedTeam, '1');
+                }
+            }
+        });
+        // ============================================================
+        // ===== /WORK SESSION SYSTEM =====
+        // ============================================================
 
         // Update showView function to handle schedule view
         window.showView = function(viewName, event) {

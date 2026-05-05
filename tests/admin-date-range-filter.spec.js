@@ -2,15 +2,16 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Admin Dashboard - Date Range Filter', () => {
+  // Admin dashboard is desktop-only — runs on chromium & Mobile Chrome only
+  // (Mobile Safari excluded in playwright.config.js testIgnore)
+  test.use({ viewport: { width: 1280, height: 800 }, isMobile: false });
+
   test.beforeEach(async ({ page }) => {
     // Navigate to admin dashboard
     await page.goto('/admin-dashboard.html');
     
-    // Wait for dashboard to load
+    // Wait for dashboard to load (filter panel always visible)
     await page.waitForSelector('.sidebar', { timeout: 10000 });
-    
-    // Open filter panel first (it's hidden by default)
-    await page.locator('button:has-text("Filter")').first().click();
     await page.waitForSelector('[data-test="filter-team"]', { timeout: 5000 });
   });
 
