@@ -3646,6 +3646,13 @@
                 viewElement.style.display = 'block';
             }
 
+            // View-specific side effects
+            if (viewName === 'history') {
+                renderHistoryFromFirestore().catch(console.error);
+            } else if (viewName === 'schedule') {
+                loadScheduleListView().catch(console.error);
+            }
+
             // Update active nav item
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
