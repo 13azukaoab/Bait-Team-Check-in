@@ -30,6 +30,16 @@
         firebase.initializeApp(APP_CONFIG.firebase);
         const db = firebase.firestore();
         const storage = firebase.storage();
+
+        // Reduce false "backend unreachable" cases on strict corporate/mobile networks.
+        try {
+            db.settings({
+                experimentalAutoDetectLongPolling: true,
+                useFetchStreams: false
+            });
+        } catch (settingsError) {
+            console.warn('Firestore settings already initialized:', settingsError?.message || settingsError);
+        }
     </script>
     
     <style>
@@ -3214,6 +3224,8 @@
         // Firebase Helper Functions
         // ===========================
         let firestoreCheckins = []; // เก็บข้อมูลจาก Firestore
+        const CHECKINS_LOCAL_CACHE_KEY = 'admin_checkins_cache_v1';
+        const SCHEDULED_LOCAL_CACHE_KEY = 'admin_scheduled_cache_v1';
         
         // แปลง Firestore Timestamp เป็น Date
         function timestampToDate(timestamp) {
@@ -3246,40 +3258,94 @@
             if (diffDays < 7) return `${diffDays} วันที่แล้ว`;
             return formatThaiDate(date);
         }
+
+        function setRealtimeConnectionState(isOnline, reason = '') {
+            const badge = document.getElementById('realtimeBadge');
+            if (!badge) return;
+
+            if (isOnline) {
+                badge.innerHTML = '<span class="realtime-dot"></span><span>Live</span>';
+                badge.title = 'เชื่อมต่อ Firestore ปกติ';
+                return;
+            }
+
+            badge.innerHTML = '<span class="realtime-dot" style="background:#f59e0b;"></span><span>Offline Cache</span>';
+            badge.title = reason || 'กำลังใช้ข้อมูลจากแคชในเครื่อง';
+        }
+
+        function normalizeCheckinRecord(docId, data) {
+            return {
+                id: docId,
+                ...data,
+                lat: data.location?.lat || 0,
+                lng: data.location?.lng || 0,
+                address: data.location?.address || '',
+                houseFrontUrl: data.photos?.houseFront || '',
+                contractPhotoUrl: data.photos?.contractPhoto || '',
+                checkinTime: timestampToDate(data.checkinTime || data.createdAt),
+                visible: data.visible !== false
+            };
+        }
+
+        function saveLocalCache(key, items) {
+            try {
+                localStorage.setItem(key, JSON.stringify(items));
+            } catch (error) {
+                console.warn('Local cache write failed:', error?.message || error);
+            }
+        }
+
+        function readLocalCache(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                console.warn('Local cache read failed:', error?.message || error);
+                return [];
+            }
+        }
         
         // ดึงข้อมูล Check-ins จาก Firestore
         async function loadCheckinsFromFirestore() {
+            const checkinsQuery = db.collection('checkins')
+                .orderBy('createdAt', 'desc')
+                .limit(2000);
+
             try {
-                // console.log('Loading check-ins from Firestore...');
-                const querySnapshot = await db.collection('checkins')
-                    .orderBy('createdAt', 'desc')
-                    .limit(2000)
-                    .get();
-                
+                const querySnapshot = await checkinsQuery.get({ source: 'server' });
                 firestoreCheckins = [];
                 querySnapshot.forEach(doc => {
                     const data = doc.data();
-                    firestoreCheckins.push({
-                        id: doc.id,
-                        ...data,
-                        // Normalize location
-                        lat: data.location?.lat || 0,
-                        lng: data.location?.lng || 0,
-                        address: data.location?.address || '',
-                        // Normalize photos
-                        houseFrontUrl: data.photos?.houseFront || '',
-                        contractPhotoUrl: data.photos?.contractPhoto || '',
-                        // Time
-                        checkinTime: timestampToDate(data.checkinTime || data.createdAt),
-                        // Visibility
-                        visible: data.visible !== false
-                    });
+                    firestoreCheckins.push(normalizeCheckinRecord(doc.id, data));
                 });
-                
+
+                saveLocalCache(CHECKINS_LOCAL_CACHE_KEY, firestoreCheckins);
+                setRealtimeConnectionState(true);
                 return firestoreCheckins;
             } catch (error) {
-                console.error('Error loading check-ins:', error);
-                return [];
+                console.warn('Server read failed, fallback to cache:', error);
+                setRealtimeConnectionState(false, error?.message || 'เชื่อมต่อ Firestore ไม่สำเร็จ กำลังใช้ข้อมูลแคช');
+
+                try {
+                    const cacheSnapshot = await checkinsQuery.get({ source: 'cache' });
+                    firestoreCheckins = [];
+                    cacheSnapshot.forEach(doc => {
+                        const data = doc.data();
+                        firestoreCheckins.push(normalizeCheckinRecord(doc.id, data));
+                    });
+
+                    if (firestoreCheckins.length > 0) {
+                        return firestoreCheckins;
+                    }
+                } catch (cacheError) {
+                    console.warn('Firestore cache read failed:', cacheError);
+                }
+
+                const localCache = readLocalCache(CHECKINS_LOCAL_CACHE_KEY);
+                firestoreCheckins = localCache;
+                return localCache;
             }
         }
 
@@ -3287,10 +3353,11 @@
         let firestoreScheduledCheckins = [];
 
         async function loadScheduledCheckinsFromFirestore() {
+            const scheduleQuery = db.collection('scheduled_checkins')
+                .orderBy('scheduledDate');
+
             try {
-                const querySnapshot = await db.collection('scheduled_checkins')
-                    .orderBy('scheduledDate')
-                    .get();
+                const querySnapshot = await scheduleQuery.get({ source: 'server' });
                 
                 firestoreScheduledCheckins = [];
                 querySnapshot.forEach(doc => {
@@ -3302,14 +3369,40 @@
                         status: data.status || 'pending'
                     });
                 });
+
+                saveLocalCache(SCHEDULED_LOCAL_CACHE_KEY, firestoreScheduledCheckins);
                 
                 // Load to UI
                 loadScheduledCheckinsUI();
                 
                 return firestoreScheduledCheckins;
             } catch (error) {
-                console.error('Error loading scheduled check-ins:', error);
-                return [];
+                console.warn('Server read failed for scheduled_checkins, fallback to cache:', error);
+
+                try {
+                    const cacheSnapshot = await scheduleQuery.get({ source: 'cache' });
+                    firestoreScheduledCheckins = [];
+                    cacheSnapshot.forEach(doc => {
+                        const data = doc.data();
+                        firestoreScheduledCheckins.push({
+                            id: doc.id,
+                            ...data,
+                            scheduledDate: data.scheduledDate,
+                            status: data.status || 'pending'
+                        });
+                    });
+
+                    loadScheduledCheckinsUI();
+                    if (firestoreScheduledCheckins.length > 0) {
+                        return firestoreScheduledCheckins;
+                    }
+                } catch (cacheError) {
+                    console.warn('Firestore cache read failed (scheduled_checkins):', cacheError);
+                }
+
+                firestoreScheduledCheckins = readLocalCache(SCHEDULED_LOCAL_CACHE_KEY);
+                loadScheduledCheckinsUI();
+                return firestoreScheduledCheckins;
             }
         }
 
@@ -4226,18 +4319,13 @@
                         firestoreCheckins = [];
                         snapshot.forEach(doc => {
                             const data = doc.data();
-                            firestoreCheckins.push({
-                                id: doc.id,
-                                ...data,
-                                lat: data.location?.lat || 0,
-                                lng: data.location?.lng || 0,
-                                address: data.location?.address || '',
-                                houseFrontUrl: data.photos?.houseFront || '',
-                                contractPhotoUrl: data.photos?.contractPhoto || '',
-                                checkinTime: timestampToDate(data.checkinTime || data.createdAt),
-                                visible: data.visible !== false
-                            });
+                            firestoreCheckins.push(normalizeCheckinRecord(doc.id, data));
                         });
+
+                        if (firestoreCheckins.length > 0) {
+                            saveLocalCache(CHECKINS_LOCAL_CACHE_KEY, firestoreCheckins);
+                        }
+                        setRealtimeConnectionState(true);
                         
                         // Refresh UI
                         updateDashboardStats();
@@ -4253,6 +4341,7 @@
                     },
                     (error) => {
                         console.error('Real-time listener error:', error);
+                        setRealtimeConnectionState(false, error?.message || 'Realtime หลุด กำลัง retry อัตโนมัติ');
                         // Fallback to polling
                         setTimeout(() => startRealtimeListener(), 5000);
                     }
@@ -4358,6 +4447,17 @@
         
         // เรียกใช้เมื่อ DOM พร้อม
         document.addEventListener('DOMContentLoaded', () => {
+            setRealtimeConnectionState(navigator.onLine);
+
+            window.addEventListener('offline', () => {
+                setRealtimeConnectionState(false, 'อุปกรณ์ออฟไลน์');
+            });
+
+            window.addEventListener('online', () => {
+                setRealtimeConnectionState(true);
+                startRealtimeListener();
+            });
+
             initializeFirestoreData();
         });
         
