@@ -1,0 +1,129 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - text:    
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - heading "Bait Check-In Bait Check-In" [level=1] [ref=e5]:
+          - img "Bait Check-In" [ref=e7]
+          - text: Bait Check-In
+        - generic [ref=e8] [cursor=pointer]:
+          - generic [ref=e9]: 
+          - generic [ref=e10]: Team A
+          - generic [ref=e11]: 
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e15]:
+            - generic [ref=e17]: 
+            - generic [ref=e19]: วันทำงานวันนี้
+          - generic [ref=e20]:
+            - button " เริ่มงาน" [ref=e21] [cursor=pointer]:
+              - generic [ref=e22]: 
+              - generic [ref=e23]: เริ่มงาน
+            - button " เลิกงาน" [ref=e24] [cursor=pointer]:
+              - generic [ref=e25]: 
+              - generic [ref=e26]: เลิกงาน
+            - button " ถึงที่พัก" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 
+              - generic [ref=e29]: ถึงที่พัก
+          - text: 
+        - text: 
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]:
+              - generic [ref=e33]: 
+              - text: ชื่อลูกค้า
+              - generic [ref=e34]: "*"
+            - textbox "กรอกชื่อลูกค้า" [ref=e35]
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - generic [ref=e38]:
+                - generic [ref=e39]: 
+                - text: เลขที่สัญญา
+                - generic [ref=e40]: "*"
+              - generic [ref=e41]:
+                - combobox [ref=e42] [cursor=pointer]:
+                  - option "CT23-" [selected]
+                  - option "CT24-"
+                  - option "CT25-"
+                  - option "CT26-"
+                - textbox "ใส่เลข" [ref=e43]
+            - generic [ref=e44]:
+              - generic [ref=e45]:
+                - generic [ref=e46]: 
+                - text: สาขา
+                - generic [ref=e47]: "*"
+              - combobox [ref=e48] [cursor=pointer]:
+                - option "เลือกสาขา" [selected]
+                - option "พุทธมณฑล"
+                - option "นครปฐม"
+                - option "หัวหิน"
+                - option "พระราม 2"
+                - option "สาทร"
+                - option "ปทุมวัน"
+                - option "พระราม 4"
+                - option "นนทบุรี"
+                - option "ปทุมธานี"
+                - option "รามอินทรา"
+                - option "อยุธยา"
+                - option "ลาดพร้าว"
+                - option "พัฒนาการ"
+                - option "สุวินทวงศ์"
+                - option "ประชาชื่น"
+                - option "ปราจีนบุรี"
+                - option "สมุทรปราการ"
+                - option "พัทยา"
+                - option "ระยอง"
+                - option "สุขุมวิท"
+                - option "ปากน้ำ"
+                - option "ชลบุรี"
+                - option "ปากช่อง"
+                - option "สระบุรี"
+              - generic [ref=e49]:
+                - generic [ref=e50]: 
+                - text: "เขต: -"
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - generic [ref=e53]: 
+              - text: ภาพถ่ายหน้าบ้าน
+              - generic [ref=e54]: "*"
+            - paragraph [ref=e55]:
+              - generic [ref=e56]: 
+              - text: เมื่อกล้องถามสิทธิ์ กรุณากด "อนุญาต/Allow" แบบถาวร
+            - generic [ref=e57]:
+              - generic [ref=e58] [cursor=pointer]:
+                - generic [ref=e59]: 
+                - generic [ref=e60]: หน้าบ้าน
+              - generic [ref=e61] [cursor=pointer]:
+                - generic [ref=e62]: 
+                - generic [ref=e63]: เลขที่สัญญา
+          - generic [ref=e64]:
+            - button " CHECK IN" [ref=e65] [cursor=pointer]:
+              - generic [ref=e66]: 
+              - generic [ref=e67]: CHECK IN
+            - text: 
+          - generic [ref=e68]:
+            - generic [ref=e69]:
+              - generic [ref=e70]: 
+              - text: ตำแหน่งปัจจุบัน
+            - generic [ref=e71]:
+              - text: 123 ถนนสุขุมวิท แขวงคลองตัน
+              - text: เขตคลองเตย กรุงเทพมหานคร 10110
+            - generic [ref=e72]: "Lat: 13.7563, Long: 100.5018"
+      - text:            
+    - text:  
+    - generic [ref=e73]:
+      - generic [ref=e74] [cursor=pointer]:
+        - generic [ref=e75]: 
+        - generic [ref=e76]: หน้าแรก
+      - generic [ref=e77] [cursor=pointer]:
+        - generic [ref=e78]: 
+        - generic [ref=e79]: เตรียมงาน
+      - generic [ref=e80] [cursor=pointer]:
+        - generic [ref=e81]: 
+        - generic [ref=e82]: ประวัติ
+  - text: 
+  - text:      
+```
