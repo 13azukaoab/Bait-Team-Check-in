@@ -1568,13 +1568,11 @@
 
                 <!-- Check-in Button (Moved below inputs) -->
                 <div class="checkin-section">
-                    <button class="checkin-btn ws-disabled" id="checkinBtn" data-test="checkin-btn" onclick="toggleCheckin()">
+                    <button class="checkin-btn" id="checkinBtn" data-test="checkin-btn" onclick="toggleCheckin()">
                         <i class="fas fa-map-pin"></i>
                         <span id="btnText">CHECK IN</span>
                     </button>
-                    <div class="ws-checkin-warning visible" id="wsCheckinWarning">
-                        <i class="fas fa-triangle-exclamation"></i> กรุณาเริ่มงานก่อน Check-in
-                    </div>
+                    <div class="ws-checkin-warning" id="wsCheckinWarning" style="display:none;"></div>
                     <div class="status-badge pending" id="statusBadge" data-test="status-badge" style="display:none;">
                         <i class="fas fa-clock"></i>
                         <span>ยังไม่ได้ Check-in</span>
@@ -2076,7 +2074,11 @@
         let currentLocation = { lat: null, lng: null, accuracy: null, timestamp: null };
         const GPS_MAX_AGE_MS = 2 * 60 * 1000; // 2 นาที (Fallback)
 
-        function toggleCheckin() {
+        async function toggleCheckin() {
+            // Auto-start งานถ้ายังไม่ได้เริ่ม
+            if (!workSession || workSession.status === WS_STATUS.NONE) {
+                await wsStartWork();
+            }
             // Validate required fields
             const customerName = document.getElementById('customerName').value;
             const contractPrefix = document.getElementById('contractPrefix').value;
@@ -2126,7 +2128,7 @@
                                 timestamp: Date.now()
                             };
                             updateLocationDisplay();
-                            performCheckin(customerName, contractNumber, branch, zone);
+                            performCheckin(customerName, fullContractNumber, branch, zone);
                         },
                         (error) => {
                             showLoading(false);
@@ -3469,7 +3471,7 @@
             if (!workSession || workSession.status === WS_STATUS.NONE) {
                 wsStopTimer();
                 wsShowState(1);
-                wsEnableCheckin(false);
+                wsEnableCheckin(true);
                 return;
             }
             if (workSession.status === WS_STATUS.STARTED) {

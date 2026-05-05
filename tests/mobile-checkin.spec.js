@@ -1,4 +1,3 @@
-// @ts-check
 const { test, expect } = require('@playwright/test');
 
 // ===================================
@@ -148,17 +147,20 @@ test.describe('Work Session Feature', () => {
     console.log('✅ State 1: ws-start-btn visible เท่านั้น');
   });
 
-  test('WS-3️⃣ Check-in button has ws-disabled class on State 1', async ({ page }) => {
+  test('WS-3️⃣ Check-in button enabled on State 1 (no ws-disabled)', async ({ page }) => {
     await page.evaluate(() => window.wsShowState && window.wsShowState(1));
     const cls = await page.locator('[data-test="checkin-btn"]').getAttribute('class');
-    expect(cls).toContain('ws-disabled');
-    console.log('✅ Check-in button disabled ตอน State 1');
+    expect(cls).not.toContain('ws-disabled');
+    console.log('✅ Check-in button enabled ตั้งแต่ State 1');
   });
 
-  test('WS-4️⃣ Warning message visible on State 1', async ({ page }) => {
+  test('WS-4️⃣ Warning message hidden on State 1', async ({ page }) => {
     await page.evaluate(() => window.wsShowState && window.wsShowState(1));
-    await expect(page.locator('#wsCheckinWarning')).toBeVisible();
-    console.log('✅ Warning message แสดงผลตอน State 1');
+    const el = page.locator('#wsCheckinWarning');
+    // warning ซ่อนอยู่ (display:none หรือไม่มี class visible)
+    const isHidden = await el.evaluate(node => node.style.display === 'none' || !node.classList.contains('visible'));
+    expect(isHidden).toBe(true);
+    console.log('✅ Warning message ซ่อนอยู่ตอน State 1');
   });
 
   test('WS-5️⃣ State 2: lastjob button and cancel link visible', async ({ page }) => {
