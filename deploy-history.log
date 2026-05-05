@@ -1,0 +1,15 @@
+# Bait Check-in Webapp - Deploy History Log
+# Format: TIMESTAMP | BRANCH | COMMIT | STATUS | MESSAGE | BY | TYPE | DETAILS
+# ============================================
+
+01-02-2026 16:40:00 | main | 08cef62 | SUCCESS | test: Fix Playwright tests | BY: Weerachon | TYPE: Hosting | DETAILS: Firebase Hosting deployed
+01-02-2026 20:35:00 | main | 9f14e6b | SUCCESS | docs: Update security checklist | BY: Weerachon | TYPE: Hosting | DETAILS: Firebase Hosting deployed
+02-02-2026 19:30:00 | main | db71e29 | SUCCESS | feat: Contract number tel input | BY: Weerachon | TYPE: Hosting | DETAILS: Firebase Hosting deployed
+02-02-2026 21:00:00 | main | 6b3c220 | SUCCESS | fix: Null checks for renderScheduleItems | BY: Weerachon | TYPE: Hosting | DETAILS: Firebase Hosting deployed (New API Key)
+02-02-2026 22:10:00 | main | d0a5303 | SUCCESS | fix: admin-date-range-filter tests | BY: Weerachon | TYPE: Git Push | DETAILS: Force push to GitHub
+02-02-2026 22:19:47 | main | 2022277 | SUCCESS | docs: Update Playwright test report - 132 tests (100% pass) - Added Issue #3: Admin Date Range Filter fix (15 tests) - Updated test history with 02-02-2026 run - Total: 44 admin + 45 date-range + 39 mobile = 132 tests | BY: Weerachon | TYPE: Hosting | DETAILS: Deployed to Firebase
+11-02-2026 12:30:00 | main | 4384dcc | SUCCESS | fix: Team filter and marker colors sync | BY: Weerachon | TYPE: Hosting | DETAILS: Fixed marker colors to match badge colors, Fixed team filter index sync issue
+11-02-2026 12:39:02 | main | 7851f25 | SUCCESS | Reorganize project structure with standard naming | BY: Weerachon | TYPE: Hosting | DETAILS: Deployed to Firebase
+05-05-2026 17:13:21 | main | 35a1b4a | SUCCESS | docs: Add Executive Summary Report for Management | BY: Weerachon | TYPE: Hosting | DETAILS: Deployed to Firebase
+05-05-2026 19:34:47 | main | 646b5ce | SUCCESS | feat: Add cancel button State 3 + fix E2E 137 tests | BY: Weerachon | TYPE: Hosting+Git | DETAILS: wsCancelLastJob(), workers:2, retries:1, 137 passed 0 failed
+05-05-2026 21:00:00 | main | 326e8a3 | SUCCESS | feat: Redesign Work Session Card — 4 independent buttons | BY: Weerachon | TYPE: Hosting+Git | DETAILS: Remove 4-state sequential flow, 3 independent buttons (เริ่มงาน/เลิกงาน/ถึงที่พัก), WS-1~WS-9 tests rewritten, 139 passed 0 failed
