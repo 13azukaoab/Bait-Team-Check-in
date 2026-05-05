@@ -3139,7 +3139,7 @@
                         <i class="fas fa-briefcase-clock" style="color: var(--primary);"></i> Work Sessions
                     </h2>
                     <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-                        <input type="date" id="wsDateFilter" data-test="ws-filter-date" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" onchange="loadWorkSessions()">
+                        <input type="month" id="wsDateFilter" data-test="ws-filter-date" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" onchange="loadWorkSessions()">
                         <select id="wsTeamFilter" data-test="ws-filter-team" style="padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Prompt', sans-serif;" onchange="loadWorkSessions()">
                             <option value="all">ทุกทีม</option>
                             <option value="A">Team A</option>
@@ -4126,6 +4126,34 @@
                 alert('เกิดข้อผิดพลาดในการลบ: ' + error.message);
             }
         }
+
+        async function deleteCheckinDirect(docId) {
+            // ใช้สำหรับลบหลายรายการโดยไม่ขึ้น confirm ซ้ำ
+            const item = firestoreCheckins.find(c => c.id === docId);
+            if (item) {
+                const pathParts = item.houseFrontUrl?.split('/o/')[1]?.split('?')[0];
+                if (pathParts) {
+                    try {
+                        const storagePath = decodeURIComponent(pathParts);
+                        await storage.ref(storagePath).delete();
+                    } catch (e) {
+                        console.log('Could not delete house photo:', e.message);
+                    }
+                }
+
+                const contractPath = item.contractPhotoUrl?.split('/o/')[1]?.split('?')[0];
+                if (contractPath) {
+                    try {
+                        const storagePath = decodeURIComponent(contractPath);
+                        await storage.ref(storagePath).delete();
+                    } catch (e) {
+                        console.log('Could not delete contract photo:', e.message);
+                    }
+                }
+            }
+
+            await db.collection('checkins').doc(docId).delete();
+        }
         
         // ลบ Check-in ทั้งหมดของลูกค้า (โดย contractNumber)
         async function deleteCustomerCheckins(contractNumber, customerName) {
@@ -4141,9 +4169,9 @@
             if (!confirmDelete) return;
             
             try {
-                // ลบทีละรายการ
+                // ลบทีละรายการแบบไม่ถามยืนยันซ้ำ
                 for (const checkin of checkins) {
-                    await deleteCheckin(checkin.id, checkin.customerName);
+                    await deleteCheckinDirect(checkin.id);
                 }
                 
                 showRealtimeToast('ลบข้อมูลลูกค้าสำเร็จ!', `${customerName} (${checkins.length} รายการ)`);
@@ -5049,6 +5077,22 @@
             return map[status] || '<span style="color:#999;">-</span>';
         }
 
+        function wsGetMonthRangeFromInput(monthInputValue) {
+            const now = new Date();
+            let year = now.getFullYear();
+            let monthIndex = now.getMonth();
+
+            if (monthInputValue && /^\d{4}-\d{2}$/.test(monthInputValue)) {
+                const [y, m] = monthInputValue.split('-');
+                year = Number(y);
+                monthIndex = Number(m) - 1;
+            }
+
+            const start = new Date(year, monthIndex, 1, 0, 0, 0, 0);
+            const end = new Date(year, monthIndex + 1, 0, 23, 59, 59, 999);
+            return { start, end };
+        }
+
         function wsGpsLink(loc) {
             if (!loc || !loc.lat) return '-';
             return `<a href="https://maps.google.com/?q=${loc.lat},${loc.lng}" target="_blank" title="${loc.address || ''}" style="color:var(--primary);"><i class="fas fa-map-marker-alt"></i> แผนที่</a>`;
@@ -5059,26 +5103,22 @@
             if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:#999;"><i class="fas fa-spinner fa-spin"></i> กำลังโหลด...</td></tr>';
 
-            // Set date filter default to today
+            // Set month filter default to current month
             const dateInput = document.getElementById('wsDateFilter');
             if (dateInput && !dateInput.value) {
                 const now = new Date();
-                dateInput.value = now.toISOString().slice(0, 10); // YYYY-MM-DD for input[type=date]
+                dateInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
             }
-
-            // Convert YYYY-MM-DD → DD-MM-YYYY for Firestore
-            let firestoreDate = wsAdminTodayKey();
-            if (dateInput && dateInput.value) {
-                const [y, m, d] = dateInput.value.split('-');
-                firestoreDate = `${d}-${m}-${y}`;
-            }
+            const monthRange = wsGetMonthRangeFromInput(dateInput?.value || '');
 
             const teamFilter = document.getElementById('wsTeamFilter')?.value || 'all';
 
             try {
-                let q = db.collection('work_sessions').where('date', '==', firestoreDate);
+                let q = db.collection('work_sessions')
+                    .where('createdAt', '>=', firebase.firestore.Timestamp.fromDate(monthRange.start))
+                    .where('createdAt', '<=', firebase.firestore.Timestamp.fromDate(monthRange.end));
                 if (teamFilter !== 'all') q = q.where('team', '==', teamFilter);
-                const snap = await q.orderBy('team').get();
+                const snap = await q.orderBy('createdAt', 'desc').limit(1000).get();
 
                 wsSessionsCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
@@ -5094,7 +5134,7 @@
                 setEl('wsStatDone', done);
 
                 if (wsSessionsCache.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">ไม่มีข้อมูล Work Session วันที่เลือก</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">ไม่มีข้อมูล Work Session ในเดือนที่เลือก</td></tr>';
                     return;
                 }
 

@@ -34,8 +34,8 @@ service cloud.firestore {
       allow update: if request.resource.data.diff(resource.data).affectedKeys()
         .hasOnly(['visible', 'notes', 'updatedAt']);
       
-      // ห้ามลบ
-      allow delete: if false;
+      // ลบได้ - ใช้งานในหน้า Admin (internal use)
+      allow delete: if true;
     }
     
     // ===========================
@@ -86,7 +86,7 @@ service cloud.firestore {
       allow create: if request.resource.data.keys().hasAll(['name', 'contractNumber']);
       allow update: if request.resource.data.diff(resource.data).affectedKeys()
         .hasOnly(['name', 'phone', 'address', 'updatedAt']);
-      allow delete: if false;
+      allow delete: if true;
     }
     
     // ===========================
