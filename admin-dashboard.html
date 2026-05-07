@@ -3311,7 +3311,7 @@
         async function loadCheckinsFromFirestore() {
             const checkinsQuery = db.collection('checkins')
                 .orderBy('createdAt', 'desc')
-                .limit(2000);
+                .limit(500); // ลดจาก 2000 — ข้อมูลจริงมี ~100 รายการ, 500 ครอบคลุมได้มาก
 
             try {
                 const querySnapshot = await checkinsQuery.get({ source: 'server' });
@@ -3354,7 +3354,8 @@
 
         async function loadScheduledCheckinsFromFirestore() {
             const scheduleQuery = db.collection('scheduled_checkins')
-                .orderBy('scheduledDate');
+                .orderBy('scheduledDate')
+                .limit(300); // ป้องกัน unbounded read
 
             try {
                 const querySnapshot = await scheduleQuery.get({ source: 'server' });
@@ -4291,7 +4292,7 @@
             
             realtimeUnsubscribe = db.collection('checkins')
                 .orderBy('createdAt', 'desc')
-                .limit(2000)
+                .limit(500) // ลดจาก 2000 — ตรงกับ limit ของ initial load
                 .onSnapshot(
                     (snapshot) => {
                         // ตรวจสอบว่ามีการเปลี่ยนแปลงจริงหรือไม่
@@ -4425,16 +4426,23 @@
         
         // โหลดข้อมูลเมื่อเปิดหน้า
         async function initializeFirestoreData() {
-            await loadCheckinsFromFirestore();
+            // [QUOTA OPT] แสดง cache ในเครื่องก่อน (0 reads) แทนการยิง Firestore 2 รอบ
+            // onSnapshot ด้านล่างจะโหลดข้อมูลสดมาแทนที่โดยอัตโนมัติ
+            const cachedCheckins = readLocalCache(CHECKINS_LOCAL_CACHE_KEY);
+            if (cachedCheckins.length > 0) {
+                firestoreCheckins = cachedCheckins;
+                updateDashboardStats();
+                updateRecentCheckins();
+                updateMapMarkersFromFirestore();
+                updateCheckinsTable();
+                updatePhotoGallery();
+                updateCustomerStats();
+            }
+
+            // scheduled_checkins ยังคง query server เพราะสถานะ pending/completed เปลี่ยนได้
             await loadScheduledCheckinsFromFirestore();
-            updateDashboardStats();
-            updateRecentCheckins();
-            updateMapMarkersFromFirestore();
-            updateCheckinsTable();
-            updatePhotoGallery();
-            updateCustomerStats();
-            
-            // เริ่ม Real-time Listener
+
+            // Real-time Listener = แหล่งข้อมูลหลักสำหรับ checkins (ยิง Firestore แค่ครั้งเดียว)
             startRealtimeListener();
         }
         
