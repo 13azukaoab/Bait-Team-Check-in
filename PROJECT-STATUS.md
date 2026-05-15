@@ -13,8 +13,8 @@
 | 🚀 **Production** | ✅ ใช้งานได้ (93 check-ins) |
 | 🔐 **API Keys** | ✅ Rotated & Deployed |
 | 📦 **Pre-Schedule** | ✅ 100% Complete |
-| 🧪 **Tests** | ✅ Fixed (พร้อมรัน) |
-| 📂 **Public Repo** | 🟡 86% (Phase 6 ค้าง) |
+| 🧪 **Tests** | ✅ 132/132 Passed (100%) |
+| 📂 **Public Repo** | ✅ Public & Complete |
 
 ---
 
@@ -122,11 +122,10 @@
 ### 📊 Test Coverage
 
 - ✅ **Cypress → Playwright Migration**: เปลี่ยนจาก Cypress เป็น Playwright (ดี +1.5x ความเร็ว)
-- ⏳ **E2E Tests** (29 tests): 16 Admin Dashboard + 13 Mobile Check-in
-  - ✅ Tests สร้างเสร็จ (16 + 13 = 29 tests)
-  - 🟨 Pass Rate: 19/29 (65.5%) - ต้องแก้ 2 issues:
-    - Issue #1: Admin Dashboard filters ซ่อน (9 tests failing)
-    - Issue #2: Mobile selector คลุมเครือ (1 test failing)
+- ✅ **E2E Tests ล่าสุด (จากรายงานอ้างอิง)**: 132/132 passed (100%)
+  - ✅ Admin Dashboard: 48/48
+  - ✅ Admin Date Range Filter: 45/45
+  - ✅ Mobile Check-in: 39/39
 
 ### 🧪 Test Automation
 
@@ -146,9 +145,9 @@
 
 ---
 
-## 📊 ผลการทดสอบ: 19/29 passed (65.5%)
+## 📊 ผลการทดสอบ: 132/132 passed (100%)
 
-**หมายหมาย:** โปรเจกต์ Functional 100% แต่ E2E Tests ต้องแก้ 2 issues ก่อน
+**หมายเหตุ:** อ้างอิงจากรายงาน Playwright ล่าสุดในเอกสารทดสอบ
 
 ## ✅ คู่มือและเอกสาร (Documentation) - เสร็จสมบูรณ์ 100%
 
@@ -180,7 +179,7 @@
 
 ### 🔐 การเตรียมพร้อม Public Repository
 
-**สถานะ:** 6/7 phases complete (85.7%) 🟢 GOOD PROGRESS
+**สถานะ:** 7/7 phases complete (100%) ✅ COMPLETE
 
 1. ✅ ~~Phase 1: Code Cleanup~~ → เสร็จสมบูรณ์
 2. ✅ ~~Phase 2: Git History Cleanup~~ → เสร็จสมบูรณ์
@@ -188,7 +187,7 @@
 4. ✅ ~~**Phase 3: API Key Rotation**~~ → เสร็จสมบูรณ์ (New key deployed & tested)
 5. ✅ **Phase 4: Firebase Security Setup** → Deploy rules แล้ว
 6. ✅ **Phase 5: Testing & Bug Fixes** → แก้ Playwright tests เสร็จแล้ว
-7. ⏳ **Phase 6: Make Repository Public** → ขั้นตอนสุดท้าย
+7. ✅ **Phase 6: Make Repository Public** → เสร็จสมบูรณ์
 
 **✅ ความคืบหน้า:** API Key ใหม่ deploy แล้ว, ระบบทำงานปกติ
 
@@ -274,39 +273,39 @@
 
 ---
 
-### 🔐 Phase 3: Rotate API Keys (CRITICAL) - ต้องทำก่อนเปิด Public!
+### 🔐 Phase 3: Rotate API Keys (CRITICAL) - เสร็จสมบูรณ์แล้ว
 
-**AI ห้ามทำ - ผู้ใช้ต้องทำเอง**
+**สรุป:** ขั้นตอนนี้ดำเนินการครบแล้วและ deploy ใช้งานเรียบร้อย
 
 **3.1 Firebase API Key:**
-- [ ] เข้า [Google Cloud Console](https://console.cloud.google.com/)
-- [ ] APIs & Services → Credentials
-- [ ] สร้าง API Key ใหม่
-- [ ] Restrict key:
+- [x] เข้า [Google Cloud Console](https://console.cloud.google.com/)
+- [x] APIs & Services → Credentials
+- [x] สร้าง API Key ใหม่
+- [x] Restrict key:
   - Application restrictions: HTTP referrers
   - Website restrictions: `bait-check-in-webapp.web.app/*`, `localhost/*`
-- [ ] ลบ/Restrict old key
-- [ ] คัดลอก new key
+- [x] ลบ/Restrict old key
+- [x] คัดลอก new key
 
 **3.2 Longdo Map API Key:**
-- [ ] เข้า [Longdo Map Console](https://map.longdo.com/console/)
-- [ ] สร้าง API Key ใหม่
-- [ ] Restrict domain: `bait-check-in-webapp.web.app`, `localhost`
-- [ ] ลบ old key
-- [ ] คัดลอก new key
+- [x] เข้า [Longdo Map Console](https://map.longdo.com/console/)
+- [x] สร้าง API Key ใหม่
+- [x] Restrict domain: `bait-check-in-webapp.web.app`, `localhost`
+- [x] ลบ old key
+- [x] คัดลอก new key
 
 **3.3 อัพเดทโค้ด:**
-- [ ] เปิด `src/config.js`
-- [ ] แทนค่า `apiKey` ใหม่ (Firebase)
-- [ ] แทนค่า `longdoKey` ใหม่
-- [ ] Save ไฟล์
+- [x] เปิด `src/config.js`
+- [x] แทนค่า `apiKey` ใหม่ (Firebase)
+- [x] แทนค่า `longdoKey` ใหม่
+- [x] Save ไฟล์
 
 **3.4 ทดสอบ:**
-- [ ] เปิด Mobile Check-in (local)
-- [ ] ทดสอบ Check-in 1 ครั้ง
-- [ ] เปิด Admin Dashboard
-- [ ] ดูแผนที่ทำงานไหม
-- [ ] ถ้าทำงาน → Deploy!
+- [x] เปิด Mobile Check-in (local)
+- [x] ทดสอบ Check-in 1 ครั้ง
+- [x] เปิด Admin Dashboard
+- [x] ดูแผนที่ทำงานไหม
+- [x] ถ้าทำงาน → Deploy!
 
 **3.5 Deploy:**
 ```powershell
@@ -331,9 +330,7 @@ git push origin main
 3. ✅ ~~เริ่มพัฒนา **API** สำหรับเชื่อมต่อ~~ → ใช้ Firebase SDK
 4. ✅ ~~เชื่อมหน้าเว็บ (Frontend) เข้ากับระบบหลังบ้าน~~ → Mobile + Desktop เชื่อมแล้ว
 5. ✅ ~~ทดสอบระบบ~~ → Migrated to Playwright (ต้องแก้ issues)
-6. ⏳ **TODO: แก้ไข Playwright Test Issues** (Priority: Medium)
-    - Issue #1: Admin Dashboard filter visibility
-    - Issue #2: Mobile Check-in selector specificity
+6. ✅ ~~TODO: แก้ไข Playwright Test Issues~~ (Priority: Medium) → แก้ไขเสร็จสมบูรณ์
 7. ✅ ~~**Firebase Hosting**~~ → Deploy เสร็จ: [https://bait-check-in-webapp.web.app](https://bait-check-in-webapp.web.app)
 8. ✅ ~~**ทดสอบระบบ**: ทดสอบ Check-in จริงผ่าน Mobile~~ → ทำงานได้สมบูรณ์
 9. ✅ ~~**Backend เสร็จสมบูรณ์**~~ → Firestore + Storage + Rules + Real-time
@@ -412,6 +409,6 @@ git push origin main
 - Filename: `workload_analysis_01-28_Feb_2026.csv`
 - **ต้องการ:** `googleMapsApiKey` ใน `src/config.js`
 
-**อัปเดตล่าสุด:** 05-05-2026, 21:00 น.
-**เวอร์ชัน:** V.2.5.0 (05-05-2026) - Work Session Card 4-button Redesign + 139 E2E tests passing
-**สถานะ:** 🟢 PRODUCTION - 139 tests passing, Work Session redesigned, deployed
+**อัปเดตล่าสุด:** 07-05-2026
+**เวอร์ชัน:** V.2.5.1 (07-05-2026) - เอกสารสถานะปรับให้ตรงกัน (Security/Public/Testing)
+**สถานะ:** 🟢 PRODUCTION - Public repository, security checklist complete, 132/132 tests passed (ตามรายงานล่าสุด)

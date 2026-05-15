@@ -53,7 +53,7 @@
 | `deploy-history.log` | Production info | 🔒 gitignored |
 | `.env` | Environment variables | 🔒 gitignored |
 
-### ก่อน Commit ทุกครั้ง
+### ก่อน Commit ทุกครั้ง (Recurring Checklist)
 
 - [ ] ไม่มี API Keys ใน code
 - [ ] ไม่มี credentials ใน comments
@@ -110,7 +110,7 @@
 | `deploy-history.log` | Production info | 🔒 gitignored |
 | `.env` | Environment variables | 🔒 gitignored |
 
-### Before Every Commit
+### Before Every Commit (Recurring Checklist)
 
 - [ ] No API Keys in code
 - [ ] No credentials in comments
@@ -149,6 +149,6 @@
 
 ---
 
-**Version:** 2.2.5  
-**Last Updated / อัปเดตล่าสุด:** 05-02-2026  
+**Version:** 2.2.6  
+**Last Updated / อัปเดตล่าสุด:** 07-05-2026  
 **Status / สถานะ:** ✅ Repository is PUBLIC and SECURE
